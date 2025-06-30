@@ -8,6 +8,11 @@ import crown from './crown.png'
 import bottompic from './bottompic.png'
 import instagram from './instagram.png'
 import instagramSVG from './instagram.svg'
+import back from './back.png'
+import loginpic from './loginpic.png'
+import signuppic from './signuppic.png'
+import freepik from './freepik.png'
+import Verifypic from './Verifypic.png'
 
 
 export const assets = {
@@ -20,5 +25,10 @@ export const assets = {
     crown,
     bottompic,
     instagram,
-    instagramSVG
+    instagramSVG,
+    back,
+    loginpic,
+    signuppic,
+    freepik,
+    Verifypic
 }

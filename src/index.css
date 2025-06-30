@@ -10,3 +10,15 @@
   html {
   scroll-behavior: smooth;
 }
+input[type="password"].hide-password-toggle::-ms-reveal,
+input[type="password"].hide-password-toggle::-ms-clear,
+input[type="password"].hide-password-toggle::-webkit-contacts-auto-fill-button,
+input[type="password"].hide-password-toggle::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
+.hide-password-toggle::-ms-reveal,
+.hide-password-toggle::-ms-clear,
+.hide-password-toggle::-webkit-contacts-auto-fill-button,
+.hide-password-toggle::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
