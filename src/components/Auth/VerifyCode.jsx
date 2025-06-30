@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { assets } from '../../assets/assets';
@@ -9,6 +9,29 @@ function VerifyCode() {
   const [codeDigits, setCodeDigits] = useState(['', '', '', '']);
   const inputsRef = useRef([]);
   const navigate = useNavigate();
+
+  const formik = useFormik({
+    initialValues: {
+      code: '',
+    },
+    validationSchema: Yup.object({
+      code: Yup.string()
+        .required('کد تایید الزامی است')
+        .length(4, 'کد باید ۴ رقم باشد'),
+    }),
+    onSubmit: () => {
+      if (formik.values.code.length === 4) {
+        console.log('کد تایید:', formik.values.code);
+        navigate('/loginform');  
+      } else {
+        alert('لطفا تمام ۴ رقم کد را وارد کنید.');
+      }
+    },
+  });
+
+  useEffect(() => {
+    formik.setFieldValue('code', codeDigits.join(''));
+  }, [codeDigits]);
 
   const handleChange = (index, value) => {
     if (/^\d?$/.test(value)) {
@@ -26,25 +49,6 @@ function VerifyCode() {
       inputsRef.current[index - 1].focus();
     }
   };
-
-  const formik = useFormik({
-    initialValues: {
-      code: '',
-    },
-    validationSchema: Yup.object({
-      code: Yup.string()
-        .required('کد تایید الزامی است')
-        .length(4, 'کد باید ۴ رقم باشد'),
-    }),
-    onSubmit: () => {
-      const fullCode = codeDigits.join('');
-      if (fullCode.length === 4) {
-        console.log('کد تایید:', fullCode);
-      } else {
-        alert('لطفا تمام ۴ رقم کد را وارد کنید.');
-      }
-    },
-  });
 
   const resendCode = () => {
     alert('کد تایید مجدداً ارسال شد.');
@@ -74,7 +78,7 @@ function VerifyCode() {
           <img
             src={assets.Verifypic}
             alt="verify illustration"
-            className="w-full max-w-[300px] md:max-w-[600px]"
+            className="w-full max-w-[250px] md:max-w-[600px]"
           />
         </motion.div>
 
@@ -82,13 +86,13 @@ function VerifyCode() {
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="md:w-1/2 bg-[#055B5C] text-white px-6 md:px-14 py-10 relative rounded-3xl shadow-2xl mx-0 md:mx-4 flex flex-col justify-center"
+          className="md:w-1/2 bg-[#055B5C] text-white px-6 md:px-14 py-6 md:py-12 relative rounded-3xl shadow-2xl mx-0 md:mx-4 flex flex-col justify-center"
           style={{ position: 'relative' }}
         >
           <img
             src={assets.freepik}
             alt="freepik"
-            className="hidden md:block absolute top-6 right-6 w-20 h-auto rounded-lg"
+            className="hidden md:block absolute top-6 right-6 w-16 h-auto rounded-lg"
           />
 
           <div className="text-center mb-6 md:mb-8 px-2">
@@ -103,11 +107,11 @@ function VerifyCode() {
 
           <form onSubmit={formik.handleSubmit} className="flex flex-col space-y-6 md:space-y-8">
 
-            <div className="flex justify-center gap-4 md:gap-6">
+            <div className="flex justify-center gap-3 md:gap-6">
               {codeDigits.map((digit, idx) => (
                 <input
                   key={idx}
-                  ref={el => inputsRef.current[idx] = el}
+                  ref={el => (inputsRef.current[idx] = el)}
                   type="text"
                   maxLength={1}
                   value={digit}
@@ -124,7 +128,13 @@ function VerifyCode() {
               <div className="text-red-300 text-center text-sm">{formik.errors.code}</div>
             )}
 
-            <div className="text-center text-white underline cursor-pointer mb-4" onClick={resendCode}>
+            <div
+              className="text-center text-white underline cursor-pointer mb-4"
+              onClick={resendCode}
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => { if (e.key === 'Enter') resendCode(); }}
+            >
               دوباره ارسال شود
             </div>
 

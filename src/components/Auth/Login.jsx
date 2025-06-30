@@ -30,11 +30,9 @@ function Login() {
         
         console.log('ورودی‌ها:', values);
 
-        // بعد از لاگین موفق، هدایت به صفحه اصلی:
         navigate('/');
 
       } catch (error) {
-        // اگر خطایی برگشت، اینجا هندل کن
         setErrors({ submit: 'خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید.' });
       } finally {
         setSubmitting(false);
@@ -45,7 +43,6 @@ function Login() {
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4">
 
-      {/* دکمه بازگشت */}
       <motion.img
         src={assets.back}
         alt="بازگشت"
@@ -58,7 +55,6 @@ function Login() {
 
       <div className="flex flex-col md:flex-row w-full max-w-6xl">
 
-        {/* تصویر سمت چپ */}
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -72,7 +68,6 @@ function Login() {
           />
         </motion.div>
 
-        {/* فرم سمت راست */}
         <motion.div
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -141,7 +136,6 @@ function Login() {
               من را به خاطر بسپار
             </label>
 
-            {/* نمایش خطای سرور */}
             {formik.errors.submit && (
               <div className="text-red-500 text-center text-sm">
                 {formik.errors.submit}

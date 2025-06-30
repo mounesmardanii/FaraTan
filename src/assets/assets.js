@@ -13,6 +13,9 @@ import loginpic from './loginpic.png'
 import signuppic from './signuppic.png'
 import freepik from './freepik.png'
 import Verifypic from './Verifypic.png'
+import welcompic from './welcompic.png'
+import upload from './upload.png'
+
 
 
 export const assets = {
@@ -30,5 +33,7 @@ export const assets = {
     loginpic,
     signuppic,
     freepik,
-    Verifypic
+    Verifypic,
+    welcompic,
+    upload
 }

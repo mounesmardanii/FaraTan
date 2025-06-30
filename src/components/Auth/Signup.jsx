@@ -33,10 +33,8 @@ function Signup() {
 
         console.log('ورودی‌های ثبت‌نام:', values);
         
-        // بعد از ثبت موفقیت‌آمیز کاربر رو به صفحه بعد هدایت کنید:
         navigate('/verify');
       } catch (error) {
-        // اگر خطایی از سرور اومد، اینجا هندلش کنید
         setErrors({ submit: 'خطایی در ثبت‌نام رخ داد. دوباره تلاش کنید.' });
       } finally {
         setSubmitting(false);
@@ -47,7 +45,6 @@ function Signup() {
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4">
 
-      {/* دکمه بازگشت */}
       <motion.img
         src={assets.back}
         alt="بازگشت"
@@ -60,7 +57,6 @@ function Signup() {
 
       <div className="flex flex-col md:flex-row w-full max-w-6xl">
 
-        {/* تصویر سمت چپ */}
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -74,7 +70,6 @@ function Signup() {
           />
         </motion.div>
 
-        {/* فرم سمت راست */}
         <motion.div
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -162,7 +157,6 @@ function Signup() {
               )}
             </div>
 
-            {/* خطای ارسال */}
             {formik.errors.submit && (
               <div className="text-red-500 text-center text-sm">
                 {formik.errors.submit}

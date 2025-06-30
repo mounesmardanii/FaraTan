@@ -5,10 +5,11 @@ import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import VerifyCodePage from './pages/VerifyCodePage';
+import LoginFormPage from './pages/LoginFormPage'; 
 
 function LayoutWrapper() {
   const location = useLocation();
-  const hideLayout = ['/login', '/signup', '/verify'].includes(location.pathname);
+  const hideLayout = ['/login', '/signup', '/verify', '/loginform'].includes(location.pathname);
 
   return (
     <>
@@ -18,6 +19,7 @@ function LayoutWrapper() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/verify" element={<VerifyCodePage />} />
+        <Route path="/loginform" element={<LoginFormPage />} />
       </Routes>
       {!hideLayout && <Footer />}
     </>
