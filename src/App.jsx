@@ -5,11 +5,23 @@ import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import VerifyCodePage from './pages/VerifyCodePage';
-import LoginFormPage from './pages/LoginFormPage'; 
+import LoginFormPage from './pages/LoginFormPage';
+import RegisterInfoPage from './pages/RegisterInfoPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import NewPasswordPage from './pages/NewPasswordPage';
 
 function LayoutWrapper() {
   const location = useLocation();
-  const hideLayout = ['/login', '/signup', '/verify', '/loginform'].includes(location.pathname);
+
+  const hideLayout = [
+    '/login',
+    '/signup',
+    '/verify',
+    '/loginform',
+    '/register-info',
+    '/forgot-password',
+    '/new-password', 
+  ].includes(location.pathname);
 
   return (
     <>
@@ -20,6 +32,9 @@ function LayoutWrapper() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/verify" element={<VerifyCodePage />} />
         <Route path="/loginform" element={<LoginFormPage />} />
+        <Route path="/register-info" element={<RegisterInfoPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/new-password" element={<NewPasswordPage />} />
       </Routes>
       {!hideLayout && <Footer />}
     </>

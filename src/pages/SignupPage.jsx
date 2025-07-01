@@ -2,7 +2,11 @@ import React from 'react';
 import Signup from '../components/Auth/Signup';
 
 function SignupPage() {
-  return <Signup />;
+  return (
+    <div>
+      <Signup />
+    </div>
+  );
 }
 
 export default SignupPage;

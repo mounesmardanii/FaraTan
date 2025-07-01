@@ -23,16 +23,14 @@ function LoginForm() {
     },
     validationSchema: Yup.object({
       gender: Yup.string().required('جنسیت الزامی است'),
-      birthDate: Yup.date().required('تاریخ تولد الزامی است'),
-      height: Yup.number()
-        .required('قد الزامی است')
-        .positive('قد باید عدد مثبت باشد'),
+      birthDate: Yup.mixed().required('تاریخ تولد الزامی است'),
+      height: Yup.number().required('قد الزامی است').positive('قد باید عدد مثبت باشد'),
       medicalCondition: Yup.string(),
       sportGoal: Yup.string(),
     }),
     onSubmit: (values) => {
       console.log('اطلاعات فرم:', values);
-      alert('اطلاعات با موفقیت ثبت شد!');
+      navigate('/register-info');
     },
   });
 
@@ -43,9 +41,15 @@ function LoginForm() {
 
   return (
     <div
-      className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4"
+      className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4 overflow-hidden"
       dir="rtl"
     >
+      <img
+        src={assets.bag}
+        alt="پس‌زمینه موج"
+        className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none"
+      />
+
       <motion.img
         src={assets.back}
         alt="بازگشت"
@@ -56,35 +60,24 @@ function LoginForm() {
         style={{ filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.3))' }}
       />
 
-      <div className="flex flex-col md:flex-row w-full max-w-6xl mt-16 md:mt-0">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl mt-16 md:mt-0 z-10">
         <motion.div
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
           className="md:w-1/2 bg-[#055B5C] text-white px-6 md:px-10 py-6 md:py-8 relative rounded-3xl shadow-2xl mx-0 md:mx-4 flex flex-col justify-center"
         >
-          <div className="text-center mb-4 md:mb-6" style={{ direction: 'rtl' }}>
-            <h2 className="text-lg md:text-2xl font-extrabold text-[#FF6600] mb-1 cursor-context-menu">
-              خوش آمدی به جمع ما.
-            </h2>
-            <p className="text-xs md:text-base cursor-context-menu">
-              پیش از ادامه <br />
-              اطلاعات خود را وارد کنید
-            </p>
+          <div className="text-center mb-4 md:mb-6">
+            <h2 className="text-lg md:text-2xl font-extrabold text-[#FF6600] mb-1">خوش آمدی به جمع ما.</h2>
+            <p className="text-xs md:text-base">پیش از ادامه اطلاعات خود را وارد کن</p>
           </div>
 
           <form
             onSubmit={formik.handleSubmit}
             className="flex flex-col space-y-4 text-xs md:text-sm"
-            dir="rtl"
           >
             <div className="flex items-center justify-between gap-4">
-              <label
-                htmlFor="gender"
-                className="w-1/3 text-right text-white font-semibold cursor-pointer"
-              >
-                جنسیت
-              </label>
+              <label htmlFor="gender" className="w-1/3 text-right text-white font-semibold">جنسیت</label>
               <select
                 id="gender"
                 name="gender"
@@ -99,16 +92,11 @@ function LoginForm() {
               </select>
             </div>
             {formik.touched.gender && formik.errors.gender && (
-              <div className="text-red-300 text-xs mt-1 text-right">{formik.errors.gender}</div>
+              <div className="text-red-300 text-xs text-right">{formik.errors.gender}</div>
             )}
 
             <div className="flex items-center justify-between gap-4">
-              <label
-                htmlFor="birthDate"
-                className="w-1/3 text-right text-white font-semibold cursor-pointer"
-              >
-                تاریخ تولد
-              </label>
+              <label htmlFor="birthDate" className="w-1/3 text-right text-white font-semibold">تاریخ تولد</label>
               <div className="w-2/3">
                 <DatePicker
                   calendar={persian}
@@ -124,16 +112,11 @@ function LoginForm() {
               </div>
             </div>
             {formik.touched.birthDate && formik.errors.birthDate && (
-              <div className="text-red-300 text-xs mt-1 text-right">{formik.errors.birthDate}</div>
+              <div className="text-red-300 text-xs text-right">{formik.errors.birthDate}</div>
             )}
 
             <div className="flex items-center justify-between gap-4">
-              <label
-                htmlFor="height"
-                className="w-1/3 text-right text-white font-semibold cursor-pointer"
-              >
-                قد
-              </label>
+              <label htmlFor="height" className="w-1/3 text-right text-white font-semibold">قد</label>
               <input
                 id="height"
                 type="number"
@@ -146,16 +129,11 @@ function LoginForm() {
               />
             </div>
             {formik.touched.height && formik.errors.height && (
-              <div className="text-red-300 text-xs mt-1 text-right">{formik.errors.height}</div>
+              <div className="text-red-300 text-xs text-right">{formik.errors.height}</div>
             )}
 
             <div className="flex items-center justify-between gap-4">
-              <label
-                htmlFor="medicalCondition"
-                className="w-1/3 text-right text-white font-semibold cursor-pointer"
-              >
-                شرایط پزشکی:
-              </label>
+              <label htmlFor="medicalCondition" className="w-1/3 text-right text-white font-semibold">شرایط پزشکی:</label>
               <input
                 id="medicalCondition"
                 type="text"
@@ -169,17 +147,12 @@ function LoginForm() {
             </div>
 
             <div className="flex items-center justify-between gap-4">
-              <label
-                htmlFor="sportGoal"
-                className="w-1/3 text-right text-white font-semibold cursor-pointer"
-              >
-                هدف شما از ورزش چیست؟
-              </label>
+              <label htmlFor="sportGoal" className="w-1/3 text-right text-white font-semibold">هدف شما از ورزش چیست؟</label>
               <input
                 id="sportGoal"
                 type="text"
                 name="sportGoal"
-                placeholder="مثلا افزایش استقامت، کاهش وزن و ..."
+                placeholder="مثلا کاهش وزن یا عضله‌سازی"
                 value={formik.values.sportGoal}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -188,27 +161,15 @@ function LoginForm() {
             </div>
 
             <div className="flex items-center gap-4 justify-between">
-              <label
-                htmlFor="photoInput"
-                className="text-white font-semibold cursor-pointer"
-                style={{ minWidth: '150px' }}
-              >
-                عکس خود را انتخاب کنید
-              </label>
-
+              <label htmlFor="photoInput" className="text-white font-semibold" style={{ minWidth: '150px' }}>عکس خود را انتخاب کنید</label>
               <div className="flex items-center gap-4 flex-grow">
                 <label htmlFor="photoInput" className="cursor-pointer">
-                  <img
-                    src={assets.upload}
-                    alt="upload icon"
-                    className="w-8 h-8 object-contain"
-                  />
+                  <img src={assets.upload} alt="upload icon" className="w-8 h-8 object-contain" />
                 </label>
                 <span className="text-white text-sm truncate max-w-[160px]">
                   {formik.values.photo ? formik.values.photo.name : 'فایلی انتخاب نشده'}
                 </span>
               </div>
-
               <input
                 id="photoInput"
                 type="file"
@@ -224,7 +185,7 @@ function LoginForm() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 200 }}
-              className="bg-[#FF6600] hover:brightness-90 transition-all py-2 rounded-xl text-white font-bold text-lg cursor-pointer"
+              className="bg-[#FF6600] hover:brightness-90 transition-all py-2 rounded-xl text-white font-bold text-lg"
             >
               ادامه
             </motion.button>
@@ -235,7 +196,7 @@ function LoginForm() {
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="md:w-1/2 flex items-center justify-center p-4 md:p-10 bg-[#9FC6C3]"
+          className="md:w-1/2 flex items-center justify-center p-4 md:p-10"
         >
           <img
             src={assets.welcompic}
@@ -243,6 +204,7 @@ function LoginForm() {
             className="w-full max-w-[300px] md:max-w-[600px]"
           />
         </motion.div>
+
       </div>
     </div>
   );

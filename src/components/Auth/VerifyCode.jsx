@@ -22,7 +22,7 @@ function VerifyCode() {
     onSubmit: () => {
       if (formik.values.code.length === 4) {
         console.log('کد تایید:', formik.values.code);
-        navigate('/loginform');  
+        navigate('/loginform');
       } else {
         alert('لطفا تمام ۴ رقم کد را وارد کنید.');
       }
@@ -55,7 +55,13 @@ function VerifyCode() {
   };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4">
+    <div className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4 overflow-hidden">
+
+      <img
+        src={assets.bag}
+        alt="پس‌زمینه موج"
+        className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none"
+      />
 
       <motion.img
         src={assets.back}
@@ -67,13 +73,13 @@ function VerifyCode() {
         style={{ filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.3))' }}
       />
 
-      <div className="flex flex-col md:flex-row-reverse w-full max-w-6xl">
+      <div className="flex flex-col md:flex-row-reverse w-full max-w-6xl z-10">
 
         <motion.div
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="md:w-1/2 flex items-center justify-center p-4 md:p-10 bg-[#9FC6C3]"
+          className="md:w-1/2 flex items-center justify-center p-4 md:p-10 bg-transparent"
         >
           <img
             src={assets.Verifypic}
@@ -87,7 +93,6 @@ function VerifyCode() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
           className="md:w-1/2 bg-[#055B5C] text-white px-6 md:px-14 py-6 md:py-12 relative rounded-3xl shadow-2xl mx-0 md:mx-4 flex flex-col justify-center"
-          style={{ position: 'relative' }}
         >
           <img
             src={assets.freepik}

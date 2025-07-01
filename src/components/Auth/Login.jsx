@@ -25,13 +25,8 @@ function Login() {
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         setSubmitting(true);
-        // اینجا می‌تونی درخواست API بزنی، مثلا:
-        // await api.login(values);
-        
         console.log('ورودی‌ها:', values);
-
         navigate('/');
-
       } catch (error) {
         setErrors({ submit: 'خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید.' });
       } finally {
@@ -41,7 +36,13 @@ function Login() {
   });
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4">
+    <div className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4 overflow-hidden">
+
+      <img
+        src={assets.bag}
+        alt="پس‌زمینه موج"
+        className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none"
+      />
 
       <motion.img
         src={assets.back}
@@ -53,26 +54,27 @@ function Login() {
         style={{ filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.3))' }}
       />
 
-      <div className="flex flex-col md:flex-row w-full max-w-6xl">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl z-10">
 
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="md:w-1/2 flex items-center justify-center p-4 md:p-10 bg-[#9FC6C3]"
+          className="md:w-1/2 flex items-center justify-center p-4 md:p-10 bg-transparent"
         >
           <img
             src={assets.loginpic}
             alt="login illustration"
-            className="w-full max-w-[300px] md:max-w-[600px]"
+            className="w-full max-w-[300px] md:max-w-[400px]"
           />
+
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="md:w-1/2 bg-[#055B5C] text-white px-4 md:px-10 py-6 md:py-12 relative rounded-3xl shadow-2xl mx-0 md:mx-4 flex flex-col justify-center"
+          className="md:w-1/2 md:h-1/2 bg-[#055B5C] text-white px-4 md:px-10 py-6 md:py-12 relative rounded-3xl shadow-2xl mx-0 md:mx-4 md:mt-13 flex flex-col justify-center"
         >
 
           <div className="text-center mb-6 md:mb-8">
@@ -84,14 +86,14 @@ function Login() {
             </p>
           </div>
 
-          <form onSubmit={formik.handleSubmit} className="flex flex-col space-y-6 md:space-y-8 text-xs md:text-base">
+          <form onSubmit={formik.handleSubmit} className="flex flex-col space-y-4 md:space-y-6 text-xs md:text-base">
 
             <div>
               <input
                 type="text"
                 name="phone"
                 placeholder="شماره تلفن خود را وارد کنید"
-                className="w-full p-2 rounded bg-[#d9d9d9] border border-gray-300 text-black text-right text-xs md:text-base"
+                className="w-full py-2 px-3 rounded bg-[#d9d9d9] border border-gray-300 text-black text-right"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.phone}
@@ -107,14 +109,14 @@ function Login() {
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   placeholder="رمز عبور خود را وارد کنید"
-                  className="w-full p-2 rounded bg-[#d9d9d9] border border-gray-300 text-black text-right pr-10 md:pr-12 text-xs md:text-base hide-password-toggle"
+                  className="w-full py-2 px-3 rounded bg-[#d9d9d9] border border-gray-300 text-black text-right pr-10"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.password}
                 />
                 <motion.span
                   onClick={togglePassword}
-                  className="absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-lg md:text-xl text-[#055B5C]"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-lg text-[#055B5C]"
                   whileTap={{ rotate: 180 }}
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
@@ -125,7 +127,7 @@ function Login() {
               )}
             </div>
 
-            <label className="flex flex-row-reverse items-center gap-2 text-white text-xs md:text-sm cursor-pointer mt-2">
+            <label className="flex flex-row-reverse items-center gap-2 text-white text-xs md:text-sm cursor-pointer mt-1">
               <input
                 type="checkbox"
                 name="remember"
@@ -137,9 +139,7 @@ function Login() {
             </label>
 
             {formik.errors.submit && (
-              <div className="text-red-500 text-center text-sm">
-                {formik.errors.submit}
-              </div>
+              <div className="text-red-500 text-center text-sm">{formik.errors.submit}</div>
             )}
 
             <motion.button
@@ -148,21 +148,21 @@ function Login() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 200 }}
-              className={`bg-[#FF6600] hover:brightness-90 transition-all p-2 rounded-xl text-white font-bold text-sm md:text-lg mt-2 cursor-pointer ${
-                formik.isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-              }`}
+              className={`bg-[#FF6600] hover:brightness-90 transition-all py-2 px-3 rounded-xl text-white font-bold text-sm md:text-lg mt-4 ${formik.isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
             >
               ورود
             </motion.button>
           </form>
 
+
           <div className="flex flex-col gap-2 text-xs md:text-sm text-white mt-4 text-right">
-            <a
-              href="#"
+            <Link
+              to="/forgot-password"
               className="hover:text-[#FF6600] cursor-pointer transition-colors"
             >
               رمز عبور خود را فراموش کرده‌اید؟
-            </a>
+            </Link>
             <Link
               to="/signup"
               className="hover:text-[#FF6600] cursor-pointer transition-colors"
@@ -170,7 +170,6 @@ function Login() {
               آیا هنوز ثبت‌نام نکرده‌اید؟ <span className="ml-1">ثبت‌نام</span>
             </Link>
           </div>
-
         </motion.div>
       </div>
     </div>
