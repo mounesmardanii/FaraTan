@@ -1,44 +1,60 @@
-import React from 'react';
-import { assets } from '../../assets/assets';
+import React from "react";
+import { assets } from "../../assets/assets";
+import { useNavigate } from "react-router-dom";
 
 const cardData = [
   {
-    title: 'برنامه ۱ ساله – سرمایه‌گذاری روی بدن و ذهن',
-    description: 'تعهد یک‌ساله یعنی جدی گرفتن خودت، در این مسیر ما همراهت هستیم',
+    title: "برنامه ۱ ساله – سرمایه‌گذاری روی بدن و ذهن",
+    description:
+      "تعهد یک‌ساله یعنی جدی گرفتن خودت، در این مسیر ما همراهت هستیم",
     points: [
-      'بهترین قیمت نسبت به مدت',
-      'برنامه‌ریزی دقیق بلندمدت',
-      'پشتیبانی مداوم مربیان',
+      "بهترین قیمت نسبت به مدت",
+      "برنامه‌ریزی دقیق بلندمدت",
+      "پشتیبانی مداوم مربیان",
     ],
-    footer: '!سال جدید رو با خودی قوی‌تر شروع کن',
+    footer: "!سال جدید رو با خودی قوی‌تر شروع کن",
     crown: true,
+    path: "/plan/1year",
   },
   {
-    title: 'برنامه ۶ ماهه – ثبات، پیشرفت، انگیزه',
-    description: 'با این پلن به قدم ذهنت نزدیک‌تر می‌شی و پیشرفت واقعی رو حس می‌کنی',
+    title: "برنامه ۶ ماهه – ثبات، پیشرفت، انگیزه",
+    description:
+      "با این پلن به قدم ذهنت نزدیک‌تر می‌شی و پیشرفت واقعی رو حس می‌کنی",
     points: [
-      'مناسب برای ادامه‌دهنده‌ها',
-      'ترکیب برنامه تغذیه و تمرین',
-      'پیگیری و ارزیابی منظم',
+      "مناسب برای ادامه‌دهنده‌ها",
+      "ترکیب برنامه تغذیه و تمرین",
+      "پیگیری و ارزیابی منظم",
     ],
-    footer: '!نیم‌سال سلامتی رو با انگیزه بساز',
+    footer: "!نیم‌سال سلامتی رو با انگیزه بساز",
+    path: "/plan/6months",
   },
   {
-    title: 'برنامه ۳ ماهه – شروعی برای تغییر',
-    description: 'اگر تازه می‌خوای ورزش رو شروع کنی یا به دنبال یک بازگشت جدی هستی، این دوره نقطه‌ی شروعه',
+    title: "برنامه ۳ ماهه – شروعی برای تغییر",
+    description:
+      "اگر تازه می‌خوای ورزش رو شروع کنی یا به دنبال یک بازگشت جدی هستی، این دوره نقطه‌ی شروعه",
     points: [
-      'مناسب برای مبتدی‌ها',
-      'رسیدن به فرم اولیه بدن',
-      'ایجاد عادت ورزشی منظم',
+      "مناسب برای مبتدی‌ها",
+      "رسیدن به فرم اولیه بدن",
+      "ایجاد عادت ورزشی منظم",
     ],
-    footer: '!همین امروز شروع کن و خودتو به چالش بکش',
+    footer: "!همین امروز شروع کن و خودتو به چالش بکش",
+    path: "/plan/3months",
   },
 ];
 
-const TrainingCard = ({ title, description, points, footer, crown }) => (
+const TrainingCard = ({
+  title,
+  description,
+  points,
+  footer,
+  crown,
+  onClick,
+}) => (
   <div
-    className={`relative bg-[#D1E7D8] rounded-3xl p-4 md:p-6 w-full md:w-1/3 shadow-md text-xs md:text-sm leading-relaxed text-right cursor-pointer transition-all duration-300 transform hover:scale-105 hover:brightness-95 ${crown ? 'border-2 border-yellow-400' : ''
-      }`}
+    onClick={onClick}
+    className={`relative bg-[#D1E7D8] rounded-3xl p-4 md:p-6 w-full md:w-1/3 shadow-md text-xs md:text-sm leading-relaxed text-right cursor-pointer transition-all duration-300 transform hover:scale-105 hover:brightness-95 ${
+      crown ? "border-2 border-yellow-400" : ""
+    }`}
   >
     <h3 className="font-extrabold text-[#055B5C] mb-2 text-sm md:text-base leading-snug">
       {title}
@@ -54,7 +70,9 @@ const TrainingCard = ({ title, description, points, footer, crown }) => (
       ))}
     </ul>
 
-    <p className="mt-4 font-bold text-[#055B5C] text-[11px] md:text-sm">{footer}</p>
+    <p className="mt-4 font-bold text-[#055B5C] text-[11px] md:text-sm">
+      {footer}
+    </p>
 
     {crown && (
       <img
@@ -67,11 +85,17 @@ const TrainingCard = ({ title, description, points, footer, crown }) => (
 );
 
 function TrainingPackages() {
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       <div className="flex flex-col md:flex-row gap-6 justify-center items-stretch">
         {cardData.map((card, idx) => (
-          <TrainingCard key={idx} {...card} />
+          <TrainingCard
+            key={idx}
+            {...card}
+            onClick={() => navigate(card.path)}
+          />
         ))}
       </div>
     </div>

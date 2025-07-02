@@ -16,6 +16,9 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import NewPasswordPage from "./pages/NewPasswordPage";
 import CoachProfile from "./pages/CoachProfile";
 import StartTraining from "./pages/StartTraining";
+import OneYearPlan from "./pages/TrainingPlans/OneYearPlan";
+import SixMonthPlan from "./pages/TrainingPlans/SixMonthPlan";
+import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
 
 function LayoutWrapper() {
   const location = useLocation();
@@ -44,6 +47,9 @@ function LayoutWrapper() {
         <Route path="/new-password" element={<NewPasswordPage />} />
         <Route path="/start-training" element={<StartTraining />} />
         <Route path="/coach-profile" element={<CoachProfile />} />
+        <Route path="/plan/1year" element={<OneYearPlan />} />
+        <Route path="/plan/6months" element={<SixMonthPlan />} />
+        <Route path="/plan/3months" element={<ThreeMonthPlan />} />
       </Routes>
       {!hideLayout && <Footer />}
     </>
