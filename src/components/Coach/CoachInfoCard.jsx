@@ -106,7 +106,7 @@ const CoachInfoCard = () => {
                 <div className="mt-1.5">
                   <button
                     type="submit"
-                    className="w-full bg-[#256250] text-white py-1 rounded-md hover:bg-[#1E4D43] transition text-[12px] sm:text-xs"
+                    className="w-full bg-[#256250] text-white py-1 rounded-md hover:bg-[#1E4D43] transition text-[12px] sm:text-xs cursor-pointer"
                   >
                     ذخیره تغییرات
                   </button>
@@ -145,7 +145,7 @@ const CoachInfoCard = () => {
             <div className="pt-2 border-t border-[#ccc]">
               <button
                 onClick={() => setEditMode(true)}
-                className="w-full bg-[#256250] text-white py-1 sm:py-2 rounded-md hover:bg-[#1E4D43] text-[12px] sm:text-base transition"
+                className="w-full bg-[#256250] text-white py-1 sm:py-2 rounded-md hover:bg-[#1E4D43] text-[12px] sm:text-base transition cursor-pointer"
               >
                 ویرایش اطلاعات
               </button>

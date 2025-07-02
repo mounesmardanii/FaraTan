@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import ClassTable from "../components/Coach/ClassTable";
 import CoachInfoCard from "../components/Coach/CoachInfoCard";
+import ScrollToTopButton from "../components/ScrollToTopButton";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -34,6 +35,7 @@ const CoachProfile = () => {
           <CoachInfoCard />
         </motion.div>
       </div>
+      <ScrollToTopButton />
     </div>
   );
 };

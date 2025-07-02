@@ -72,7 +72,7 @@ const ClassTable = () => {
                   className={`px-2 py-1 rounded-xl text-sm w-full max-w-[90px] mx-auto transition ${
                     item.status === "تکمیل شده"
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      : "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC]"
+                      : "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
                   }`}
                 >
                   رزرو

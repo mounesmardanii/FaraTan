@@ -11,7 +11,7 @@ function Footer() {
 
   return (
     <footer
-      id="footer"
+      id="contact"
       className="bg-[#EDEDED] text-right px-6 md:px-12 py-12 mt-20"
     >
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">

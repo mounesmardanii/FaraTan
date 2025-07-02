@@ -11,6 +11,11 @@ function Navbar() {
     navigate("/login");
   };
 
+  const handleNavigate = (path) => {
+    navigate(path);
+    setMenuOpen(false); // بستن منو بعد از مسیردهی
+  };
+
   return (
     <header className="relative w-full py-4 px-[20px] md:px-[50px] lg:px-[100px] bg-white">
       <div className="flex items-center justify-between w-full">
@@ -24,24 +29,37 @@ function Navbar() {
 
           <nav className="hidden md:flex gap-10 text-[#055B5C] font-extrabold text-[18px]">
             <a
-              href="#footer"
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" });
+                setMenuOpen(false);
+              }}
               className="hover:text-[#FF6600] transition-colors duration-300"
             >
               ارتباط با ما
             </a>
             <a
               href="#about"
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .getElementById("about")
+                  ?.scrollIntoView({ behavior: "smooth" });
+                setMenuOpen(false);
+              }}
               className="hover:text-[#FF6600] transition-colors duration-300"
             >
               درباره ما
             </a>
             <a
-              onClick={() => navigate("/start-training")}
+              onClick={() => handleNavigate("/start-training")}
               className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
             >
               شروع بدنسازی
             </a>
-
             <a
               href="/"
               className="hover:text-[#FF6600] transition-colors duration-300"
@@ -66,6 +84,7 @@ function Navbar() {
         </div>
       </div>
 
+      {/* منوی موبایل */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -78,25 +97,39 @@ function Navbar() {
             <nav className="flex gap-10 text-[#055B5C] font-extrabold text-[16px]">
               <a
                 href="#contact"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById("contact")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                  setMenuOpen(false);
+                }}
                 className="hover:text-[#FF6600] transition-colors duration-300"
               >
                 ارتباط با ما
               </a>
               <a
                 href="#about"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById("about")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                  setMenuOpen(false);
+                }}
                 className="hover:text-[#FF6600] transition-colors duration-300"
               >
                 درباره ما
               </a>
               <a
-                onClick={() => navigate("/start-training")}
+                onClick={() => handleNavigate("/start-training")}
                 className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
               >
                 شروع بدنسازی
               </a>
-
               <a
-                href="#home"
+                href="/"
+                onClick={() => setMenuOpen(false)}
                 className="hover:text-[#FF6600] transition-colors duration-300"
               >
                 خانه
