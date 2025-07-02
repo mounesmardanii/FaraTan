@@ -19,7 +19,12 @@ import bag from "./bag.png";
 import forgetpic from "./forgetpic.svg";
 import newpasspic from "./newpasspic.svg";
 
+import BodybuildingPic from "./BodybuildingPic.png";
+import woman1 from "./woman1.png";
+
 export const assets = {
+  BodybuildingPic,
+  woman1,
   menu,
   headerPic,
   Bodybuilding,

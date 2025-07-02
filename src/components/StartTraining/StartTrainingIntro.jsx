@@ -59,7 +59,7 @@ const StartTrainingIntro = () => {
         {coaches.map((coach, index) => (
           <motion.div
             key={index}
-            onClick={() => navigate(`/coach/${coach.id}`)}
+            onClick={() => navigate("/coach-profile")}
             className="flex flex-col items-center gap-2 bg-[#F2F2F2] rounded-[150px] py-6 shadow-md w-[200px] h-[300px] hover:scale-105 transition-transform"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
