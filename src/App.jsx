@@ -19,7 +19,10 @@ import StartTraining from "./pages/StartTraining";
 import OneYearPlan from "./pages/TrainingPlans/OneYearPlan";
 import SixMonthPlan from "./pages/TrainingPlans/SixMonthPlan";
 import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
-import DashboardPage from "./admin/pages/DashpoardPage"; // از stash
+import DashboardPage from "./admin/pages/DashpoardPage"; // پنل ادمین
+import ProfilePage from "./pages/ProfilePage";
+import MyReservations from "./pages/MyReservations";
+import MyPurchases from "./pages/MyPurchases";
 
 function LayoutWrapper() {
   const location = useLocation();
@@ -32,7 +35,7 @@ function LayoutWrapper() {
     "/register-info",
     "/forgot-password",
     "/new-password",
-    "/admin", // از stash
+    "/admin", // صفحه ادمین بدون Navbar و Footer
   ].includes(location.pathname);
 
   return (
@@ -52,7 +55,10 @@ function LayoutWrapper() {
         <Route path="/plan/1year" element={<OneYearPlan />} />
         <Route path="/plan/6months" element={<SixMonthPlan />} />
         <Route path="/plan/3months" element={<ThreeMonthPlan />} />
-        <Route path="/admin" element={<DashboardPage />} /> {/* از stash */}
+        <Route path="/admin" element={<DashboardPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/my-reservations" element={<MyReservations />} />
+        <Route path="/my-purchases" element={<MyPurchases />} />
       </Routes>
       {!hideLayout && <Footer />}
     </>

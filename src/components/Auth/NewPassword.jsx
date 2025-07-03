@@ -1,31 +1,38 @@
-import React from 'react';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { assets } from '../../assets/assets';
+import React from "react";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { assets } from "../../assets/assets";
 
 const NewPassword = () => {
   const navigate = useNavigate();
 
   const formVariants = {
     hidden: { opacity: 0, scale: 0.95, y: 30 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
   };
 
   return (
     <Formik
-      initialValues={{ password: '', confirmPassword: '' }}
+      initialValues={{ password: "", confirmPassword: "" }}
       validationSchema={Yup.object({
-        password: Yup.string().min(6, 'رمز باید حداقل ۶ کاراکتر باشد').required('رمز جدید الزامی است'),
+        password: Yup.string()
+          .min(6, "رمز باید حداقل ۶ کاراکتر باشد")
+          .required("رمز جدید الزامی است"),
         confirmPassword: Yup.string()
-          .oneOf([Yup.ref('password'), null], 'رمزها مطابقت ندارند')
-          .required('تأیید رمز الزامی است'),
+          .oneOf([Yup.ref("password"), null], "رمزها مطابقت ندارند")
+          .required("تأیید رمز الزامی است"),
       })}
       onSubmit={(values) => {
-        console.log('رمز جدید تنظیم شد:', values);
-        alert('رمز جدید با موفقیت ذخیره شد.');
-        navigate('/login');
+        console.log("رمز جدید تنظیم شد:", values);
+        alert("رمز جدید با موفقیت ذخیره شد.");
+        navigate("/login");
       }}
     >
       {(formik) => (
@@ -42,11 +49,11 @@ const NewPassword = () => {
           <motion.img
             src={assets.back}
             alt="بازگشت"
-            onClick={() => navigate('/login')}
+            onClick={() => navigate("/login")}
             whileHover={{ scale: 1.15 }}
-            transition={{ type: 'spring', stiffness: 300 }}
+            transition={{ type: "spring", stiffness: 300 }}
             className="absolute top-4 right-4 w-8 h-8 cursor-pointer z-50"
-            style={{ filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.3))' }}
+            style={{ filter: "drop-shadow(0 0 2px rgba(0,0,0,0.3))" }}
           />
 
           <div className="w-full max-w-6xl z-10 md:flex items-center gap-10">
@@ -91,7 +98,9 @@ const NewPassword = () => {
                   className="w-full p-2 sm:p-3 rounded-xl bg-gray-100 text-black text-right text-sm"
                 />
                 {formik.touched.password && formik.errors.password && (
-                  <div className="text-red-300 text-xs text-right">{formik.errors.password}</div>
+                  <div className="text-red-300 text-xs text-right">
+                    {formik.errors.password}
+                  </div>
                 )}
 
                 <input
@@ -103,22 +112,24 @@ const NewPassword = () => {
                   onBlur={formik.handleBlur}
                   className="w-full p-2 sm:p-3 rounded-xl bg-gray-100 text-black text-right text-sm"
                 />
-                {formik.touched.confirmPassword && formik.errors.confirmPassword && (
-                  <div className="text-red-300 text-xs text-right">{formik.errors.confirmPassword}</div>
-                )}
+                {formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword && (
+                    <div className="text-red-300 text-xs text-right">
+                      {formik.errors.confirmPassword}
+                    </div>
+                  )}
 
                 <motion.button
                   type="submit"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 200 }}
+                  transition={{ type: "spring", stiffness: 200 }}
                   className="w-full py-2 sm:py-3 bg-[#FF6600] text-white font-bold text-sm sm:text-lg rounded-xl cursor-pointer"
                 >
                   ثبت رمز جدید
                 </motion.button>
               </motion.form>
             </motion.div>
-
 
             <motion.div
               initial={{ opacity: 0, x: -80 }}
