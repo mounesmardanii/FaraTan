@@ -25,16 +25,14 @@ function Navbar() {
   return (
     <header className="relative w-full py-4 px-[20px] md:px-[50px] lg:px-[100px] bg-white">
       <div className="flex items-center justify-between w-full">
-        {/* سمت راست */}
         <div className="flex items-center gap-3 md:gap-10">
-          {/* دکمه ورود یا پروفایل */}
           <div className="relative">
             {!user ? (
               <button
                 onClick={handleLoginClick}
                 className="bg-[#055B5C] text-white px-4 py-2 text-[14px] rounded-full md:px-6 md:py-2 md:text-[16px] flex items-center justify-center transition-all duration-300 hover:bg-[#044041] hover:scale-105 cursor-pointer"
               >
-                <span className="relative -top-[2px]">ورود/ثبت‌نام</span>
+                ورود / ثبت‌نام
               </button>
             ) : (
               <div>
@@ -47,24 +45,43 @@ function Navbar() {
 
                 {showDropdown && (
                   <div className="absolute top-full left-0 bg-white rounded-md shadow-md mt-2 py-2 w-48 text-right z-50">
-                    <button
-                      onClick={() => handleNavigate("/profile")}
-                      className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
-                    >
-                      پروفایل من
-                    </button>
-                    <button
-                      onClick={() => handleNavigate("/my-reservations")}
-                      className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
-                    >
-                      رزروهای من
-                    </button>
-                    <button
-                      onClick={() => handleNavigate("/my-purchases")}
-                      className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
-                    >
-                      خریدهای من
-                    </button>
+                    {user.role === "admin" ? (
+                      <>
+                        <button
+                          onClick={() => handleNavigate("/admin")}
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                        >
+                          ورود به پنل ادمین
+                        </button>
+                        <button
+                          onClick={() => handleNavigate("/profile")}
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                        >
+                          پروفایل من
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleNavigate("/profile")}
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                        >
+                          پروفایل من
+                        </button>
+                        <button
+                          onClick={() => handleNavigate("/my-reservations")}
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                        >
+                          رزروهای من
+                        </button>
+                        <button
+                          onClick={() => handleNavigate("/my-purchases")}
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                        >
+                          خریدهای من
+                        </button>
+                      </>
+                    )}
                     <button
                       onClick={logout}
                       className="block w-full text-right px-4 py-2 text-red-600 hover:bg-gray-100"
@@ -77,7 +94,6 @@ function Navbar() {
             )}
           </div>
 
-          {/* منوی دسکتاپ */}
           <nav className="hidden md:flex gap-10 text-[#055B5C] font-extrabold text-[18px]">
             <a
               href="#contact"
@@ -117,7 +133,6 @@ function Navbar() {
             </a>
           </nav>
 
-          {/* دکمه منوی موبایل */}
           <div className="md:hidden flex items-center gap-4">
             <button onClick={() => setMenuOpen(!menuOpen)}>
               <img
@@ -129,13 +144,11 @@ function Navbar() {
           </div>
         </div>
 
-        {/* لوگو وسط */}
         <div className="text-[#FF6600] font-extrabold text-[18px] md:text-[28px] text-center cursor-context-menu">
           باشگاه فراتن
         </div>
       </div>
 
-      {/* منوی موبایل */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -145,7 +158,7 @@ function Navbar() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="absolute top-full left-0 w-full flex justify-center md:hidden bg-white py-3 border-b-[3px] border-[#FF6600] rounded-b-full z-50"
           >
-            <nav className="flex flex-col gap-3 items-center text-[#055B5C] font-extrabold text-[16px]">
+            <nav className="flex flex-row gap-6 items-center text-[#055B5C] font-extrabold text-[16px]">
               <a
                 href="#contact"
                 onClick={(e) => {

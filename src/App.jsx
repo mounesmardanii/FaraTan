@@ -1,11 +1,10 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import React from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import UserDashboard from "./pages/UserDashboard";
+
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -19,14 +18,27 @@ import StartTraining from "./pages/StartTraining";
 import OneYearPlan from "./pages/TrainingPlans/OneYearPlan";
 import SixMonthPlan from "./pages/TrainingPlans/SixMonthPlan";
 import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
-import DashboardPage from "./admin/pages/DashpoardPage"; // پنل ادمین
+import DashboardPage from "./admin/pages/DashpoardPage";
 import ProfilePage from "./pages/ProfilePage";
 import MyReservations from "./pages/MyReservations";
 import MyPurchases from "./pages/MyPurchases";
 
+import { useAuth } from "./context/AuthContext";
+
+function AdminRoute({ children }) {
+  const { user } = useAuth();
+  console.log("User role:", user ? user.role : "null");
+  if (user === null) {
+    return <div>در حال بارگذاری...</div>;
+  }
+  if (user.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+}
+
 function LayoutWrapper() {
   const location = useLocation();
-
   const hideLayout = [
     "/login",
     "/signup",
@@ -35,7 +47,7 @@ function LayoutWrapper() {
     "/register-info",
     "/forgot-password",
     "/new-password",
-    "/admin", // صفحه ادمین بدون Navbar و Footer
+    "/admin",
   ].includes(location.pathname);
 
   return (
@@ -55,7 +67,16 @@ function LayoutWrapper() {
         <Route path="/plan/1year" element={<OneYearPlan />} />
         <Route path="/plan/6months" element={<SixMonthPlan />} />
         <Route path="/plan/3months" element={<ThreeMonthPlan />} />
-        <Route path="/admin" element={<DashboardPage />} />
+        <Route path="/dashboard" element={<UserDashboard />} />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <DashboardPage />
+            </AdminRoute>
+          }
+        />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/my-reservations" element={<MyReservations />} />
         <Route path="/my-purchases" element={<MyPurchases />} />

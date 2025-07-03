@@ -10,37 +10,40 @@ const validationSchema = Yup.object().shape({
   phone: Yup.string()
     .matches(/^09\d{9}$/, "شماره تلفن معتبر نیست")
     .required("شماره تلفن الزامی است"),
-  specialty: Yup.string().required("تخصص الزامی است"),
-  experience: Yup.string().required("سابقه الزامی است"),
+  medicalCondition: Yup.string().required("شرایط پزشکی الزامی است"),
+  dietHistory: Yup.string().required("سابقه رژیم الزامی است"),
+  exerciseHistory: Yup.string().required("سابقه ورزشی الزامی است"),
 });
 
-const CoachInfoCard = () => {
+const ProfileInfoCard = () => {
   const [editMode, setEditMode] = useState(false);
   const [initialValues, setInitialValues] = useState({
     name: "",
     age: "",
     phone: "",
-    specialty: "",
-    experience: "",
+    medicalCondition: "",
+    dietHistory: "",
+    exerciseHistory: "",
   });
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("coach"));
+    const saved = JSON.parse(localStorage.getItem("userInfo"));
     if (saved) {
       setInitialValues(saved);
     } else {
       setInitialValues({
-        name: "مریم عبدی",
-        age: 31,
-        phone: "09116868921",
-        specialty: "یوگا",
-        experience: "۸ سال",
+        name: "یگانه محمدی",
+        age: 28,
+        phone: "09123456789",
+        medicalCondition: "بدون مشکل خاص",
+        dietHistory: "2 ماه رژیم کتو",
+        exerciseHistory: "1 سال بدنسازی",
       });
     }
   }, []);
 
   const handleSubmit = (values) => {
-    localStorage.setItem("coach", JSON.stringify(values));
+    localStorage.setItem("userInfo", JSON.stringify(values));
     setInitialValues(values);
     setEditMode(false);
   };
@@ -71,43 +74,50 @@ const CoachInfoCard = () => {
             validationSchema={validationSchema}
           >
             {() => (
-              <Form className="flex flex-col h-full text-[12px] sm:text-xs mt-4 text-right">
+              <Form className="flex flex-col h-full text-[11px] sm:text-[11px] mt-6 text-right">
                 <div className="flex flex-col gap-0.25 overflow-hidden">
-                  {["name", "age", "phone", "specialty", "experience"].map(
-                    (field, idx) => (
-                      <div key={idx}>
-                        <label className="text-gray-800 font-bold block mb-0.5 text-[12px] sm:text-sm">
-                          {field === "name"
-                            ? ": نام"
-                            : field === "age"
-                            ? ": سن"
-                            : field === "phone"
-                            ? ": شماره تلفن"
-                            : field === "specialty"
-                            ? ": تخصص"
-                            : ": سابقه"}
-                        </label>
-                        <Field
+                  {[
+                    "name",
+                    "age",
+                    "phone",
+                    "medicalCondition",
+                    "dietHistory",
+                    "exerciseHistory",
+                  ].map((field, idx) => (
+                    <div key={idx}>
+                      <label className="text-gray-800 font-bold block mb-0 text-[11px] sm:text-[11px]">
+                        {field === "name"
+                          ? ": نام"
+                          : field === "age"
+                          ? ": سن"
+                          : field === "phone"
+                          ? ": شماره تلفن"
+                          : field === "medicalCondition"
+                          ? ": شرایط پزشکی"
+                          : field === "dietHistory"
+                          ? ": سابقه رژیم"
+                          : ": سابقه ورزشی"}
+                      </label>
+                      <Field
+                        name={field}
+                        type={field === "age" ? "number" : "text"}
+                        className="w-full px-1 py-0.25 border border-[#B5D2C1] rounded-md text-[11px] sm:text-[11px] text-right"
+                      />
+                      <div className="min-h-[12px]">
+                        <ErrorMessage
                           name={field}
-                          type={field === "age" ? "number" : "text"}
-                          className="w-full px-2 py-0.5 border border-[#B5D2C1] rounded-md text-[12px] sm:text-xs text-right"
+                          component="div"
+                          className="text-red-600 text-[7px] sm:text-[8px] mt-0"
                         />
-                        <div className="min-h-[14px]">
-                          <ErrorMessage
-                            name={field}
-                            component="div"
-                            className="text-red-600 text-[10px] sm:text-[10px] mt-0.5"
-                          />
-                        </div>
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
 
-                <div className="mt-1.5">
+                <div className="mt-0.5">
                   <button
                     type="submit"
-                    className="w-full bg-[#256250] text-white py-1 rounded-md hover:bg-[#1E4D43] transition text-[12px] sm:text-xs cursor-pointer"
+                    className="w-full bg-[#256250] text-white py-0.5 rounded-md hover:bg-[#1E4D43] transition text-[11px] sm:text-[11px] cursor-pointer"
                   >
                     ذخیره تغییرات
                   </button>
@@ -135,12 +145,16 @@ const CoachInfoCard = () => {
                 </a>
               </p>
               <p>
-                <strong className="text-[#256250]">تخصص:</strong>{" "}
-                {initialValues.specialty}
+                <strong className="text-[#256250]">شرایط پزشکی:</strong>{" "}
+                {initialValues.medicalCondition}
               </p>
               <p>
-                <strong className="text-[#256250]">سابقه:</strong>{" "}
-                {initialValues.experience}
+                <strong className="text-[#256250]">سابقه رژیم:</strong>{" "}
+                {initialValues.dietHistory}
+              </p>
+              <p>
+                <strong className="text-[#256250]">سابقه ورزشی:</strong>{" "}
+                {initialValues.exerciseHistory}
               </p>
             </div>
             <div className="pt-2 border-t border-[#ccc]">
@@ -158,4 +172,4 @@ const CoachInfoCard = () => {
   );
 };
 
-export default CoachInfoCard;
+export default ProfileInfoCard;

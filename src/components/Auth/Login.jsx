@@ -5,12 +5,12 @@ import { assets } from "../../assets/assets";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useAuth } from "../../context/AuthContext"; // استفاده از AuthContext
+import { useAuth } from "../../context/AuthContext";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth(); // استفاده از متد login
+  const { login } = useAuth();
 
   const togglePassword = () => setShowPassword(!showPassword);
 
@@ -27,18 +27,35 @@ function Login() {
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         setSubmitting(true);
+        const isAdmin =
+          values.phone === "09116688921" && values.password === "mounes0713";
+        console.log(
+          "Phone:",
+          values.phone,
+          "Password:",
+          values.password,
+          "Is Admin?",
+          isAdmin
+        );
 
-        // ورود با اطلاعات ساختگی
-        login({
-          name: `کاربر ${values.phone.slice(-4)}`, // مثلا "کاربر 9987"
-          email: `${values.phone}@example.com`,
-        });
-
-        navigate("/"); // برگشت به صفحه اصلی
+        if (isAdmin) {
+          login({
+            name: `مدیر سایت`,
+            email: "admin@example.com",
+            phone: values.phone,
+            role: "admin",
+          });
+        } else {
+          login({
+            name: `کاربر ${values.phone.slice(-4)}`,
+            email: `${values.phone}@example.com`,
+            phone: values.phone,
+            role: "user",
+          });
+        }
+        navigate("/");
       } catch (error) {
-        setErrors({
-          submit: "خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید.",
-        });
+        setErrors({ submit: "خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید." });
       } finally {
         setSubmitting(false);
       }
@@ -47,14 +64,12 @@ function Login() {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4 overflow-hidden">
-      {/* تصویر موج بالا */}
       <img
         src={assets.bag}
         alt="پس‌زمینه موج"
         className="absolute top-0 left-0 w-full h-auto z-0 pointer-events-none"
       />
 
-      {/* دکمه بازگشت */}
       <motion.img
         src={assets.back}
         alt="بازگشت"
@@ -66,7 +81,6 @@ function Login() {
       />
 
       <div className="flex flex-col md:flex-row w-full max-w-6xl z-10">
-        {/* تصویر سمت راست */}
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -80,7 +94,6 @@ function Login() {
           />
         </motion.div>
 
-        {/* فرم ورود */}
         <motion.div
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -100,7 +113,6 @@ function Login() {
             onSubmit={formik.handleSubmit}
             className="flex flex-col space-y-4 md:space-y-6 text-xs md:text-base"
           >
-            {/* شماره تلفن */}
             <div>
               <input
                 type="text"
@@ -118,7 +130,6 @@ function Login() {
               )}
             </div>
 
-            {/* رمز عبور */}
             <div className="flex flex-col gap-1">
               <div className="relative">
                 <input
@@ -145,7 +156,6 @@ function Login() {
               )}
             </div>
 
-            {/* چک‌باکس به خاطر سپاری */}
             <label className="flex flex-row-reverse items-center gap-2 text-white text-xs md:text-sm cursor-pointer mt-1">
               <input
                 type="checkbox"
@@ -157,14 +167,12 @@ function Login() {
               من را به خاطر بسپار
             </label>
 
-            {/* ارور کلی */}
             {formik.errors.submit && (
               <div className="text-red-500 text-center text-sm">
                 {formik.errors.submit}
               </div>
             )}
 
-            {/* دکمه ورود */}
             <motion.button
               type="submit"
               disabled={formik.isSubmitting}
@@ -179,7 +187,6 @@ function Login() {
             </motion.button>
           </form>
 
-          {/* لینک‌های پایین فرم */}
           <div className="flex flex-col gap-2 text-xs md:text-sm text-white mt-4 text-right">
             <Link
               to="/forgot-password"
