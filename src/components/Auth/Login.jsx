@@ -27,21 +27,15 @@ function Login() {
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         setSubmitting(true);
-        const isAdmin =
-          values.phone === "09116688921" && values.password === "mounes0713";
-        console.log(
-          "Phone:",
-          values.phone,
-          "Password:",
-          values.password,
-          "Is Admin?",
-          isAdmin
-        );
 
-        if (isAdmin) {
+        const isMaryamAdmin =
+          values.phone === "09116868921" &&
+          values.password === "mounes0713";
+
+        if (isMaryamAdmin) {
           login({
-            name: `مدیر سایت`,
-            email: "admin@example.com",
+            name: "مریم",
+            email: "maryam@example.com",
             phone: values.phone,
             role: "admin",
           });
@@ -53,6 +47,7 @@ function Login() {
             role: "user",
           });
         }
+
         navigate("/");
       } catch (error) {
         setErrors({ submit: "خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید." });
@@ -60,6 +55,7 @@ function Login() {
         setSubmitting(false);
       }
     },
+
   });
 
   return (
@@ -179,9 +175,8 @@ function Login() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: "spring", stiffness: 200 }}
-              className={`bg-[#FF6600] hover:brightness-90 transition-all py-2 px-3 rounded-xl text-white font-bold text-sm md:text-lg mt-4 ${
-                formik.isSubmitting ? "opacity-70 cursor-not-allowed" : ""
-              }`}
+              className={`bg-[#FF6600] hover:brightness-90 transition-all py-2 px-3 rounded-xl text-white font-bold text-sm md:text-lg mt-4 ${formik.isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                }`}
             >
               ورود
             </motion.button>

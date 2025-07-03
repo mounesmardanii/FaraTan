@@ -35,12 +35,12 @@ function Navbar() {
                 ورود / ثبت‌نام
               </button>
             ) : (
-              <div>
+              <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="bg-[#055B5C] text-white px-4 py-2 text-[14px] rounded-full md:px-6 md:py-2 md:text-[16px] flex items-center justify-center transition-all duration-300 hover:bg-[#044041] hover:scale-105 cursor-pointer"
                 >
-                  {user.name || "پروفایل"}
+                  {user.name === "مریم" && user.role === "admin" ? "مدیر سایت" : user.name || "پروفایل"}
                 </button>
 
                 {showDropdown && (
@@ -92,6 +92,7 @@ function Navbar() {
                 )}
               </div>
             )}
+
           </div>
 
           <nav className="hidden md:flex gap-10 text-[#055B5C] font-extrabold text-[18px]">
