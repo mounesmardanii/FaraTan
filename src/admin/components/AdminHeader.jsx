@@ -11,7 +11,7 @@ function AdminHeader({ onMenuClick }) {
       {/* موبایل: آیکون منو */}
       <div className="md:hidden">
         <button onClick={onMenuClick} aria-label="Toggle menu" className="p-2">
-          <img src={assets.menu} alt="menu" className="w-12 h-12" />
+          <img src={assets.menu} alt="menu" className="w-12 h-12 cursor-pointer" />
         </button>
       </div>
 

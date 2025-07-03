@@ -7,7 +7,6 @@ import {
 } from 'recharts';
 import AdminSidebar from '../AdminSidebar';
 import AdminHeader from '../AdminHeader';
-import { assets } from '../../../assets/assets';
 
 function Dashboard() {
   const [stats] = useState({
@@ -53,48 +52,45 @@ function Dashboard() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } }
   };
 
-  // وضعیت باز یا بسته بودن سایدبار در موبایل
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col relative">
 
-      {/* هدر بدون fixed */}
       <AdminHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
       <div className="flex flex-1 relative mt-4">
 
-        {/* دسکتاپ: سایدبار همیشه باز و بدون تغییر */}
-        <aside className="hidden md:flex mt-3 w-64 z-20">
+        {/* دسکتاپ: بدون تغییر */}
+        <aside className="hidden md:flex mt-3 w-64 z-30 border-t-[3px] border-r-[3px] border-[#055B5C] rounded-tr-[75px]">
           <AdminSidebar />
         </aside>
 
-        {/* موبایل: سایدبار کشویی */}
+        {/* موبایل: سایدبار کشویی اختصاصی */}
         <motion.aside
           initial={{ x: '-100%' }}
           animate={{ x: sidebarOpen ? 0 : '-100%' }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed md:hidden top-[calc(4rem)] left-0 z-50 w-64 h-[calc(100vh-4rem)] bg-[#D1E7D8] border-r-4 border-[#055B5C] rounded-tr-[75px] p-4 overflow-y-auto shadow-lg"
-          onClick={() => setSidebarOpen(false)}
+          className="fixed md:hidden top-[4rem] left-0 z-50 w-[275px] h-[calc(100vh-4rem)] bg-[#D1E7D8] border-t-[3px] border-r-[3px] border-[#055B5C] rounded-tr-[75px] p-6 overflow-y-auto mt-13"
         >
           <AdminSidebar />
         </motion.aside>
 
-        {/* بک‌دراپ نیمه شفاف روی محتوای سمت راست */}
+
+
+        {/* بک‌دراپ در موبایل فقط هنگام باز بودن سایدبار */}
         {sidebarOpen && (
           <div
-            className="fixed md:hidden inset-0 top-[4rem] bg-black bg-opacity-40 z-40"
+            className="fixed md:hidden inset-0 top-[4rem] z-40"
             onClick={() => setSidebarOpen(false)}
           />
         )}
 
-        {/* محتوای اصلی */}
         <main
-          className={`flex-1 p-4 md:p-10 relative z-10 overflow-y-auto border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white flex flex-col gap-6 text-right mt-3 ml-10
+          className={`flex-1 p-8 md:p-10 relative z-10 overflow-y-auto border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white flex flex-col gap-6 text-right mt-3 ml-10
             ${sidebarOpen ? 'pointer-events-none select-none' : ''}
           `}
         >
-
           {/* Stats */}
           <motion.div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
@@ -102,10 +98,9 @@ function Dashboard() {
             animate="visible"
             variants={fadeIn}
           >
-            {[
-              { label: 'تعداد کاربران فعال', value: stats.activeUsers },
-              { label: 'درآمد این ماه', value: stats.monthlyRevenue },
-              { label: 'تعداد مربیان فعال', value: stats.activeCoaches },
+            {[{ label: 'تعداد کاربران فعال', value: stats.activeUsers },
+            { label: 'درآمد این ماه', value: stats.monthlyRevenue },
+            { label: 'تعداد مربیان فعال', value: stats.activeCoaches },
             ].map((item, i) => (
               <motion.div key={i} className="bg-[#D1E7D8] rounded-xl shadow p-5"
                 initial={{ opacity: 0, y: 20 }}
@@ -118,13 +113,9 @@ function Dashboard() {
             ))}
           </motion.div>
 
-          {/* Courses Section */}
-          <motion.div
-            className="bg-[#D1E7D8] rounded-xl shadow p-6"
-            initial="hidden"
-            animate="visible"
-            variants={fadeIn}
-            transition={{ delay: 0.8 }}
+          {/* Courses */}
+          <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6"
+            initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.8 }}
           >
             <p className="text-orange-600 font-bold text-sm mb-3 text-center">انواع دوره‌ها</p>
             <div className="flex justify-around text-[#055B5C] font-bold">
@@ -143,72 +134,44 @@ function Dashboard() {
 
           {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <motion.div
-              className="bg-[#D1E7D8] rounded-xl shadow p-6 h-[220px]"
-              initial="hidden"
-              animate="visible"
-              variants={fadeIn}
-              transition={{ delay: 1.5 }}
+            <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6 h-[220px]"
+              initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 1.5 }}
             >
-              <p className="text-orange-600 font-bold text-sm mb-3 text-center">نمودار رشد کاربران در سه ماه اخیر</p>
+              <p className="text-orange-600 font-bold text-sm mb-3 text-center">نمودار رشد کاربران</p>
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={growthData} isAnimationActive={true}>
+                <LineChart data={growthData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="users"
-                    stroke="#FF7A00"
-                    strokeWidth={3}
-                    animationDuration={1500}
-                    animationEasing="ease-in-out"
-                    isAnimationActive={true}
-                  />
+                  <Line type="monotone" dataKey="users" stroke="#FF7A00" strokeWidth={3} />
                 </LineChart>
               </ResponsiveContainer>
             </motion.div>
 
-            <motion.div
-              className="bg-[#D1E7D8] rounded-xl shadow p-6 h-[220px]"
-              initial="hidden"
-              animate="visible"
-              variants={fadeIn}
-              transition={{ delay: 1.7 }}
+            <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6 h-[220px]"
+              initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 1.7 }}
             >
-              <p className="text-orange-600 font-bold text-sm mb-3 text-center">نمودار حضور غیاب هفتگی</p>
+              <p className="text-orange-600 font-bold text-sm mb-3 text-center">نمودار حضور هفتگی</p>
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={attendanceData} isAnimationActive={true}>
+                <BarChart data={attendanceData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="day" />
                   <YAxis />
                   <Tooltip />
-                  <Bar
-                    dataKey="attendance"
-                    fill="#FF7A00"
-                    animationDuration={1500}
-                    animationEasing="ease-in-out"
-                    isAnimationActive={true}
-                  />
+                  <Bar dataKey="attendance" fill="#FF7A00" />
                 </BarChart>
               </ResponsiveContainer>
             </motion.div>
           </div>
 
           {/* Weekly Schedule */}
-          <motion.div
-            className="bg-[#D1E7D8] rounded-xl shadow p-6"
-            initial="hidden"
-            animate="visible"
-            variants={fadeIn}
-            transition={{ delay: 2 }}
+          <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6"
+            initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 2 }}
           >
-            <p className="text-orange-600 font-bold text-sm mb-4 text-center">برنامه‌ی هفتگی کلاس بدنسازی</p>
-
-            {/* Wrapper با اسکرول افقی برای موبایل */}
+            <p className="text-orange-600 font-bold text-sm mb-4 text-center">برنامه‌ی هفتگی</p>
             <div className="overflow-x-auto">
-              <table className="min-w-full table-auto text-center text-sm text-[#055B5C] font-semibold">
+              <table className="min-w-full text-sm text-[#055B5C] text-center font-semibold">
                 <thead>
                   <tr>
                     {weeklySchedule.map((d, i) => (
@@ -231,7 +194,6 @@ function Dashboard() {
               </table>
             </div>
           </motion.div>
-
         </main>
       </div>
     </div>
