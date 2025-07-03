@@ -185,7 +185,7 @@ function LoginForm() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 200 }}
-              className="bg-[#FF6600] hover:brightness-90 transition-all py-2 rounded-xl text-white font-bold text-lg"
+              className="bg-[#FF6600] hover:brightness-90 transition-all py-2 rounded-xl text-white font-bold text-lg cursor-pointer"
             >
               ادامه
             </motion.button>

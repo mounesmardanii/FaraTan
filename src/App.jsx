@@ -19,6 +19,7 @@ import StartTraining from "./pages/StartTraining";
 import OneYearPlan from "./pages/TrainingPlans/OneYearPlan";
 import SixMonthPlan from "./pages/TrainingPlans/SixMonthPlan";
 import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
+import DashboardPage from "./admin/pages/DashpoardPage"; // از stash
 
 function LayoutWrapper() {
   const location = useLocation();
@@ -31,6 +32,7 @@ function LayoutWrapper() {
     "/register-info",
     "/forgot-password",
     "/new-password",
+    "/admin", // از stash
   ].includes(location.pathname);
 
   return (
@@ -50,6 +52,7 @@ function LayoutWrapper() {
         <Route path="/plan/1year" element={<OneYearPlan />} />
         <Route path="/plan/6months" element={<SixMonthPlan />} />
         <Route path="/plan/3months" element={<ThreeMonthPlan />} />
+        <Route path="/admin" element={<DashboardPage />} /> {/* از stash */}
       </Routes>
       {!hideLayout && <Footer />}
     </>
@@ -57,11 +60,7 @@ function LayoutWrapper() {
 }
 
 function App() {
-  return (
-    <Router>
-      <LayoutWrapper />
-    </Router>
-  );
+  return <LayoutWrapper />;
 }
 
 export default App;

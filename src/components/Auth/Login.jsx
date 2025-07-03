@@ -5,10 +5,12 @@ import { assets } from '../../assets/assets';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useUser } from '../../context/UserContext'; // ✅ اضافه شده
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { setUser } = useUser(); // ✅ اضافه شده
 
   const togglePassword = () => setShowPassword(!showPassword);
 
@@ -25,14 +27,37 @@ function Login() {
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         setSubmitting(true);
-        console.log('ورودی‌ها:', values);
-        navigate('/');
+
+        // اطلاعات کاربر ادمین (مریم)
+        const adminPhone = '09116868921';
+        const adminPassword = 'mounes0713';
+
+        if (
+          values.phone === adminPhone &&
+          values.password === adminPassword
+        ) {
+          setUser({
+            name: 'مریم',
+            phone: values.phone,
+            role: 'admin',
+          });
+        } else {
+          setUser({
+            name: 'کاربر عادی',
+            phone: values.phone,
+            role: 'user',
+          });
+        }
+
+        navigate('/'); // ✅ فقط برگشت به صفحه اصلی
+
       } catch (error) {
         setErrors({ submit: 'خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید.' });
       } finally {
         setSubmitting(false);
       }
-    },
+    }
+
   });
 
   return (
@@ -67,7 +92,6 @@ function Login() {
             alt="login illustration"
             className="w-full max-w-[300px] md:max-w-[400px]"
           />
-
         </motion.div>
 
         <motion.div
@@ -148,13 +172,11 @@ function Login() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: 'spring', stiffness: 200 }}
-              className={`bg-[#FF6600] hover:brightness-90 transition-all py-2 px-3 rounded-xl text-white font-bold text-sm md:text-lg mt-4 ${formik.isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-                }`}
+              className={`bg-[#FF6600] hover:brightness-90 transition-all py-2 px-3 rounded-xl text-white font-bold text-sm md:text-lg mt-4 ${formik.isSubmitting ? 'opacity-70  cursor-not-allowed' : ''}`}
             >
               ورود
             </motion.button>
           </form>
-
 
           <div className="flex flex-col gap-2 text-xs md:text-sm text-white mt-4 text-right">
             <Link
@@ -165,7 +187,7 @@ function Login() {
             </Link>
             <Link
               to="/signup"
-              className="hover:text-[#FF6600] cursor-pointer transition-colors"
+              className="hover:text-[#FF6600] cursor-pointer transition-colors "
             >
               آیا هنوز ثبت‌نام نکرده‌اید؟ <span className="ml-1">ثبت‌نام</span>
             </Link>
