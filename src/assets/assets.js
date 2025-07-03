@@ -33,6 +33,8 @@ import reservation from "./reservation.png";
 import payment1 from "./payment1.png";
 import apple from "./apple.png";
 import plan from "./plan.png";
+import woman4 from "./woman4.png";
+
 
 export const assets = {
   plan,
@@ -68,4 +70,5 @@ export const assets = {
   text,
   wardrobe,
   user,
+  woman4,
 };

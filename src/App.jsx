@@ -3,8 +3,6 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import UserDashboard from "./pages/UserDashboard";
-
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -19,6 +17,7 @@ import OneYearPlan from "./pages/TrainingPlans/OneYearPlan";
 import SixMonthPlan from "./pages/TrainingPlans/SixMonthPlan";
 import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
 import DashboardPage from "./admin/pages/DashpoardPage";
+import AdminUsersPage from "./admin/pages/AdminUsersPage"; // ✅ جدید
 import ProfilePage from "./pages/ProfilePage";
 import MyReservations from "./pages/MyReservations";
 import MyPurchases from "./pages/MyPurchases";
@@ -28,17 +27,20 @@ import { useAuth } from "./context/AuthContext";
 function AdminRoute({ children }) {
   const { user } = useAuth();
   console.log("User role:", user ? user.role : "null");
+
   if (user === null) {
     return <div>در حال بارگذاری...</div>;
   }
   if (user.role !== "admin") {
     return <Navigate to="/" replace />;
   }
+
   return children;
 }
 
 function LayoutWrapper() {
   const location = useLocation();
+
   const hideLayout = [
     "/login",
     "/signup",
@@ -48,12 +50,15 @@ function LayoutWrapper() {
     "/forgot-password",
     "/new-password",
     "/admin",
+    "/admin/users", // ✅ پنهان‌کردن Navbar/Footer در این صفحه
   ].includes(location.pathname);
 
   return (
     <>
       {!hideLayout && <Navbar />}
+
       <Routes>
+        {/* صفحات عمومی */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -67,8 +72,11 @@ function LayoutWrapper() {
         <Route path="/plan/1year" element={<OneYearPlan />} />
         <Route path="/plan/6months" element={<SixMonthPlan />} />
         <Route path="/plan/3months" element={<ThreeMonthPlan />} />
-        <Route path="/dashboard" element={<UserDashboard />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/my-reservations" element={<MyReservations />} />
+        <Route path="/my-purchases" element={<MyPurchases />} />
 
+        {/* صفحات ادمین با گارد دسترسی */}
         <Route
           path="/admin"
           element={
@@ -77,10 +85,16 @@ function LayoutWrapper() {
             </AdminRoute>
           }
         />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/my-reservations" element={<MyReservations />} />
-        <Route path="/my-purchases" element={<MyPurchases />} />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <AdminUsersPage />
+            </AdminRoute>
+          }
+        />
       </Routes>
+
       {!hideLayout && <Footer />}
     </>
   );

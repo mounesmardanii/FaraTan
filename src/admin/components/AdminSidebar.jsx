@@ -31,11 +31,13 @@ function AdminSidebar() {
           >
             <img src={item.icon} alt="" className="w-6 h-6" />
             <span
-              className={`text-[15px] font-extrabold cursor-pointer ${isDashboard ? '' : 'bg-[#9FC6C3] px-3 py-1 rounded-full'
+              className={`text-[15px] font-extrabold cursor-pointer ${!isActive ? 'bg-[#9FC6C3] px-3 py-1 rounded-full' : ''
                 }`}
             >
               {item.label}
             </span>
+
+
           </button>
         );
       })}
