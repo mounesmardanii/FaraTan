@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { assets } from "../../assets/assets";
+import { useUserProfile } from "../../context/UserProfileContext"; // ✅
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("نام الزامی است"),
@@ -16,35 +17,20 @@ const validationSchema = Yup.object().shape({
 });
 
 const ProfileInfoCard = () => {
+  const { userProfile, updateUserInfo } = useUserProfile(); // ✅
   const [editMode, setEditMode] = useState(false);
-  const [initialValues, setInitialValues] = useState({
-    name: "",
-    age: "",
-    phone: "",
-    medicalCondition: "",
-    dietHistory: "",
-    exerciseHistory: "",
-  });
 
-  useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("userInfo"));
-    if (saved) {
-      setInitialValues(saved);
-    } else {
-      setInitialValues({
-        name: "یگانه محمدی",
-        age: 28,
-        phone: "09123456789",
-        medicalCondition: "بدون مشکل خاص",
-        dietHistory: "2 ماه رژیم کتو",
-        exerciseHistory: "1 سال بدنسازی",
-      });
-    }
-  }, []);
+  const fields = [
+    "name",
+    "age",
+    "phone",
+    "medicalCondition",
+    "dietHistory",
+    "exerciseHistory",
+  ];
 
   const handleSubmit = (values) => {
-    localStorage.setItem("userInfo", JSON.stringify(values));
-    setInitialValues(values);
+    updateUserInfo(values); // ✅ ذخیره در context
     setEditMode(false);
   };
 
@@ -56,7 +42,7 @@ const ProfileInfoCard = () => {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="relative w-full max-sm:w-[350px] max-w-full min-[800px]:max-w-[400px] min-w-[250px] h-[400px] mt-15
         mx-2 sm:mx-4 font-[Tahoma] text-right border border-[#D1E7D8] rounded-4xl shadow-md p-3 max-sm:p-2 sm:p-3 rtl transition-colors
-        duration-300 bg-[#D1E7D8] box-border"
+        duration-300 bg-[#9FC6C3] box-border"
       >
         <motion.img
           initial={{ opacity: 0, scale: 0.8 }}
@@ -69,21 +55,14 @@ const ProfileInfoCard = () => {
         {editMode ? (
           <Formik
             enableReinitialize
-            initialValues={initialValues}
+            initialValues={userProfile}
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
           >
             {() => (
               <Form className="flex flex-col h-full text-[11px] sm:text-[11px] mt-6 text-right">
-                <div className="flex flex-col gap-0.25 overflow-hidden">
-                  {[
-                    "name",
-                    "age",
-                    "phone",
-                    "medicalCondition",
-                    "dietHistory",
-                    "exerciseHistory",
-                  ].map((field, idx) => (
+                <div className="flex flex-col gap-0.5 overflow-hidden">
+                  {fields.map((field, idx) => (
                     <div key={idx}>
                       <label className="text-gray-800 font-bold block mb-0 text-[11px] sm:text-[11px]">
                         {field === "name"
@@ -101,7 +80,7 @@ const ProfileInfoCard = () => {
                       <Field
                         name={field}
                         type={field === "age" ? "number" : "text"}
-                        className="w-full px-1 py-0.25 border border-[#B5D2C1] rounded-md text-[11px] sm:text-[11px] text-right"
+                        className="w-full px-1 py-0.5 border border-gray-200 rounded-md text-[11px] sm:text-[11px] text-right"
                       />
                       <div className="min-h-[12px]">
                         <ErrorMessage
@@ -114,10 +93,10 @@ const ProfileInfoCard = () => {
                   ))}
                 </div>
 
-                <div className="mt-0.5">
+                <div className="mt-2">
                   <button
                     type="submit"
-                    className="w-full bg-[#256250] text-white py-0.5 rounded-md hover:bg-[#1E4D43] transition text-[11px] sm:text-[11px] cursor-pointer"
+                    className="w-full bg-[#055B5C] text-white py-1 rounded-md hover:bg-[#1E4D43] transition text-[11px] sm:text-[11px]"
                   >
                     ذخیره تغییرات
                   </button>
@@ -127,40 +106,40 @@ const ProfileInfoCard = () => {
           </Formik>
         ) : (
           <div className="flex flex-col justify-between h-full pt-16 space-y-1.5 text-gray-800 text-[18px] sm:text-[16px] leading-relaxed -mt-5">
-            <h2 className="text-[#FF6600] font-extrabold text-[20px] sm:text-[18px] border-b border-[#ccc] pb-1">
-              {initialValues.name}
+            <h2 className="text-[#FF6600] font-extrabold text-[20px] sm:text-[18px] border-b border-white pb-1">
+              {userProfile.name}
             </h2>
             <div className="space-y-1.5">
               <p>
                 <strong className="text-[#256250]">سن:</strong>{" "}
-                {initialValues.age}
+                {userProfile.age}
               </p>
               <p>
                 <strong className="text-[#256250]">شماره تلفن:</strong>{" "}
                 <a
-                  href={`tel:${initialValues.phone}`}
+                  href={`tel:${userProfile.phone}`}
                   className="text-[#256250] hover:underline font-semibold"
                 >
-                  {initialValues.phone}
+                  {userProfile.phone}
                 </a>
               </p>
               <p>
                 <strong className="text-[#256250]">شرایط پزشکی:</strong>{" "}
-                {initialValues.medicalCondition}
+                {userProfile.medicalCondition}
               </p>
               <p>
                 <strong className="text-[#256250]">سابقه رژیم:</strong>{" "}
-                {initialValues.dietHistory}
+                {userProfile.dietHistory}
               </p>
               <p>
                 <strong className="text-[#256250]">سابقه ورزشی:</strong>{" "}
-                {initialValues.exerciseHistory}
+                {userProfile.exerciseHistory}
               </p>
             </div>
-            <div className="pt-2 border-t border-[#ccc]">
+            <div className="pt-2 border-t border-white">
               <button
                 onClick={() => setEditMode(true)}
-                className="w-full bg-[#256250] text-white py-1 sm:py-2 rounded-md hover:bg-[#1E4D43] text-[12px] sm:text-base transition cursor-pointer"
+                className="w-full bg-[#055B5C] text-white py-1 sm:py-2 rounded-md hover:bg-[#1E4D43] text-[12px] sm:text-base transition cursor-pointer"
               >
                 ویرایش اطلاعات
               </button>

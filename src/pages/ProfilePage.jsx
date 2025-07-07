@@ -24,21 +24,19 @@ const ProfilePage = () => {
 
   return (
     <div className="relative p-4 sm:p-6 md:p-8 max-w-[1400px] w-full mx-auto mt-8">
-      {/* <UserDashboard /> */}
-      {/* ترتیب: کارت پروفایل سمت راست، جدول سمت چپ */}
-      <div className="flex flex-col justify-center items-center gap-4 sm:gap-6 md:gap-8 min-[800px]:items-start min-[800px]:flex-row">
-        {/* کارت پروفایل سمت راست */}
+      <div className="flex flex-col gap-2 sm:gap-2 min-[800px]:flex-row min-[800px]:items-start ml-20">
+        {/* ستون پروفایل (کوچک‌تر و نزدیک‌تر) */}
         <motion.div
           initial="hidden"
           animate="visible"
           variants={fadeInUp}
           custom={1}
-          className="w-full min-[800px]:w-[400px]"
+          className="w-full min-[800px]:w-[300px]"
         >
           <ProfileInfoCard />
         </motion.div>
 
-        {/* جدول اطلاعات فیزیکی سمت چپ */}
+        {/* ستون داشبورد کاربر */}
         <motion.div
           initial="hidden"
           animate="visible"
@@ -46,11 +44,10 @@ const ProfilePage = () => {
           custom={2}
           className="w-full"
         >
-          <UserDashboard />{" "}
+          <UserDashboard />
         </motion.div>
       </div>
 
-      {/* دکمه اسکرول به بالا */}
       <ScrollToTopButton />
     </div>
   );
