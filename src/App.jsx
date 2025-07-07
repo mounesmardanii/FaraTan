@@ -24,6 +24,13 @@ import MyPurchases from "./pages/MyPurchases";
 import SportsProgram from "./pages/SportsProgram";
 import NutritionProgram from "./pages/NutritionProgram";
 import NutritionPlanDetail from "./pages/NutritionPlanDetail";
+
+// Admin pages from remote
+import AddFitnessClassPage from "./admin/pages/AddFitnessClassPage";
+import AdminCoachesPage from "./admin/pages/AdminCoachesPage";
+import WardrobeManagementPage from "./admin/pages/WardrobeManagementPage";
+import PaymentStatusPage from "./admin/pages/PaymentStatusPage";
+
 import { useAuth } from "./context/AuthContext";
 import PaymentPage from "./pages/PaymentPage";
 
@@ -47,12 +54,17 @@ function LayoutWrapper() {
     "/admin",
     "/admin/users",
     "/payment",
+    "/admin/fitness",
+    "/admin/coaches",
+    "/admin/wardrobes",
+    "/admin/payments", // Added from remote
   ].includes(location.pathname);
 
   return (
     <>
       {!hideLayout && <Navbar />}
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -76,6 +88,8 @@ function LayoutWrapper() {
           path="/nutrition/:weekId/plan"
           element={<NutritionPlanDetail />}
         />
+
+        {/* Admin routes */}
         <Route
           path="/admin"
           element={
@@ -89,6 +103,38 @@ function LayoutWrapper() {
           element={
             <AdminRoute>
               <AdminUsersPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/fitness"
+          element={
+            <AdminRoute>
+              <AddFitnessClassPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/coaches"
+          element={
+            <AdminRoute>
+              <AdminCoachesPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/wardrobes"
+          element={
+            <AdminRoute>
+              <WardrobeManagementPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/payments"
+          element={
+            <AdminRoute>
+              <PaymentStatusPage />
             </AdminRoute>
           }
         />
