@@ -1,5 +1,5 @@
 import React from 'react';
-import AdminUsers from '../components/AdminUsers/AdminUsers'; // مسیر به فایل Dashboard.jsx
+import AdminUsers from '../components/AdminUsers/AdminUsers'; 
 
 function AdminUsersPage() {
   return (
