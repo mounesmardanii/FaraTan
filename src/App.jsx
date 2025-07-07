@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
-// عمومی
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -20,11 +19,11 @@ import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
 import ProfilePage from "./pages/ProfilePage";
 import MyReservations from "./pages/MyReservations";
 import MyPurchases from "./pages/MyPurchases";
-
-// ادمین
 import DashboardPage from "./admin/pages/DashpoardPage";
 import AdminUsersPage from "./admin/pages/AdminUsersPage";
 import AddFitnessClassPage from "./admin/pages/AddFitnessClassPage";
+import AdminCoachesPage from "./admin/pages/AdminCoachesPage";
+import WardrobeManagementPage from "./admin/pages/WardrobeManagementPage";
 
 import { useAuth } from "./context/AuthContext";
 
@@ -47,7 +46,9 @@ function LayoutWrapper() {
     "/new-password",
     "/admin",
     "/admin/users",
-    "/admin/fitness"
+    "/admin/fitness",
+    "/admin/coaches",
+    "/admin/wardrobes" 
   ].includes(location.pathname);
 
   return (
@@ -55,7 +56,6 @@ function LayoutWrapper() {
       {!hideLayout && <Navbar />}
 
       <Routes>
-        {/* عمومی */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -73,10 +73,11 @@ function LayoutWrapper() {
         <Route path="/my-reservations" element={<MyReservations />} />
         <Route path="/my-purchases" element={<MyPurchases />} />
 
-        {/* ادمین */}
         <Route path="/admin" element={<AdminRoute><DashboardPage /></AdminRoute>} />
         <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
         <Route path="/admin/fitness" element={<AdminRoute><AddFitnessClassPage /></AdminRoute>} />
+        <Route path="/admin/coaches" element={<AdminRoute><AdminCoachesPage /></AdminRoute>} />
+        <Route path="/admin/wardrobes" element={<AdminRoute><WardrobeManagementPage /></AdminRoute>} /> 
       </Routes>
 
       {!hideLayout && <Footer />}

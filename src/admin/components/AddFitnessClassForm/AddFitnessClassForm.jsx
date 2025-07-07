@@ -60,18 +60,17 @@ const AddFitnessClassForm = () => {
     setPreview(null);
   };
 
+  console.log('Component rendered at:', new Date().toLocaleString('fa-IR', { timeZone: 'Asia/Tehran' }));
+
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col text-right relative">
-      {/* هدر با دکمه موبایل */}
       <AdminHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
 
       <div className="flex flex-1 relative mt-4">
-        {/* سایدبار دسکتاپ */}
         <aside className="hidden md:flex mt-3 w-64 z-30 border-t-[3px] border-r-[3px] border-[#055B5C] rounded-tr-[75px]">
           <AdminSidebar />
         </aside>
 
-        {/* سایدبار موبایل */}
         <motion.aside
           initial={{ x: '-100%' }}
           animate={{ x: sidebarOpen ? 0 : '-100%' }}
@@ -81,39 +80,36 @@ const AddFitnessClassForm = () => {
           <AdminSidebar />
         </motion.aside>
 
-        {/* بک‌دراپ موبایل */}
         {sidebarOpen && (
           <div
-            className="fixed md:hidden inset-0 top-[4rem] z-40"
+            className="fixed md:hidden inset-0 top-[4rem] z-40 bg-black/50 mt-13.5"
             onClick={() => setSidebarOpen(false)}
           />
         )}
 
-        {/* محتوای اصلی */}
         <main
           dir="rtl"
-          className={`flex-1 px-4 py-8 md:p-10 z-10 overflow-y-auto border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white md:ml-10 text-right mt-3 ml-10 p-10 ${
+          className={`flex-1 px-4 py-6 md:p-10 z-10 border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white md:ml-10 text-right mt-3 ml-10 ${
             sidebarOpen ? 'pointer-events-none select-none' : ''
           }`}
         >
           <div className="flex justify-center">
             <form
               onSubmit={handleSubmit}
-              className="w-full max-w-lg bg-white p-6 rounded-2xl shadow-lg border border-orange-100 animate-fade-in"
+              className="w-full max-w-[90%] md:max-w-lg bg-white p-4 md:p-6 rounded-2xl shadow-lg border border-orange-100 animate-fade-in"
               encType="multipart/form-data"
             >
-              <h2 className="text-[#055B5C] font-extrabold text-2xl mb-6 text-center border-b-2 border-orange-400 pb-2">
+              <h2 className="text-[#055B5C] font-extrabold text-xl md:text-2xl mb-4 md:mb-6 text-center border-b-2 border-orange-400 pb-2">
                 اضافه کردن کلاس ورزشی
               </h2>
 
-              {/* آپلود عکس */}
-              <label htmlFor="imageInput" className="block text-[#055B5C] text-sm mb-1">
+              <label htmlFor="imageInput" className="block text-[#055B5C] text-xs md:text-sm mb-1">
                 عکس کلاس:
               </label>
-
               <label
                 htmlFor="imageInput"
-                className="cursor-pointer flex items-center justify-center w-full h-40 mb-5 rounded-lg bg-orange-50 hover:bg-orange-100 transition border border-dashed border-orange-300"
+                className="cursor-pointer flex items-center justify-center w-full h-32 md:h-40 mb-4 md:mb-5 rounded-lg bg-orange-50 hover:bg-orange-100 transition border border-dashed border-orange-300"
+                style={{ cursor: 'pointer' }} 
               >
                 {preview ? (
                   <img
@@ -123,8 +119,8 @@ const AddFitnessClassForm = () => {
                   />
                 ) : (
                   <div className="flex flex-col items-center">
-                    <img src={uploadIcon} alt="upload icon" className="w-10 h-10 opacity-70" />
-                    <span className="text-sm text-[#055B5C] mt-2">آپلود عکس</span>
+                    <img src={uploadIcon} alt="upload icon" className="w-8 h-8 md:w-10 md:h-10 opacity-70" />
+                    <span className="text-xs md:text-sm text-[#055B5C] mt-2">آپلود عکس</span>
                   </div>
                 )}
               </label>
@@ -136,10 +132,9 @@ const AddFitnessClassForm = () => {
                 className="hidden"
               />
 
-              {/* فیلدها */}
               {['title', 'duration', 'coach', 'price'].map((field, index) => (
-                <div className="mb-4" key={index}>
-                  <label className="block text-sm text-[#055B5C] mb-1">
+                <div className="mb-3 md:mb-4" key={index}>
+                  <label className="block text-xs md:text-sm text-[#055B5C] mb-1">
                     {field === 'title'
                       ? 'نام کلاس:'
                       : field === 'duration'
@@ -153,22 +148,21 @@ const AddFitnessClassForm = () => {
                     name={field}
                     value={formData[field]}
                     onChange={handleChange}
-                    className="w-full border border-[#055B5C] rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-orange-300 transition"
+                    className="w-full border border-[#055B5C] rounded-md p-1.5 md:p-2 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 transition"
                   />
                 </div>
               ))}
 
-              {/* نمایش خطا */}
               {error && (
-                <div className="text-red-600 text-sm text-center mb-3 animate-pulse">
+                <div className="text-red-600 text-xs md:text-sm text-center mb-2 md:mb-3 animate-pulse">
                   {error}
                 </div>
               )}
 
-              {/* دکمه ثبت */}
               <button
                 type="submit"
-                className="w-full bg-[#F45C25] text-white font-semibold py-2 rounded-md hover:bg-[#e45320] transition duration-300 shadow-sm"
+                className="w-full bg-[#F45C25] text-white font-semibold py-1.5 md:py-2 rounded-md text-xs md:text-base hover:bg-[#e45320] transition duration-300 shadow-sm cursor-pointer"
+                style={{ cursor: 'pointer' }} 
               >
                 اضافه کردن کلاس
               </button>
@@ -177,7 +171,6 @@ const AddFitnessClassForm = () => {
         </main>
       </div>
 
-      {/* انیمیشن fade-in */}
       <style>
         {`
           @keyframes fadeIn {

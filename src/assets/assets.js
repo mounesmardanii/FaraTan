@@ -34,7 +34,9 @@ import payment1 from "./payment1.png";
 import apple from "./apple.png";
 import plan from "./plan.png";
 import woman4 from "./woman4.png";
-
+import repair from "./repair.png";
+import lock1 from "./lock1.png";
+import lock2 from "./lock2.png";
 
 export const assets = {
   plan,
@@ -71,4 +73,7 @@ export const assets = {
   wardrobe,
   user,
   woman4,
+  repair,
+  lock1,
+  lock2
 };

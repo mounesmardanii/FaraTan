@@ -61,12 +61,10 @@ function Dashboard() {
 
       <div className="flex flex-1 relative mt-4">
 
-        {/* دسکتاپ: بدون تغییر */}
         <aside className="hidden md:flex mt-3 w-64 z-30 border-t-[3px] border-r-[3px] border-[#055B5C] rounded-tr-[75px]">
           <AdminSidebar />
         </aside>
 
-        {/* موبایل: سایدبار کشویی اختصاصی */}
         <motion.aside
           initial={{ x: '-100%' }}
           animate={{ x: sidebarOpen ? 0 : '-100%' }}
@@ -76,9 +74,15 @@ function Dashboard() {
           <AdminSidebar />
         </motion.aside>
 
+        {sidebarOpen && (
+          <div
+            className="fixed md:hidden inset-0 top-[4rem] z-40 bg-black/50 mt-13.5"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
 
-        {/* بک‌دراپ در موبایل فقط هنگام باز بودن سایدبار */}
+
         {sidebarOpen && (
           <div
             className="fixed md:hidden inset-0 top-[4rem] z-40"
@@ -91,7 +95,6 @@ function Dashboard() {
             ${sidebarOpen ? 'pointer-events-none select-none' : ''}
           `}
         >
-          {/* Stats */}
           <motion.div
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
             initial="hidden"
@@ -113,7 +116,6 @@ function Dashboard() {
             ))}
           </motion.div>
 
-          {/* Courses */}
           <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6"
             initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.8 }}
           >
@@ -132,7 +134,6 @@ function Dashboard() {
             </div>
           </motion.div>
 
-          {/* Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6 h-[220px]"
               initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 1.5 }}
@@ -165,7 +166,6 @@ function Dashboard() {
             </motion.div>
           </div>
 
-          {/* Weekly Schedule */}
           <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6"
             initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 2 }}
           >

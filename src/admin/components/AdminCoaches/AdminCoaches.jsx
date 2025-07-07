@@ -2,75 +2,75 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import AdminHeader from '../AdminHeader';
 import AdminSidebar from '../AdminSidebar';
-import { assets } from '../../../assets/assets';
+import { assets } from '../../../assets/assets'; 
 
-function AdminUsers() {
+function AdminCoaches() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [users, setUsers] = useState([]);
+  const [coaches, setCoaches] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  const [formData, setFormData] = useState({ name: '', lastName: '', sport: '', course: '' });
+  const [formData, setFormData] = useState({ name: '', lastName: '', specialty: '' });
   const [addingNew, setAddingNew] = useState(false);
 
   useEffect(() => {
     const dummy = [
-      { id: 1, name: 'غزل', lastName: 'نادری', sport: 'ایروبیک', course: 'یک ساله', avatar: assets.woman4 },
-      { id: 2, name: 'مونِس', lastName: 'مردانی', sport: 'ایروبیک', course: 'سه ماهه', avatar: assets.woman4 },
+      { id: 1, name: 'ملاحت', lastName: 'مردانی', specialty: 'ایروبیک', avatar: assets.woman1 },
+      { id: 2, name: 'سارا', lastName: 'احمدی', specialty: 'فیتنس', avatar: assets.woman4 },
     ];
-    setUsers(dummy);
+    setCoaches(dummy);
   }, []);
 
-  const filteredUsers = useMemo(() => {
-    return users.filter(user =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCoaches = useMemo(() => {
+    return coaches.filter(coach =>
+      coach.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm, users]);
+  }, [searchTerm, coaches]);
 
-  const handleAddUser = () => {
-    if (!formData.name.trim() || !formData.lastName.trim()) {
-      alert('نام و نام خانوادگی الزامی است');
+  const handleAddCoach = () => {
+    if (!formData.name.trim() || !formData.lastName.trim() || !formData.specialty.trim()) {
+      alert('نام، نام خانوادگی و تخصص الزامی است');
       return;
     }
     try {
-      const newUser = {
+      const newCoach = {
         ...formData,
         id: Date.now(),
-        avatar: assets.woman4
+        avatar: assets.woman1 
       };
-      setUsers([...users, newUser]);
+      setCoaches([...coaches, newCoach]);
       resetForm();
-      console.log('New user added:', newUser);
+      console.log('New coach added:', newCoach);
     } catch (error) {
-      console.error('Error adding user:', error);
+      console.error('Error adding coach:', error);
     }
   };
 
-  const handleDeleteUser = (id) => {
+  const handleDeleteCoach = (id) => {
     try {
-      setUsers(users.filter(u => u.id !== id));
+      setCoaches(coaches.filter(c => c.id !== id));
       resetForm();
-      console.log('User deleted:', id);
+      console.log('Coach deleted:', id);
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deleting coach:', error);
     }
   };
 
   const handleSaveEdit = () => {
     try {
-      setUsers(users.map(u => u.id === formData.id ? { ...formData, avatar: assets.woman4 } : u));
+      setCoaches(coaches.map(c => c.id === formData.id ? { ...formData, avatar: assets.man1 } : c)); 
       resetForm();
-      console.log('User edited:', formData);
+      console.log('Coach edited:', formData);
     } catch (error) {
       console.error('Error saving edit:', error);
     }
   };
 
-  const handleEdit = (user) => {
+  const handleEdit = (coach) => {
     try {
-      setEditIndex(user.id);
-      setFormData(user);
+      setEditIndex(coach.id);
+      setFormData({ ...coach, avatar: assets.woman1 }); 
       setAddingNew(false);
-      console.log('Editing user:', user);
+      console.log('Editing coach:', coach);
     } catch (error) {
       console.error('Error starting edit:', error);
     }
@@ -79,7 +79,7 @@ function AdminUsers() {
   const resetForm = () => {
     try {
       setEditIndex(null);
-      setFormData({ name: '', lastName: '', sport: '', course: '' });
+      setFormData({ name: '', lastName: '', specialty: '' });
       setAddingNew(false);
       console.log('Form reset');
     } catch (error) {
@@ -89,9 +89,9 @@ function AdminUsers() {
 
   const handleAddNewClick = () => {
     try {
-      console.log('Plus button clicked, adding new row');
+      console.log('Plus button clicked, adding new coach');
       setAddingNew(true);
-      setFormData({ name: '', lastName: '', sport: '', course: '' });
+      setFormData({ name: '', lastName: '', specialty: '', avatar: assets.woman1 }); 
     } catch (error) {
       console.error('Error in handleAddNewClick:', error);
     }
@@ -154,7 +154,7 @@ function AdminUsers() {
             animate="visible"
             variants={fadeIn}
           >
-            لیست اعضای باشگاه
+            لیست مربیان
           </motion.h2>
 
           <motion.div
@@ -168,48 +168,49 @@ function AdminUsers() {
                 <thead>
                   <tr className="bg-[#EAF4EF] border-b border-[#ccc]">
                     <th className="py-2 px-1 md:px-2 w-[10%]">پروفایل</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">نام</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">نام خانوادگی</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">ورزش</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">دوره</th>
+                    <th className="py-2 px-1 md:px-2 w-[25%]">نام</th>
+                    <th className="py-2 px-1 md:px-2 w-[25%]">نام خانوادگی</th>
+                    <th className="py-2 px-1 md:px-2 w-[40%]">تخصص</th>
                     <th className="py-2 px-1 md:px-2 w-[20%]">عملیات</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredUsers.map((u) => (
-                    <tr key={u.id} className="bg-[#EAF4EF] border-b border-[#ccc]">
+                  {filteredCoaches.map((c, i) => (
+                    <tr
+                      key={c.id}
+                      className="bg-[#EAF4EF] border-b border-[#ccc]"
+                    >
                       <td className="py-2 px-1 md:px-2">
-                        <img src={u.avatar} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" />
+                        <img src={c.avatar} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; console.log('Avatar failed to load, using placeholder'); }} />
                       </td>
-                      {editIndex === u.id ? (
+                      {editIndex === c.id ? (
                         <>
-                          {['name', 'lastName', 'sport', 'course'].map((key) => (
+                          {['name', 'lastName', 'specialty'].map((key) => (
                             <td key={key} className="py-2 px-1 md:px-2">
                               <input
                                 value={formData[key]}
                                 onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
                                 className="w-full px-1 md:px-2 py-1 border rounded text-[10px] md:text-xs text-right truncate"
-                                placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : key === 'sport' ? 'ورزش' : 'دوره'}
+                                placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : 'تخصص'}
                               />
                             </td>
                           ))}
                           <td className="py-2 px-1 md:px-2">
                             <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                              <button onClick={handleSaveEdit} className="cursor-pointer text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition">ذخیره</button>
-                              <button onClick={resetForm} className="cursor-pointer text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition">لغو</button>
+                              <button onClick={handleSaveEdit} className="text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition cursor-pointer">ذخیره</button>
+                              <button onClick={resetForm} className="text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition cursor-pointer">لغو</button>
                             </div>
                           </td>
                         </>
                       ) : (
                         <>
-                          <td className="py-2 px-1 md:px-2 truncate">{u.name}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{u.lastName}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{u.sport}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{u.course}</td>
+                          <td className="py-2 px-1 md:px-2 truncate">{c.name}</td>
+                          <td className="py-2 px-1 md:px-2 truncate">{c.lastName}</td>
+                          <td className="py-2 px-1 md:px-2 truncate">{c.specialty}</td>
                           <td className="py-2 px-1 md:px-2">
                             <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                              <button onClick={() => handleEdit(u)} className="cursor-pointer text-blue-600 bg-blue-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-blue-200 transition">ویرایش</button>
-                              <button onClick={() => handleDeleteUser(u.id)} className="cursor-pointer text-red-600 bg-red-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-red-200 transition">حذف</button>
+                              <button onClick={() => handleEdit(c)} className="text-blue-600 bg-blue-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-blue-200 transition cursor-pointer">ویرایش</button>
+                              <button onClick={() => handleDeleteCoach(c.id)} className="text-red-600 bg-red-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-red-200 transition cursor-pointer">حذف</button>
                             </div>
                           </td>
                         </>
@@ -218,35 +219,40 @@ function AdminUsers() {
                   ))}
 
                   {addingNew && (
-                    <tr className="bg-[#F9F9F9] border-t">
+                    <tr
+                      className="bg-[#F9F9F9] border-t"
+                    >
                       <td className="py-2 px-1 md:px-2">
-                        <img src={assets.woman4} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" />
+                        <img src={assets.woman1} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; console.log('Avatar failed to load, using placeholder'); }} />
                       </td>
-                      {['name', 'lastName', 'sport', 'course'].map((key) => (
+                      {['name', 'lastName', 'specialty'].map((key) => (
                         <td key={key} className="py-2 px-1 md:px-2">
                           <input
                             value={formData[key]}
                             onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
                             className="w-full px-1 md:px-2 py-1 border rounded text-[10px] md:text-xs text-right truncate"
-                            placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : key === 'sport' ? 'ورزش' : 'دوره'}
+                            placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : 'تخصص'}
                           />
                         </td>
                       ))}
                       <td className="py-2 px-1 md:px-2">
                         <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                          <button onClick={handleAddUser} className="cursor-pointer text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition">ثبت</button>
-                          <button onClick={resetForm} className="cursor-pointer text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition">لغو</button>
+                          <button onClick={handleAddCoach} className="text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition cursor-pointer">ثبت</button>
+                          <button onClick={resetForm} className="text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition cursor-pointer">لغو</button>
                         </div>
                       </td>
                     </tr>
                   )}
 
                   {!addingNew && !editIndex && (
-                    <tr key="add-row" className="bg-[#EAF4EF]">
-                      <td colSpan="6" className="text-center py-4">
+                    <tr
+                      key="add-row"
+                      className="bg-[#EAF4EF]"
+                    >
+                      <td colSpan="5" className="text-center py-4">
                         <button
                           onClick={handleAddNewClick}
-                          className="cursor-pointer text-2xl md:text-3xl text-green-600 hover:text-green-700 transition"
+                          className="text-2xl md:text-3xl text-green-600 hover:text-green-700 transition cursor-pointer"
                         >
                           +
                         </button>
@@ -263,4 +269,4 @@ function AdminUsers() {
   );
 }
 
-export default AdminUsers;
+export default AdminCoaches;
