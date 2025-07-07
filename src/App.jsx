@@ -19,11 +19,14 @@ import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
 import ProfilePage from "./pages/ProfilePage";
 import MyReservations from "./pages/MyReservations";
 import MyPurchases from "./pages/MyPurchases";
+
+// Admin pages
 import DashboardPage from "./admin/pages/DashpoardPage";
 import AdminUsersPage from "./admin/pages/AdminUsersPage";
 import AddFitnessClassPage from "./admin/pages/AddFitnessClassPage";
 import AdminCoachesPage from "./admin/pages/AdminCoachesPage";
 import WardrobeManagementPage from "./admin/pages/WardrobeManagementPage";
+import PaymentStatusPage from "./admin/pages/PaymentStatusPage"; // 🆕 Added
 
 import { useAuth } from "./context/AuthContext";
 
@@ -48,7 +51,8 @@ function LayoutWrapper() {
     "/admin/users",
     "/admin/fitness",
     "/admin/coaches",
-    "/admin/wardrobes" 
+    "/admin/wardrobes",
+    "/admin/payments" // 🆕 Hide layout in this route
   ].includes(location.pathname);
 
   return (
@@ -56,6 +60,7 @@ function LayoutWrapper() {
       {!hideLayout && <Navbar />}
 
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -73,11 +78,13 @@ function LayoutWrapper() {
         <Route path="/my-reservations" element={<MyReservations />} />
         <Route path="/my-purchases" element={<MyPurchases />} />
 
+        {/* Admin routes */}
         <Route path="/admin" element={<AdminRoute><DashboardPage /></AdminRoute>} />
         <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
         <Route path="/admin/fitness" element={<AdminRoute><AddFitnessClassPage /></AdminRoute>} />
         <Route path="/admin/coaches" element={<AdminRoute><AdminCoachesPage /></AdminRoute>} />
-        <Route path="/admin/wardrobes" element={<AdminRoute><WardrobeManagementPage /></AdminRoute>} /> 
+        <Route path="/admin/wardrobes" element={<AdminRoute><WardrobeManagementPage /></AdminRoute>} />
+        <Route path="/admin/payments" element={<AdminRoute><PaymentStatusPage /></AdminRoute>} />
       </Routes>
 
       {!hideLayout && <Footer />}
