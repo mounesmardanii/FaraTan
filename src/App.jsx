@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
+// عمومی
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -16,31 +17,26 @@ import StartTraining from "./pages/StartTraining";
 import OneYearPlan from "./pages/TrainingPlans/OneYearPlan";
 import SixMonthPlan from "./pages/TrainingPlans/SixMonthPlan";
 import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
-import DashboardPage from "./admin/pages/DashpoardPage";
-import AdminUsersPage from "./admin/pages/AdminUsersPage"; // ✅ جدید
 import ProfilePage from "./pages/ProfilePage";
 import MyReservations from "./pages/MyReservations";
 import MyPurchases from "./pages/MyPurchases";
+
+// ادمین
+import DashboardPage from "./admin/pages/DashpoardPage";
+import AdminUsersPage from "./admin/pages/AdminUsersPage";
+import AddFitnessClassPage from "./admin/pages/AddFitnessClassPage";
 
 import { useAuth } from "./context/AuthContext";
 
 function AdminRoute({ children }) {
   const { user } = useAuth();
-  console.log("User role:", user ? user.role : "null");
-
-  if (user === null) {
-    return <div>در حال بارگذاری...</div>;
-  }
-  if (user.role !== "admin") {
-    return <Navigate to="/" replace />;
-  }
-
+  if (user === null) return <div>در حال بارگذاری...</div>;
+  if (user.role !== "admin") return <Navigate to="/" replace />;
   return children;
 }
 
 function LayoutWrapper() {
   const location = useLocation();
-
   const hideLayout = [
     "/login",
     "/signup",
@@ -50,7 +46,8 @@ function LayoutWrapper() {
     "/forgot-password",
     "/new-password",
     "/admin",
-    "/admin/users", // ✅ پنهان‌کردن Navbar/Footer در این صفحه
+    "/admin/users",
+    "/admin/fitness"
   ].includes(location.pathname);
 
   return (
@@ -58,7 +55,7 @@ function LayoutWrapper() {
       {!hideLayout && <Navbar />}
 
       <Routes>
-        {/* صفحات عمومی */}
+        {/* عمومی */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -76,23 +73,10 @@ function LayoutWrapper() {
         <Route path="/my-reservations" element={<MyReservations />} />
         <Route path="/my-purchases" element={<MyPurchases />} />
 
-        {/* صفحات ادمین با گارد دسترسی */}
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <DashboardPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/users"
-          element={
-            <AdminRoute>
-              <AdminUsersPage />
-            </AdminRoute>
-          }
-        />
+        {/* ادمین */}
+        <Route path="/admin" element={<AdminRoute><DashboardPage /></AdminRoute>} />
+        <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
+        <Route path="/admin/fitness" element={<AdminRoute><AddFitnessClassPage /></AdminRoute>} />
       </Routes>
 
       {!hideLayout && <Footer />}

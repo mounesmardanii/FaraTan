@@ -171,7 +171,7 @@ function Dashboard() {
           >
             <p className="text-orange-600 font-bold text-sm mb-4 text-center">برنامه‌ی هفتگی</p>
             <div className="overflow-x-auto">
-              <table className="min-w-full text-sm text-[#055B5C] text-center font-semibold">
+              <table dir="rtl" className="min-w-full text-sm text-[#055B5C] text-center font-semibold">
                 <thead>
                   <tr>
                     {weeklySchedule.map((d, i) => (
@@ -194,6 +194,7 @@ function Dashboard() {
               </table>
             </div>
           </motion.div>
+
         </main>
       </div>
     </div>
