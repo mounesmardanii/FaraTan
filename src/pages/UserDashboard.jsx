@@ -7,12 +7,15 @@ const UserDashboard = () => {
   const navigate = useNavigate();
 
   const navItems = [
-    { label: "پرداخت ها", icon: assets.payment1, path: "/payments" },
-    { label: "برنامه تغذیه", icon: assets.apple, path: "/nutrition" },
-    { label: "رزرو ها", icon: assets.reservation, path: "/reservations" },
-    { label: "برنامه ورزشی", icon: assets.plan, path: "/workout" },
+    { label: "پرداخت ها", icon: assets.payment1, path: "/my-purchases" },
+    {
+      label: "برنامه تغذیه",
+      icon: assets.apple,
+      path: "/nutrition",
+    },
+    { label: "رزرو ها", icon: assets.reservation, path: "/my-reservations" },
+    { label: "برنامه ورزشی", icon: assets.plan, path: "/sports-program" },
   ];
-
   return (
     <div className="flex flex-col items-center p-4 sm:p-6 md:p-8 max-w-[1200px] mx-auto">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-4 mt-4">

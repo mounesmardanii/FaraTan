@@ -9,8 +9,8 @@ const ThreeMonthPlan = () => {
         برنامه ۳ ماهه - شروعی برای تغییر
       </h1>
       <ClassTableWithCoach
-        classType="بدنسازی"
-        coachName="مریم عیدی"
+        category="بدنسازی"
+        classType="دوره سه‌ماهه"
         classList={[
           {
             id: 2,

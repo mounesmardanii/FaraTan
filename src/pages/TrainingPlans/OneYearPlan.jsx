@@ -9,7 +9,8 @@ const OneYearPlan = () => {
         برنامه یک‌ساله - سرمایه‌گذاری روی بدن و ذهن
       </h1>
       <ClassTableWithCoach
-        classType="بدنسازی"
+        category="بدنسازی"
+        classType="دوره یک‌ساله"
         classList={[
           {
             id: 2,

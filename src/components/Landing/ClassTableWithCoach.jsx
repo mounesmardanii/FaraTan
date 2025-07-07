@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+// ✅ ClassTableWithCoach.jsx
+import React from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const rowVariants = {
   hidden: { opacity: 0, x: 50 },
@@ -15,14 +17,21 @@ const rowVariants = {
 };
 
 const ClassTableWithCoach = ({
-  classType = "بدنسازی",
+  category = "بدنسازی",
+  classType = "نوع دوره",
   coachName = "مربی فراتن",
   classList = [],
-  onBuy = () => {},
 }) => {
+  const navigate = useNavigate();
+
   const handleBuy = (item) => {
     if (item.status === "ظرفیت دارد") {
-      onBuy(item);
+      navigate("/payment", {
+        state: {
+          ...item,
+          duration: classType,
+        },
+      });
     }
   };
 
@@ -34,7 +43,7 @@ const ClassTableWithCoach = ({
       className="bg-[#FEEDDB] p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] mx-auto mt-10 font-[Tahoma] text-right border border-[#D1E7D8]"
     >
       <h3 className="text-[#256250] border-b-2 border-[#FF6600] pb-2 mb-4 text-xl font-bold text-center">
-        دوره‌های {classType}
+        دوره‌های {category} - {classType}
       </h3>
 
       <table className="w-full table-fixed border-collapse">
@@ -52,7 +61,7 @@ const ClassTableWithCoach = ({
         <tbody className="text-sm">
           {classList.map((item, index) => (
             <motion.tr
-              key={item.id}
+              key={item.id + "-" + item.coach + index}
               custom={index}
               initial="hidden"
               animate="visible"
@@ -62,11 +71,11 @@ const ClassTableWithCoach = ({
               <td className="p-2 text-center">
                 <button
                   onClick={() => handleBuy(item)}
-                  disabled={item.status === "تکمیل شده"}
+                  disabled={item.status !== "ظرفیت دارد"}
                   className={`px-4 py-1 rounded-full text-sm font-bold transition ${
-                    item.status === "تکمیل شده"
-                      ? "bg-gray-300 text-[#256250] cursor-not-allowed"
-                      : "bg-[#B5D2C1] text-[#256250] hover:bg-[#9dbdaa] cursor-pointer"
+                    item.status === "ظرفیت دارد"
+                      ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
+                      : "bg-gray-300 text-[#888] cursor-not-allowed"
                   }`}
                 >
                   خرید دوره

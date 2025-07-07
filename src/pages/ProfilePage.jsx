@@ -5,7 +5,6 @@ import ScrollToTopButton from "../components/ScrollToTopButton";
 import { motion } from "framer-motion";
 import UserDashboard from "../pages/UserDashboard";
 
-// انیمیشن
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: (i = 0) => ({
@@ -25,7 +24,6 @@ const ProfilePage = () => {
   return (
     <div className="relative p-4 sm:p-6 md:p-8 max-w-[1400px] w-full mx-auto mt-8">
       <div className="flex flex-col gap-2 sm:gap-2 min-[800px]:flex-row min-[800px]:items-start ml-20">
-        {/* ستون پروفایل (کوچک‌تر و نزدیک‌تر) */}
         <motion.div
           initial="hidden"
           animate="visible"
@@ -36,7 +34,6 @@ const ProfilePage = () => {
           <ProfileInfoCard />
         </motion.div>
 
-        {/* ستون داشبورد کاربر */}
         <motion.div
           initial="hidden"
           animate="visible"

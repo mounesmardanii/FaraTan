@@ -9,7 +9,8 @@ const SixMonthPlan = () => {
         برنامه ۶ ماهه - ثبات، پیشرفت، انگیزه
       </h1>
       <ClassTableWithCoach
-        classType="بدنسازی"
+        category="بدنسازی"
+        classType="دوره شش‌ماهه"
         classList={[
           {
             id: 1,
