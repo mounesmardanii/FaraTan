@@ -30,3 +30,46 @@ class MemberResponseSchema(BaseModel):
     class Config:
         from_attributes = True
 
+
+class VerifyOTPSchema(BaseModel):
+    number: str
+    otp: str
+    model_config = ConfigDict(from_attributes=True)
+
+class VerifyOTPResponseSchema(BaseModel):
+    verified: bool
+    message: str
+
+
+class MemberLoginSchema(BaseModel):
+    phone_number: str
+    password: str
+
+
+class ResendOTPSchema(BaseModel):
+    number: str
+
+class ResendOTPResponseSchema(BaseModel):
+    number: str
+    message: str        
+
+
+class UpdateMemberInfoSchema(BaseModel):
+    password: Optional[str]
+    confirm_password: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
+
+
+class ResetPasswordSchema(BaseModel):
+    number: str
+    otp: str
+    new_password: str
+    confirm_password: str
+
+
+class ForgetPasswordSchema(BaseModel):
+    number: str
+    password: str
+    confirm_password: str
+   

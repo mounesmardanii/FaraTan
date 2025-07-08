@@ -6,7 +6,7 @@ from  app.domain.schemas.member_schema import MemberCreateSchema
 from  app.infrastructure.repositories.member_repository import MemberRepository
 from  app.services.auth_services.hash_service import HashService
 from  app.services.base_service import BaseService
-import uuid
+from uuid import UUID
 
 
 class MemberService(BaseService):
@@ -26,6 +26,7 @@ class MemberService(BaseService):
         phone_number=member_body.phone_number,
         gender=member_body.gender,
         birthdate=member_body.birthdate,
+        password=self.hash_service.hash_password(member_body.password),
         national_id=member_body.national_id
         )
         return self.member_repository.create_member(member)
@@ -35,3 +36,21 @@ class MemberService(BaseService):
         logger.info(f"📥 Fetching member with phone_number {phone_number}")
         return self.member_repository.get_member_by_number(phone_number)
 
+
+    async def update_verified_status(self, member_id: UUID, update_fields: Dict) -> Member: 
+        logger.info(f"🔃 Updating member with id {member_id}")
+        return self.member_repository.update_member(member_id, update_fields)
+
+    async def update_member(self, member_id: UUID, update_fields: Dict) -> Member:
+        logger.info(f"🔃 Updating member with id {member_id}")
+
+        # if 'password' in update_fields:
+        #     if update_fields['password'] != update_fields['confirm_password']:
+        #         logger.info(f"❌ Password confirmation does not match")
+        #         raise HTTPException(status_code=400, detail='Password confirmation does not match')
+        update_fields['password'] = self.hash_service.hash_password(update_fields['password'])
+        update_fields.pop('confirm_password')
+        
+        update_fields = {key: value for key, value in update_fields.items() if value != ""}  
+
+        return self.member_repository.update_member(member_id, update_fields)  
