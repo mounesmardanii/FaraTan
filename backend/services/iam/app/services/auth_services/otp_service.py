@@ -3,32 +3,29 @@ from typing import Annotated
 from loguru import logger
 from fastapi import Depends
 from redis import Redis
-
+from app.services.auth_services.kavenegar_client import KavenegarOTPClient
 from  app.core.redis.redis_client import get_redis_client
 from  app.services.base_service import BaseService
 
 
 class OTPService(BaseService):
-    def __init__(
-        self, redis_client: Annotated[Redis, Depends(get_redis_client)]
-    ) -> None:
+    def __init__(self,
+                 client: Annotated[KavenegarOTPClient,Depends()] ,
+                   redis_client: Annotated[Redis, Depends(get_redis_client)])-> None:
         super().__init__()
-        self.redis_client = redis_client
+        self.client = client
+        self.redis = redis_client
+        self.ttl = 120  
 
-    @staticmethod
-    def __generate_otp() -> str:
-        return str(random.randint(100000, 999999))
-
-    def send_otp(self, email: str):
-        otp = self.__generate_otp()
-        self.redis_client.setex(email, self.config.OTP_EXPIRE_TIME, otp)
-        logger.info(f"OTP {otp} sent to email {email}")
+    def send_otp(self, phone: str) -> str:
+        otp = self.client.generate_otp()
+        self.redis.setex(phone, self.ttl, otp)
+        self.client.send_otp(phone, otp)
         return otp
 
-    def verify_otp(self, email: str, otp: str) -> bool:
-        stored_otp = self.redis_client.get(email)
-        return stored_otp is not None and stored_otp == otp
+    def verify_otp(self, phone: str, otp: str) -> bool:
+        stored = self.redis.get(phone)
+        return stored is not None and stored.decode() == otp
 
-    def check_exist(self, email: str) -> bool:
-        stored_otp = self.redis_client.get(email)
-        return stored_otp is not None
+    def check_exist(self, phone: str) -> bool:
+        return self.redis.get(phone) is not None
