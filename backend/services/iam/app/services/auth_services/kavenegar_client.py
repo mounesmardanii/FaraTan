@@ -1,12 +1,12 @@
-# services/otp/kavenegar_client.py
 from kavenegar import KavenegarAPI, APIException, HTTPException
 from fastapi import HTTPException as FastAPIHTTPException
 import random
+from  app.services.base_service import BaseService
 
-class KavenegarOTPClient:
-    def __init__(self, api_key: str, sender: str):
-        self.api = KavenegarAPI(api_key)
-        self.sender = sender
+class KavenegarOTPClient(BaseService):
+    def __init__(self):
+        self.api = KavenegarAPI(self.config.KAVENEGAR_API_KEY)
+        self.sender = self.config.KAVENEGAR_SENDER
 
     def generate_otp(self) -> str:
         return str(random.randint(100000, 999999))
@@ -15,6 +15,7 @@ class KavenegarOTPClient:
         try:
             params = {
                 'sender': self.sender,
+                # 'receptor': phone,
                 'receptor': '09380403877',
                 'message': f'کد تایید شما: {otp}'
             }
