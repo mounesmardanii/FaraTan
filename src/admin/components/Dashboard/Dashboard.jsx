@@ -105,7 +105,7 @@ function Dashboard() {
             { label: 'درآمد این ماه', value: stats.monthlyRevenue },
             { label: 'تعداد مربیان فعال', value: stats.activeCoaches },
             ].map((item, i) => (
-              <motion.div key={i} className="bg-[#D1E7D8] rounded-xl shadow p-5"
+              <motion.div key={i} className="bg-[#EAF4EF] rounded-xl shadow p-5"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.2, duration: 0.5 }}
@@ -116,7 +116,7 @@ function Dashboard() {
             ))}
           </motion.div>
 
-          <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6"
+          <motion.div className=" bg-[#EAF4EF] rounded-xl shadow p-6"
             initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.8 }}
           >
             <p className="text-orange-600 font-bold text-sm mb-3 text-center">انواع دوره‌ها</p>
@@ -128,17 +128,17 @@ function Dashboard() {
                   transition={{ delay: 0.9 + i * 0.2, duration: 0.5 }}
                 >
                   <p>{c.title}</p>
-                  <p>{c.count} نفر</p>
+                  <p dir="rtl">{c.count} نفر</p>
                 </motion.div>
               ))}
             </div>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6 h-[220px]"
+            <motion.div className="bg-[#EAF4EF] rounded-xl shadow p-6 h-[220px]"
               initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 1.5 }}
             >
-              <p className="text-orange-600 font-bold text-sm mb-3 text-center">نمودار رشد کاربران</p>
+              <p className="text-orange-600 font-bold text-sm mb-3 text-center">نمودار رشد کاربران (واحد: نفر)</p>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={growthData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -150,10 +150,10 @@ function Dashboard() {
               </ResponsiveContainer>
             </motion.div>
 
-            <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6 h-[220px]"
+            <motion.div className="bg-[#EAF4EF] rounded-xl shadow p-6 h-[220px]"
               initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 1.7 }}
             >
-              <p className="text-orange-600 font-bold text-sm mb-3 text-center">نمودار حضور هفتگی</p>
+              <p className="text-orange-600 font-bold text-sm mb-3 text-center">نمودار حضور هفتگی (واحد: نفر)</p>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={attendanceData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -166,20 +166,20 @@ function Dashboard() {
             </motion.div>
           </div>
 
-          <motion.div className="bg-[#D1E7D8] rounded-xl shadow p-6"
+          <motion.div className="bg-[#EAF4EF] rounded-xl shadow p-6"
             initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 2 }}
           >
             <p className="text-orange-600 font-bold text-sm mb-4 text-center">برنامه‌ی هفتگی</p>
             <div className="overflow-x-auto">
-              <table dir="rtl" className="min-w-full text-sm text-[#055B5C] text-center font-semibold">
+              <table dir="rtl" className="min-w-full text-sm text-[#055B5C] text-center font-semibold ">
                 <thead>
                   <tr>
                     {weeklySchedule.map((d, i) => (
-                      <th key={i} className="px-4 py-2">{d.day}</th>
+                      <th key={i} className="px-4 py-2 ">{d.day}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="bg-[#EAF4EF]">
+                <tbody className=" bg-[#bee2c9]">
                   <tr>
                     {weeklySchedule.map((_, i) => (
                       <td key={i} className="px-4 py-2">بدنسازی</td>

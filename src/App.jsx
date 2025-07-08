@@ -24,6 +24,9 @@ import MyPurchases from "./pages/MyPurchases";
 import SportsProgram from "./pages/SportsProgram";
 import NutritionProgram from "./pages/NutritionProgram";
 import NutritionPlanDetail from "./pages/NutritionPlanDetail";
+import NutritionProgramPage from "./admin/pages/NutritionProgramPage";
+import FitnessProgramPage from "./admin/pages/FitnessProgramPage";
+
 
 // Admin pages from remote
 import AddFitnessClassPage from "./admin/pages/AddFitnessClassPage";
@@ -42,27 +45,8 @@ function AdminRoute({ children }) {
 }
 
 function LayoutWrapper() {
-  const location = useLocation();
-  const hideLayout = [
-    "/login",
-    "/signup",
-    "/verify",
-    "/loginform",
-    "/register-info",
-    "/forgot-password",
-    "/new-password",
-    "/admin",
-    "/admin/users",
-    "/payment",
-    "/admin/fitness",
-    "/admin/coaches",
-    "/admin/wardrobes",
-    "/admin/payments", // Added from remote
-  ].includes(location.pathname);
-
   return (
     <>
-      {!hideLayout && <Navbar />}
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
@@ -84,6 +68,9 @@ function LayoutWrapper() {
         <Route path="/sports-program" element={<SportsProgram />} />
         <Route path="/nutrition" element={<NutritionProgram />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/admin/add-nutrition" element={<NutritionProgramPage />} />
+        <Route path="/admin/add-fitness" element={<FitnessProgramPage />} />
+
         <Route
           path="/nutrition/:weekId/plan"
           element={<NutritionPlanDetail />}
@@ -139,10 +126,10 @@ function LayoutWrapper() {
           }
         />
       </Routes>
-      {!hideLayout && <Footer />}
     </>
   );
 }
+
 
 function App() {
   return <LayoutWrapper />;
