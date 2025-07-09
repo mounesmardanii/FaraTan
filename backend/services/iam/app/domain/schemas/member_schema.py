@@ -3,11 +3,10 @@ from datetime import date, datetime
 from typing import Optional
 from uuid import UUID
 from typing import Annotated
+
 class MemberCreateSchema(BaseModel):
     full_name: str  
     phone_number: str 
-    gender: Optional[str]  
-    birthdate: Optional[date]  
     national_id: Annotated[str, StringConstraints(min_length=10, max_length=10, pattern=r"^\d{10}$")]
     password:str
 
@@ -24,6 +23,7 @@ class MemberResponseSchema(BaseModel):
     national_id: str
     profile_image: Optional[str]
     is_verified:bool
+    can_reset_password:bool
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
 
@@ -32,7 +32,7 @@ class MemberResponseSchema(BaseModel):
 
 
 class VerifyOTPSchema(BaseModel):
-    number: str
+    phone_number: str
     otp: str
     model_config = ConfigDict(from_attributes=True)
 
@@ -47,29 +47,39 @@ class MemberLoginSchema(BaseModel):
 
 
 class ResendOTPSchema(BaseModel):
-    number: str
+    phone_number: str
 
 class ResendOTPResponseSchema(BaseModel):
-    number: str
+    phone_number: str
     message: str        
 
 
-class UpdateMemberInfoSchema(BaseModel):
-    password: Optional[str]
-    confirm_password: Optional[str]
-    first_name: Optional[str]
-    last_name: Optional[str]
 
 
 class ResetPasswordSchema(BaseModel):
-    number: str
+    phone_number: str
     otp: str
     new_password: str
     confirm_password: str
 
 
 class ForgetPasswordSchema(BaseModel):
-    number: str
+    phone_number: str
     password: str
     confirm_password: str
-   
+
+
+class UpdateMemberInfoSchema(BaseModel):
+    
+    full_name: Optional[str]
+    phone_number: Optional[str]
+    gender: Optional[str]
+    birthdate: Optional[date]
+    national_id: Optional[
+        Annotated[str, StringConstraints(min_length=10, max_length=10, pattern=r"^\d{10}$")]
+    ]
+    password: Optional[str]
+    confirm_password: Optional[str]
+
+    class Config:
+        from_attributes = True

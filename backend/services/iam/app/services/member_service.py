@@ -24,8 +24,6 @@ class MemberService(BaseService):
         member = Member(
         full_name=member_body.full_name,
         phone_number=member_body.phone_number,
-        gender=member_body.gender,
-        birthdate=member_body.birthdate,
         password=self.hash_service.hash_password(member_body.password),
         national_id=member_body.national_id
         )
@@ -36,6 +34,9 @@ class MemberService(BaseService):
         logger.info(f"📥 Fetching member with phone_number {phone_number}")
         return self.member_repository.get_member_by_number(phone_number)
 
+    async def get_member_by_id(self, member_id: UUID) -> Member:  
+        logger.info(f"📥 Fetching member with id {member_id}")
+        return self.member_repository.get_member_by_id(member_id)
 
     async def update_verified_status(self, member_id: UUID, update_fields: Dict) -> Member: 
         logger.info(f"🔃 Updating member with id {member_id}")
@@ -44,13 +45,24 @@ class MemberService(BaseService):
     async def update_member(self, member_id: UUID, update_fields: Dict) -> Member:
         logger.info(f"🔃 Updating member with id {member_id}")
 
-        # if 'password' in update_fields:
-        #     if update_fields['password'] != update_fields['confirm_password']:
-        #         logger.info(f"❌ Password confirmation does not match")
-        #         raise HTTPException(status_code=400, detail='Password confirmation does not match')
         update_fields['password'] = self.hash_service.hash_password(update_fields['password'])
-        update_fields.pop('confirm_password')
         
         update_fields = {key: value for key, value in update_fields.items() if value != ""}  
 
         return self.member_repository.update_member(member_id, update_fields)  
+
+    async def update_can_change_status(self, member_id: UUID, update_fields: Dict) -> Member: 
+        logger.info(f"🔃 Updating member with id {member_id}")
+        return self.member_repository.update_member(member_id, update_fields)
+
+    async def change_member_password(self, phone_number:str, update_fields: Dict) -> Member:
+        logger.info(f"🔃 Changing password member with id {phone_number}")
+
+        update_fields['password'] = self.hash_service.hash_password(update_fields['password'])
+
+        member = self.member_repository.get_member_by_number(phone_number)
+        if member.can_reset_password != True:
+            raise HTTPException(status_code=400, detail='You need to verify the otp first')
+
+        self.member_repository.update_member(member.id, {"can_reset_password": False})    
+        return self.member_repository.update_member(member.id, update_fields)
