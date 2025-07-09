@@ -18,8 +18,6 @@ class MemberResponseSchema(BaseModel):
     id: UUID
     full_name: str
     phone_number: str
-    gender: Optional[str]
-    birthdate: Optional[date]
     national_id: str
     profile_image: Optional[str]
     is_verified:bool
@@ -70,11 +68,9 @@ class ForgetPasswordSchema(BaseModel):
 
 
 class UpdateMemberInfoSchema(BaseModel):
-    
+
     full_name: Optional[str]
-    phone_number: Optional[str]
-    gender: Optional[str]
-    birthdate: Optional[date]
+    phone_number: Optional[str] 
     national_id: Optional[
         Annotated[str, StringConstraints(min_length=10, max_length=10, pattern=r"^\d{10}$")]
     ]
