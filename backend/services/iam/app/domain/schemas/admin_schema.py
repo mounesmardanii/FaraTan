@@ -2,5 +2,5 @@ from pydantic import BaseModel
 
 
 class AdminLoginSchema(BaseModel):
-    email: str
+    phone_number: str
     password: str
