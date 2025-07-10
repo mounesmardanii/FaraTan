@@ -15,15 +15,15 @@ const ForgotPassword = () => {
 
     return (
         <Formik
-            initialValues={{ email: '' }}
+            initialValues={{ phoneNumber: '' }}
             validationSchema={Yup.object({
-                email: Yup.string()
-                    .email('ایمیل نامعتبر است')
-                    .required('ایمیل الزامی است'),
+                phoneNumber: Yup.string()
+                    .matches(/^09[0-9]{9}$/, 'شماره تماس باید با 09 شروع شده و 11 رقم باشد')
+                    .required('شماره تماس الزامی است'),
             })}
             onSubmit={(values) => {
                 console.log('درخواست بازیابی رمز:', values);
-                alert('اگر ایمیل معتبر باشد، لینک بازیابی ارسال خواهد شد.');
+                alert('اگر شماره تماس معتبر باشد، لینک بازیابی ارسال خواهد شد.');
                 navigate('/login');
             }}
         >
@@ -82,7 +82,7 @@ const ForgotPassword = () => {
                                 transition={{ delay: 0.3, duration: 0.5 }}
                                 className="text-sm md:text-base text-center md:text-right mb-6 leading-relaxed"
                             >
-                                لطفاً ایمیل خود را وارد کنید تا لینک بازیابی برای شما ارسال شود.
+                                لطفاً شماره تماس خود را وارد کنید تا لینک بازیابی برای شما ارسال شود.
                             </motion.p>
 
                             <motion.form
@@ -93,16 +93,16 @@ const ForgotPassword = () => {
                                 transition={{ delay: 0.4, duration: 0.5 }}
                             >
                                 <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="ایمیل خود را وارد کنید"
-                                    value={formik.values.email}
+                                    type="tel"
+                                    name="phoneNumber"
+                                    placeholder="شماره تماس خود را وارد کنید (مثال: 09123456789)"
+                                    value={formik.values.phoneNumber}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                     className="w-full p-3 rounded-xl bg-gray-100 text-black text-right"
                                 />
-                                {formik.touched.email && formik.errors.email && (
-                                    <div className="text-red-300 text-xs text-right">{formik.errors.email}</div>
+                                {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+                                    <div className="text-red-300 text-xs text-right">{formik.errors.phoneNumber}</div>
                                 )}
 
                                 <motion.button
@@ -110,7 +110,7 @@ const ForgotPassword = () => {
                                     whileHover={{ scale: 1.05, y: -2 }}
                                     whileTap={{ scale: 0.95 }}
                                     transition={{ type: 'spring', stiffness: 200 }}
-                                    className="w-full py-3 bg-[#FF6600] text-white font-bold text-lg rounded-xl cursor-pointer  "
+                                    className="w-full py-3 bg-[#FF6600] text-white font-bold text-lg rounded-xl cursor-pointer"
                                 >
                                     ارسال لینک بازیابی
                                 </motion.button>
@@ -122,7 +122,6 @@ const ForgotPassword = () => {
                             >
                                 رمز عبور جدید؟ ورود
                             </motion.p>
-
                         </motion.div>
                     </div>
                 </div>

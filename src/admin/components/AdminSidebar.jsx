@@ -9,7 +9,6 @@ function AdminSidebar() {
   const items = [
     { icon: assets.home, label: 'داشبورد', path: '/admin' },
     { icon: assets.user, label: 'کاربران', path: '/admin/users' },
-    { icon: assets.sport, label: 'ورزش‌ها', path: '/admin/fitness' },
     { icon: assets.text, label: 'مربی ها', path: '/admin/coaches' },
     { icon: assets.wardrobe, label: 'کمد ها', path: '/admin/wardrobes' },
     { icon: assets.payment, label: 'پرداخت ها', path: '/admin/payments' },

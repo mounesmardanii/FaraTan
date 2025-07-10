@@ -1,21 +1,23 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import AdminHeader from '../AdminHeader';
 import AdminSidebar from '../AdminSidebar';
-import { assets } from '../../../assets/assets'; 
+import { assets } from '../../../assets/assets';
 
 function AdminCoaches() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [coaches, setCoaches] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  const [formData, setFormData] = useState({ name: '', lastName: '', specialty: '' });
+  const [formData, setFormData] = useState({ name: '', lastName: '', specialty: '', workExperience: '', age: '', phoneNumber: '' });
   const [addingNew, setAddingNew] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const dummy = [
-      { id: 1, name: 'ملاحت', lastName: 'مردانی', specialty: 'ایروبیک', avatar: assets.woman1 },
-      { id: 2, name: 'سارا', lastName: 'احمدی', specialty: 'فیتنس', avatar: assets.woman4 },
+      { id: 1, name: 'ملاحت', lastName: 'مردانی', specialty: 'ایروبیک', workExperience: '5 سال', age: '30', phoneNumber: '09123456789', avatar: assets.woman1 },
+      { id: 2, name: 'سارا', lastName: 'احمدی', specialty: 'فیتنس', workExperience: '3 سال', age: '28', phoneNumber: '09129876543', avatar: assets.woman4 },
     ];
     setCoaches(dummy);
   }, []);
@@ -27,15 +29,15 @@ function AdminCoaches() {
   }, [searchTerm, coaches]);
 
   const handleAddCoach = () => {
-    if (!formData.name.trim() || !formData.lastName.trim() || !formData.specialty.trim()) {
-      alert('نام، نام خانوادگی و تخصص الزامی است');
+    if (!formData.name.trim() || !formData.lastName.trim() || !formData.specialty.trim() || !formData.workExperience.trim() || !formData.age.trim() || !formData.phoneNumber.trim()) {
+      alert('تمامی فیلدها (نام، نام خانوادگی، تخصص، سابقه کاری، سن و شماره تماس) الزامی است');
       return;
     }
     try {
       const newCoach = {
         ...formData,
         id: Date.now(),
-        avatar: assets.woman1 
+        avatar: assets.woman1
       };
       setCoaches([...coaches, newCoach]);
       resetForm();
@@ -57,7 +59,7 @@ function AdminCoaches() {
 
   const handleSaveEdit = () => {
     try {
-      setCoaches(coaches.map(c => c.id === formData.id ? { ...formData, avatar: assets.man1 } : c)); 
+      setCoaches(coaches.map(c => c.id === formData.id ? { ...formData, avatar: assets.man1 } : c));
       resetForm();
       console.log('Coach edited:', formData);
     } catch (error) {
@@ -68,7 +70,7 @@ function AdminCoaches() {
   const handleEdit = (coach) => {
     try {
       setEditIndex(coach.id);
-      setFormData({ ...coach, avatar: assets.woman1 }); 
+      setFormData({ ...coach, avatar: assets.woman1 });
       setAddingNew(false);
       console.log('Editing coach:', coach);
     } catch (error) {
@@ -79,7 +81,7 @@ function AdminCoaches() {
   const resetForm = () => {
     try {
       setEditIndex(null);
-      setFormData({ name: '', lastName: '', specialty: '' });
+      setFormData({ name: '', lastName: '', specialty: '', workExperience: '', age: '', phoneNumber: '' });
       setAddingNew(false);
       console.log('Form reset');
     } catch (error) {
@@ -91,9 +93,18 @@ function AdminCoaches() {
     try {
       console.log('Plus button clicked, adding new coach');
       setAddingNew(true);
-      setFormData({ name: '', lastName: '', specialty: '', avatar: assets.woman1 }); 
+      setFormData({ name: '', lastName: '', specialty: '', workExperience: '', age: '', phoneNumber: '', avatar: assets.woman1 });
     } catch (error) {
       console.error('Error in handleAddNewClick:', error);
+    }
+  };
+
+  const handleScheduleClass = (coachId) => {
+    try {
+      navigate(`/admin/coach-schedule/${coachId}`);
+      console.log('Navigating to schedule for coach:', coachId);
+    } catch (error) {
+      console.error('Error navigating to schedule:', error);
     }
   };
 
@@ -129,9 +140,7 @@ function AdminCoaches() {
 
         <main
           dir="rtl"
-          className={`flex-1 p-4 md:p-8 relative z-10 border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white flex flex-col gap-6 text-right mt-3 ml-10 md:ml-10 ${
-            sidebarOpen ? 'pointer-events-none select-none' : ''
-          }`}
+          className={`flex-1 p-4 md:p-8 relative z-10 border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white flex flex-col gap-6 text-right mt-3 ml-10 md:ml-10 ${sidebarOpen ? 'pointer-events-none select-none' : ''}`}
         >
           <motion.div
             className="flex items-center border-2 border-[#9FC6C3] rounded-full px-3 py-1 md:px-4 md:py-2 w-full max-w-[80%] md:max-w-sm mx-auto"
@@ -164,14 +173,17 @@ function AdminCoaches() {
             variants={fadeIn}
           >
             <div className="w-full">
-              <table className="w-full text-[10px] md:text-xs text-[#055B5C] text-center font-semibold table-fixed">
+              <table className="w-full text-[10px] md:text-xs text-[#055B5C] text-center font-semibold">
                 <thead>
                   <tr className="bg-[#EAF4EF] border-b border-[#ccc]">
                     <th className="py-2 px-1 md:px-2 w-[10%]">پروفایل</th>
-                    <th className="py-2 px-1 md:px-2 w-[25%]">نام</th>
-                    <th className="py-2 px-1 md:px-2 w-[25%]">نام خانوادگی</th>
-                    <th className="py-2 px-1 md:px-2 w-[40%]">تخصص</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">عملیات</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%]">نام</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%]">نام خانوادگی</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%]">تخصص</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%]">سابقه کاری</th>
+                    <th className="py-2 px-1 md:px-2 w-[10%]">سن</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%]">شماره تماس</th>
+                    <th className="py-2 px-1 md:px-2 w-[25%]">عملیات</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -185,20 +197,20 @@ function AdminCoaches() {
                       </td>
                       {editIndex === c.id ? (
                         <>
-                          {['name', 'lastName', 'specialty'].map((key) => (
+                          {['name', 'lastName', 'specialty', 'workExperience', 'age', 'phoneNumber'].map((key) => (
                             <td key={key} className="py-2 px-1 md:px-2">
                               <input
                                 value={formData[key]}
                                 onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
                                 className="w-full px-1 md:px-2 py-1 border rounded text-[10px] md:text-xs text-right truncate"
-                                placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : 'تخصص'}
+                                placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : key === 'specialty' ? 'تخصص' : key === 'workExperience' ? 'سابقه کاری' : key === 'age' ? 'سن' : 'شماره تماس'}
                               />
                             </td>
                           ))}
                           <td className="py-2 px-1 md:px-2">
                             <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                              <button onClick={handleSaveEdit} className="text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition cursor-pointer">ذخیره</button>
-                              <button onClick={resetForm} className="text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition cursor-pointer">لغو</button>
+                              <button onClick={handleSaveEdit} className="text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition cursor-pointer min-w-[60px]">ذخیره</button>
+                              <button onClick={resetForm} className="text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition cursor-pointer min-w-[60px]">لغو</button>
                             </div>
                           </td>
                         </>
@@ -207,10 +219,14 @@ function AdminCoaches() {
                           <td className="py-2 px-1 md:px-2 truncate">{c.name}</td>
                           <td className="py-2 px-1 md:px-2 truncate">{c.lastName}</td>
                           <td className="py-2 px-1 md:px-2 truncate">{c.specialty}</td>
-                          <td className="py-2 px-1 md:px-2">
-                            <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                              <button onClick={() => handleEdit(c)} className="text-blue-600 bg-blue-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-blue-200 transition cursor-pointer">ویرایش</button>
-                              <button onClick={() => handleDeleteCoach(c.id)} className="text-red-600 bg-red-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-red-200 transition cursor-pointer">حذف</button>
+                          <td className="py-2 px-1 md:px-2 truncate">{c.workExperience}</td>
+                          <td className="py-2 px-1 md:px-2 truncate">{c.age}</td>
+                          <td className="py-2 px-1 md:px-2 truncate">{c.phoneNumber}</td>
+                          <td className="py-2 px-1 md:px-2 min-w-[200px]">
+                            <div className="flex gap-1 md:gap-2 justify-center items-center">
+                              <button onClick={() => handleEdit(c)} className="text-blue-600 bg-blue-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-blue-200 transition cursor-pointer whitespace-nowrap min-w-[60px]">ویرایش</button>
+                              <button onClick={() => handleDeleteCoach(c.id)} className="text-red-600 bg-red-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-red-200 transition cursor-pointer whitespace-nowrap min-w-[60px]">حذف</button>
+                              <button onClick={() => handleScheduleClass(c.id)} className="text-yellow-600 bg-yellow-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-yellow-200 transition cursor-pointer whitespace-nowrap min-w-[80px]">زمان کلاس</button>
                             </div>
                           </td>
                         </>
@@ -225,20 +241,20 @@ function AdminCoaches() {
                       <td className="py-2 px-1 md:px-2">
                         <img src={assets.woman1} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; console.log('Avatar failed to load, using placeholder'); }} />
                       </td>
-                      {['name', 'lastName', 'specialty'].map((key) => (
+                      {['name', 'lastName', 'specialty', 'workExperience', 'age', 'phoneNumber'].map((key) => (
                         <td key={key} className="py-2 px-1 md:px-2">
                           <input
                             value={formData[key]}
                             onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
                             className="w-full px-1 md:px-2 py-1 border rounded text-[10px] md:text-xs text-right truncate"
-                            placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : 'تخصص'}
+                            placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : key === 'specialty' ? 'تخصص' : key === 'workExperience' ? 'سابقه کاری' : key === 'age' ? 'سن' : 'شماره تماس'}
                           />
                         </td>
                       ))}
                       <td className="py-2 px-1 md:px-2">
                         <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                          <button onClick={handleAddCoach} className="text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition cursor-pointer">ثبت</button>
-                          <button onClick={resetForm} className="text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition cursor-pointer">لغو</button>
+                          <button onClick={handleAddCoach} className="text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition cursor-pointer min-w-[60px]">ثبت</button>
+                          <button onClick={resetForm} className="text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition cursor-pointer min-w-[60px]">لغو</button>
                         </div>
                       </td>
                     </tr>
@@ -249,7 +265,7 @@ function AdminCoaches() {
                       key="add-row"
                       className="bg-[#EAF4EF]"
                     >
-                      <td colSpan="5" className="text-center py-4">
+                      <td colSpan="8" className="text-center py-4">
                         <button
                           onClick={handleAddNewClick}
                           className="text-2xl md:text-3xl text-green-600 hover:text-green-700 transition cursor-pointer"

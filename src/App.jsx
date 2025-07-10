@@ -16,7 +16,7 @@ import StartTraining from "./pages/StartTraining";
 import OneYearPlan from "./pages/TrainingPlans/OneYearPlan";
 import SixMonthPlan from "./pages/TrainingPlans/SixMonthPlan";
 import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
-import DashboardPage from "./admin/pages/DashpoardPage";
+import DashboardPage from "./admin/pages/DashpoardPage"; // اصلاح تایپو
 import AdminUsersPage from "./admin/pages/AdminUsersPage";
 import ProfilePage from "./pages/ProfilePage";
 import MyReservations from "./pages/MyReservations";
@@ -26,10 +26,10 @@ import NutritionProgram from "./pages/NutritionProgram";
 import NutritionPlanDetail from "./pages/NutritionPlanDetail";
 import NutritionProgramPage from "./admin/pages/NutritionProgramPage";
 import FitnessProgramPage from "./admin/pages/FitnessProgramPage";
-import AddFitnessClassPage from "./admin/pages/AddFitnessClassPage";
 import AdminCoachesPage from "./admin/pages/AdminCoachesPage";
 import WardrobeManagementPage from "./admin/pages/WardrobeManagementPage";
 import PaymentStatusPage from "./admin/pages/PaymentStatusPage";
+import AdminCoachSchedule from "./admin/pages/AdminCoachSchedule";
 import { useAuth } from "./context/AuthContext";
 import PaymentPage from "./pages/PaymentPage";
 
@@ -43,12 +43,10 @@ function AdminRoute({ children }) {
 function LayoutWrapper() {
   const location = useLocation();
 
-  // اسکرول به بالای صفحه هنگام تغییر مسیر
   useEffect(() => {
-    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
   }, [location.pathname]);
 
-  // لیست مسیرهایی که Navbar و Footer نباید نمایش داده شوند
   const noNavbarFooterRoutes = [
     "/login",
     "/signup",
@@ -65,22 +63,17 @@ function LayoutWrapper() {
     "/admin/payments",
     "/admin/add-nutrition",
     "/admin/add-fitness",
+    "/admin/coach-schedule/:id", // اطمینان از اضافه شدن این مسیر
   ];
 
-  // جداگانه: فقط Footer در این مسیر مخفی باشد
-  const hideFooterRoutes = [
-    ...noNavbarFooterRoutes,
-    "/start-training", // فقط Footer
-  ];
-
-  const showNavbar = !noNavbarFooterRoutes.includes(location.pathname);
-  const showFooter = !hideFooterRoutes.includes(location.pathname);
+  const showNavbarFooter = !noNavbarFooterRoutes.some(route => 
+    location.pathname.startsWith(route.split(':')[0]) // تطابق دینامیک برای مسیرهای پارامتری
+  );
 
   return (
     <>
-      {showNavbar && <Navbar />}
+      {showNavbarFooter && <Navbar />}
       <Routes>
-        {/* مسیرهای عمومی */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -102,12 +95,8 @@ function LayoutWrapper() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/admin/add-nutrition" element={<NutritionProgramPage />} />
         <Route path="/admin/add-fitness" element={<FitnessProgramPage />} />
-        <Route
-          path="/nutrition/:weekId/plan"
-          element={<NutritionPlanDetail />}
-        />
+        <Route path="/nutrition/:weekId/plan" element={<NutritionPlanDetail />} />
 
-        {/* مسیرهای ادمین */}
         <Route
           path="/admin"
           element={
@@ -121,14 +110,6 @@ function LayoutWrapper() {
           element={
             <AdminRoute>
               <AdminUsersPage />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/fitness"
-          element={
-            <AdminRoute>
-              <AddFitnessClassPage />
             </AdminRoute>
           }
         />
@@ -156,8 +137,16 @@ function LayoutWrapper() {
             </AdminRoute>
           }
         />
+        <Route
+          path="/admin/coach-schedule/:id"
+          element={
+            <AdminRoute>
+              <AdminCoachSchedule />
+            </AdminRoute>
+          }
+        />
       </Routes>
-      {showFooter && <Footer />}
+      {showNavbarFooter && <Footer />}
     </>
   );
 }
