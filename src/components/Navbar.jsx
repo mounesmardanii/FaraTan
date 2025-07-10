@@ -49,13 +49,13 @@ function Navbar() {
                       <>
                         <button
                           onClick={() => handleNavigate("/admin")}
-                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100 cursor-pointer"
                         >
                           ورود به پنل ادمین
                         </button>
                         <button
                           onClick={() => handleNavigate("/profile")}
-                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100 cursor-pointer"
                         >
                           پروفایل من
                         </button>
@@ -64,19 +64,19 @@ function Navbar() {
                       <>
                         <button
                           onClick={() => handleNavigate("/profile")}
-                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100 cursor-pointer"
                         >
                           پروفایل من
                         </button>
                         <button
                           onClick={() => handleNavigate("/my-reservations")}
-                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100 cursor-pointer"
                         >
                           رزروهای من
                         </button>
                         <button
                           onClick={() => handleNavigate("/my-purchases")}
-                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100"
+                          className="block w-full text-right px-4 py-2 text-[#055B5C] hover:bg-gray-100 cursor-pointer"
                         >
                           خریدهای من
                         </button>
@@ -84,7 +84,7 @@ function Navbar() {
                     )}
                     <button
                       onClick={logout}
-                      className="block w-full text-right px-4 py-2 text-red-600 hover:bg-gray-100"
+                      className="block w-full text-right px-4 py-2 text-red-600 hover:bg-gray-100 cursor-pointer"
                     >
                       خروج
                     </button>
@@ -92,7 +92,6 @@ function Navbar() {
                 )}
               </div>
             )}
-
           </div>
 
           <nav className="hidden md:flex gap-10 text-[#055B5C] font-extrabold text-[18px]">
@@ -104,7 +103,7 @@ function Navbar() {
                   .getElementById("contact")
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="hover:text-[#FF6600] transition-colors duration-300"
+              className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
             >
               ارتباط با ما
             </a>
@@ -116,7 +115,7 @@ function Navbar() {
                   .getElementById("about")
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="hover:text-[#FF6600] transition-colors duration-300"
+              className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
             >
               درباره ما
             </a>
@@ -135,7 +134,7 @@ function Navbar() {
           </nav>
 
           <div className="md:hidden flex items-center gap-4">
-            <button onClick={() => setMenuOpen(!menuOpen)}>
+            <button onClick={() => setMenuOpen(!menuOpen)} className="cursor-pointer">
               <img
                 src={assets.menu}
                 alt="menu icon"
@@ -169,7 +168,7 @@ function Navbar() {
                     ?.scrollIntoView({ behavior: "smooth" });
                   setMenuOpen(false);
                 }}
-                className="hover:text-[#FF6600] transition-colors duration-300"
+                className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
               >
                 ارتباط با ما
               </a>
@@ -182,7 +181,7 @@ function Navbar() {
                     ?.scrollIntoView({ behavior: "smooth" });
                   setMenuOpen(false);
                 }}
-                className="hover:text-[#FF6600] transition-colors duration-300"
+                className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
               >
                 درباره ما
               </a>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -26,14 +26,10 @@ import NutritionProgram from "./pages/NutritionProgram";
 import NutritionPlanDetail from "./pages/NutritionPlanDetail";
 import NutritionProgramPage from "./admin/pages/NutritionProgramPage";
 import FitnessProgramPage from "./admin/pages/FitnessProgramPage";
-
-
-// Admin pages from remote
 import AddFitnessClassPage from "./admin/pages/AddFitnessClassPage";
 import AdminCoachesPage from "./admin/pages/AdminCoachesPage";
 import WardrobeManagementPage from "./admin/pages/WardrobeManagementPage";
 import PaymentStatusPage from "./admin/pages/PaymentStatusPage";
-
 import { useAuth } from "./context/AuthContext";
 import PaymentPage from "./pages/PaymentPage";
 
@@ -45,8 +41,38 @@ function AdminRoute({ children }) {
 }
 
 function LayoutWrapper() {
+  const location = useLocation();
+
+  // اسکرول به ابتدای صفحه با هر تغییر مسیر
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  // لیست مسیرهایی که نباید Navbar یا Footer را نمایش دهند
+  const noNavbarFooterRoutes = [
+    "/login",
+    "/signup",
+    "/verify",
+    "/loginform",
+    "/register-info",
+    "/forgot-password",
+    "/new-password",
+    "/admin",
+    "/admin/users",
+    "/admin/fitness",
+    "/admin/coaches",
+    "/admin/wardrobes",
+    "/admin/payments",
+    "/admin/add-nutrition",
+    "/admin/add-fitness",
+  ];
+
+  // بررسی اینکه آیا مسیر فعلی جزو مسیرهای بدون Navbar و Footer است یا خیر
+  const showNavbarFooter = !noNavbarFooterRoutes.includes(location.pathname);
+
   return (
     <>
+      {showNavbarFooter && <Navbar />}
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
@@ -70,7 +96,6 @@ function LayoutWrapper() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/admin/add-nutrition" element={<NutritionProgramPage />} />
         <Route path="/admin/add-fitness" element={<FitnessProgramPage />} />
-
         <Route
           path="/nutrition/:weekId/plan"
           element={<NutritionPlanDetail />}
@@ -126,10 +151,10 @@ function LayoutWrapper() {
           }
         />
       </Routes>
+      {showNavbarFooter && <Footer />}
     </>
   );
 }
-
 
 function App() {
   return <LayoutWrapper />;

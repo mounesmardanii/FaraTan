@@ -16,12 +16,14 @@ function Login() {
 
   const formik = useFormik({
     initialValues: {
-      phone: "",
+      email: "",
       password: "",
       remember: false,
     },
     validationSchema: Yup.object({
-      phone: Yup.string().required("شماره تلفن الزامی است"),
+      email: Yup.string()
+        .email("ایمیل نامعتبر است")
+        .required("ایمیل الزامی است"),
       password: Yup.string().required("رمز عبور الزامی است"),
     }),
     onSubmit: async (values, { setSubmitting, setErrors }) => {
@@ -29,21 +31,21 @@ function Login() {
         setSubmitting(true);
 
         const isMaryamAdmin =
-          values.phone === "09116868921" &&
+          values.email === "maryam@gmail.com" &&
           values.password === "mounes0713";
 
         if (isMaryamAdmin) {
           login({
             name: "مریم",
-            email: "maryam@example.com",
-            phone: values.phone,
+            email: values.email,
+            phone: "09116868921",
             role: "admin",
           });
         } else {
           login({
-            name: `کاربر ${values.phone.slice(-4)}`,
-            email: `${values.phone}@example.com`,
-            phone: values.phone,
+            name: `کاربر ${values.email.split("@")[0]}`,
+            email: values.email,
+            phone: `0911${Math.floor(1000000 + Math.random() * 9000000)}`,
             role: "user",
           });
         }
@@ -55,7 +57,6 @@ function Login() {
         setSubmitting(false);
       }
     },
-
   });
 
   return (
@@ -111,17 +112,17 @@ function Login() {
           >
             <div>
               <input
-                type="text"
-                name="phone"
-                placeholder="شماره تلفن خود را وارد کنید"
+                type="email"
+                name="email"
+                placeholder="ایمیل خود را وارد کنید"
                 className="w-full py-2 px-3 rounded bg-[#d9d9d9] border border-gray-300 text-black text-right"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.phone}
+                value={formik.values.email}
               />
-              {formik.touched.phone && formik.errors.phone && (
+              {formik.touched.email && formik.errors.email && (
                 <div className="text-red-300 text-xs md:text-sm mt-1">
-                  {formik.errors.phone}
+                  {formik.errors.email}
                 </div>
               )}
             </div>
@@ -156,7 +157,7 @@ function Login() {
               <input
                 type="checkbox"
                 name="remember"
-                className="accent-[#FF6600] w-3 md:w-4 h-3 md:h-4"
+                className="accent-[#FF6600] w-3 | md:w-4 h-3 md:h-4"
                 onChange={formik.handleChange}
                 checked={formik.values.remember}
               />
@@ -175,8 +176,9 @@ function Login() {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
               transition={{ type: "spring", stiffness: 200 }}
-              className={`bg-[#FF6600] hover:brightness-90 transition-all py-2 px-3 rounded-xl text-white font-bold text-sm md:text-lg mt-4 ${formik.isSubmitting ? "opacity-70 cursor-not-allowed" : ""
-                }`}
+              className={`bg-[#FF6600] hover:brightness-90 transition-all py-2 px-3 rounded-xl text-white font-bold text-sm md:text-lg mt-4 ${
+                formik.isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             >
               ورود
             </motion.button>
@@ -191,7 +193,7 @@ function Login() {
             </Link>
             <Link
               to="/signup"
-              className="hover:text-[#FF6600] cursor-pointer transition-colors "
+              className="hover:text-[#FF6600] cursor-pointer transition-colors"
             >
               آیا هنوز ثبت‌نام نکرده‌اید؟ <span className="ml-1">ثبت‌نام</span>
             </Link>

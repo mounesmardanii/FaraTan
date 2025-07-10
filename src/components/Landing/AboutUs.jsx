@@ -1,14 +1,18 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 
 const AboutUs = () => {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate('/start-training');
+  };
+
   return (
     <div id="about" className="max-w-7xl mx-auto px-6 py-10">
-
       <div className="relative flex flex-col-reverse md:flex-row items-center justify-center gap-6 md:gap-0">
-
         <div className="relative w-full md:w-1/2 text-[#055B5C] text-right leading-7 p-4 md:p-6 mt-6 md:mt-0">
-
           <div className="absolute top-4 left-4 flex flex-col items-start gap-0 -mt-4">
             <img src={assets.lin1} alt="line1" className="w-20 h-auto rotate-0" />
             <img src={assets.lin2} alt="line2" className="w-1 h-16" />
@@ -33,29 +37,25 @@ const AboutUs = () => {
               همین امروز به خانواده بزرگ <span className="font-extrabold">فراتن</span> بپیوندید و تغییری مثبت در زندگی‌تان ایجاد کنید
             </p>
           </div>
-
         </div>
 
         <div className="w-full md:w-1/2 flex justify-center mt-2 md:mt-0">
-
           <img
             src={assets.aboutUsPic}
             alt="about us"
             className="w-[240px] md:w-[580px] ml-0 md:ml-[120px]"
           />
         </div>
-
       </div>
 
-<div className="w-full flex justify-center mt-6">
-  <button
-    className="bg-[#FF6600] text-white font-extrabold text-xs md:text-base px-6 md:px-20 py-1.5 md:py-2 rounded-full border-2 border-dashed border-[#055B5C] cursor-pointer hover:scale-105 hover:bg-[#e65c00] transition-all duration-300"
-  >
-    الان وقتشه! وارد دنیای تمرین شو
-  </button>
-</div>
-
-
+      <div className="w-full flex justify-center mt-6">
+        <button
+          onClick={handleButtonClick}
+          className="bg-[#FF6600] text-white font-extrabold text-xs md:text-base px-6 md:px-20 py-1.5 md:py-2 rounded-full border-2 border-dashed border-[#055B5C] cursor-pointer hover:scale-105 hover:bg-[#e65c00] transition-all duration-300"
+        >
+          الان وقتشه! وارد دنیای تمرین شو
+        </button>
+      </div>
     </div>
   );
 };
