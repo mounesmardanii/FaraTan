@@ -3,7 +3,7 @@ from loguru import logger
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.core.postgres_db.database import get_db
-from app.domain.models.member_model import Member
+from app.domain.models.member_model import Member, MemberProfile
 from uuid import UUID
 
 
@@ -24,20 +24,32 @@ class MemberRepository:
 
 
   def get_member_by_id(self, member_id: UUID) -> Member:
-      logger.info(f"📥 Fetching member with id: {member_id}")
-      return self.db.query(Member).filter(Member.id == member_id).first()
+    logger.info(f"📥 Fetching member with id: {member_id}")
+    return self.db.query(Member).filter(Member.id == member_id).first()
 
   def update_member(self, member_id: UUID, updated_member: Dict) -> Member:
-      member_query = self.db.query(Member).filter(Member.id == member_id)
-      db_member = member_query.first()
+    member_query = self.db.query(Member).filter(Member.id == member_id)
+    db_member = member_query.first()
 
-      if db_member:
-          member_query.update(updated_member, synchronize_session=False)
-          self.db.commit()
-          self.db.refresh(db_member)
-          logger.info(f"✅ member {member_id} updated")
-          return db_member
-      else:
+    if db_member:
+      member_query.update(updated_member, synchronize_session=False)
+      self.db.commit()
+      self.db.refresh(db_member)
+      logger.info(f"✅ member {member_id} updated")
+      return db_member
+    else:
           logger.warning(f"⚠️ member {member_id} not found")
           return None
-      
+    
+
+  def create_profile(self, profile: MemberProfile) -> MemberProfile:
+    self.db.add(profile)
+    self.db.commit()
+    logger.info(f"✅profile created")
+    self.db.refresh(profile)
+    return profile    
+
+  def get_profile_by_member_id(self, member_id: UUID) -> MemberProfile:
+    logger.info(f"📥 Fetching profile for member with id: {member_id}")
+    return self.db.query(MemberProfile).filter(MemberProfile.member_id == member_id).first()
+  

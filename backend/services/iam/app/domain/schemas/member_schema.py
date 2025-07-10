@@ -78,3 +78,22 @@ class UpdateMemberInfoSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class MemberProfileCreateSchema(BaseModel):
+    height: Optional[float]
+    gender: Optional[str]  
+    birthdate: Optional[date]
+    health_conditions: Optional[str]
+    fitness_goals: Optional[str] 
+
+
+class MemberProfileResponseSchema(MemberProfileCreateSchema):
+    id: UUID
+    member_id: UUID
+    age: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True        

@@ -2,7 +2,12 @@ from fastapi import Depends, status, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from loguru import logger
-from app.domain.schemas.member_schema import MemberCreateSchema, MemberResponseSchema,UpdateMemberInfoSchema, MemberLoginSchema, ForgetPasswordSchema,ResendOTPResponseSchema,ResendOTPSchema,ResetPasswordSchema, VerifyOTPResponseSchema,VerifyOTPSchema
+from app.domain.schemas.member_schema import( MemberCreateSchema, MemberResponseSchema,
+                                             UpdateMemberInfoSchema, MemberLoginSchema,
+                                               ForgetPasswordSchema,ResendOTPResponseSchema,
+                                               ResendOTPSchema,ResetPasswordSchema,
+                                               VerifyOTPResponseSchema,VerifyOTPSchema,
+                                                MemberProfileResponseSchema,MemberProfileCreateSchema )
 from app.domain.schemas.token_schema import TokenSchema, TokenDataSchema
 from app.services.auth_services.auth_service import AuthService
 from app.services.member_main_service import MemberMainService
@@ -59,9 +64,9 @@ async def resend_otp(
 
 
 @member_router.put(
-    "/UpdateProfile",
+    "/UpdateInfo",
     status_code=status.HTTP_200_OK)
-async def update_profile(
+async def update_info(
         current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
         member_data: UpdateMemberInfoSchema,
         member_service: Annotated[MemberService, Depends()]
@@ -77,22 +82,36 @@ async def read_me(current_member: Annotated[TokenDataSchema, Depends(get_current
     return current_member
 
 
-# @member_router.post(
-#     "/VerifyOTPForgetPassword", status_code=status.HTTP_200_OK
-# )
-# async def verify_otp_for_password(
-#     verify_member_schema: VerifyOTPSchema,
-#     member_service: Annotated[MemberMainService, Depends()],
-# ) :
-#     logger.info(f"Verifying OTP for member with phone_number {verify_member_schema.phone_number}")
-#     return await member_service.verify_otp_forget_password(verify_member_schema)
+@member_router.post(
+    "/VerifyOTPForgetPassword", status_code=status.HTTP_200_OK
+)
+async def verify_otp_for_password(
+    verify_member_schema: VerifyOTPSchema,
+    member_service: Annotated[MemberMainService, Depends()],
+) :
+    logger.info(f"Verifying OTP for member with phone_number {verify_member_schema.phone_number}")
+    return await member_service.verify_otp_forget_password(verify_member_schema)
 
-# @member_router.put(
-#     "/ForgetPassword",
-#     status_code=status.HTTP_200_OK)
-# async def forget_password(
-#         member_data: ForgetPasswordSchema,
-#         member_service: Annotated[MemberService, Depends()]
-# ):
-#     logger.info(f'🔃 Changing member password for member {member_data.phone_number}')
-#     return await member_service.change_member_password(member_data.phone_number, dict(member_data))   
+@member_router.put(
+    "/ForgetPassword",
+    status_code=status.HTTP_200_OK)
+async def forget_password(
+        member_data: ForgetPasswordSchema,
+        member_service: Annotated[MemberService, Depends()]
+):
+    logger.info(f'🔃 Changing member password for member {member_data.phone_number}')
+    return await member_service.change_member_password(member_data.phone_number, dict(member_data))   
+
+
+
+@member_router.post(
+    "/member/profile",
+    response_model=MemberProfileResponseSchema,
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_member_profile(
+    profile_data: MemberProfileCreateSchema,
+    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_service: Annotated[MemberMainService, Depends()],
+) -> MemberProfileResponseSchema:
+    return await member_service.create_profile(current_member.id, profile_data)

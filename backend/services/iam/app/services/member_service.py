@@ -1,8 +1,8 @@
 from typing import Annotated, Dict
 from loguru import logger
 from fastapi import Depends, HTTPException
-from  app.domain.models.member_model import Member
-from  app.domain.schemas.member_schema import MemberCreateSchema, MemberResponseSchema
+from  app.domain.models.member_model import Member, MemberProfile
+from  app.domain.schemas.member_schema import MemberCreateSchema, MemberResponseSchema, MemberProfileCreateSchema
 from  app.infrastructure.repositories.member_repository import MemberRepository
 from  app.services.auth_services.hash_service import HashService
 from  app.services.base_service import BaseService
@@ -71,3 +71,21 @@ class MemberService(BaseService):
         self.member_repository.update_member(member.id, {"can_reset_password": False})    
         updated_member =  self.member_repository.update_member(member.id, update_fields)
         return MemberResponseSchema.from_orm(updated_member)
+    
+
+    
+    async def get_profile_by_member_id(self, member_id: UUID) -> MemberProfile:
+        profile = self.member_repository.get_profile_by_member_id(member_id)
+
+    async def create_profile(self, member_id: UUID, profile_data: MemberProfileCreateSchema) -> MemberProfile:
+        if profile_data.gender not in ["male","female"]:
+            raise HTTPException(status_code=400, detail='Invalid gender')
+        profile = MemberProfile(
+            member_id=member_id,
+            height=profile_data.height,
+            gender=profile_data.gender,
+            birthdate=profile_data.birthdate,
+            health_conditions=profile_data.health_conditions,
+            fitness_goals=profile_data.fitness_goals,
+        )
+        return self.member_repository.create_profile(profile)
