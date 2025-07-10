@@ -166,24 +166,25 @@ function AdminCoaches() {
             لیست مربیان
           </motion.h2>
 
+          {/* Desktop Table */}
           <motion.div
-            className="bg-[#D1E7D8] rounded-xl shadow p-4 w-full max-w-[95%] mx-auto"
+            className="bg-[#D1E7D8] rounded-xl shadow p-4 w-full max-w-[95%] mx-auto hidden md:block"
             initial="hidden"
             animate="visible"
             variants={fadeIn}
           >
-            <div className="w-full">
-              <table className="w-full text-[10px] md:text-xs text-[#055B5C] text-center font-semibold">
+            <div className="w-full overflow-x-auto">
+              <table className="min-w-[500px] text-[10px] md:text-xs text-[#055B5C] text-center font-semibold">
                 <thead>
                   <tr className="bg-[#EAF4EF] border-b border-[#ccc]">
-                    <th className="py-2 px-1 md:px-2 w-[10%]">پروفایل</th>
-                    <th className="py-2 px-1 md:px-2 w-[15%]">نام</th>
-                    <th className="py-2 px-1 md:px-2 w-[15%]">نام خانوادگی</th>
-                    <th className="py-2 px-1 md:px-2 w-[15%]">تخصص</th>
-                    <th className="py-2 px-1 md:px-2 w-[15%]">سابقه کاری</th>
-                    <th className="py-2 px-1 md:px-2 w-[10%]">سن</th>
-                    <th className="py-2 px-1 md:px-2 w-[15%]">شماره تماس</th>
-                    <th className="py-2 px-1 md:px-2 w-[25%]">عملیات</th>
+                    <th className="py-2 px-1 md:px-2 w-[10%] whitespace-nowrap">پروفایل</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%] whitespace-nowrap">نام</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%] whitespace-nowrap">نام خانوادگی</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%] whitespace-nowrap">تخصص</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%] whitespace-nowrap">سابقه کاری</th>
+                    <th className="py-2 px-1 md:px-2 w-[10%] whitespace-nowrap">سن</th>
+                    <th className="py-2 px-1 md:px-2 w-[15%] whitespace-nowrap">شماره تماس</th>
+                    <th className="py-2 px-1 md:px-2 w-[25%] whitespace-nowrap">عملیات</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -192,13 +193,13 @@ function AdminCoaches() {
                       key={c.id}
                       className="bg-[#EAF4EF] border-b border-[#ccc]"
                     >
-                      <td className="py-2 px-1 md:px-2">
+                      <td className="py-2 px-1 md:px-2 whitespace-nowrap">
                         <img src={c.avatar} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; console.log('Avatar failed to load, using placeholder'); }} />
                       </td>
                       {editIndex === c.id ? (
                         <>
                           {['name', 'lastName', 'specialty', 'workExperience', 'age', 'phoneNumber'].map((key) => (
-                            <td key={key} className="py-2 px-1 md:px-2">
+                            <td key={key} className="py-2 px-1 md:px-2 whitespace-nowrap">
                               <input
                                 value={formData[key]}
                                 onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
@@ -207,7 +208,7 @@ function AdminCoaches() {
                               />
                             </td>
                           ))}
-                          <td className="py-2 px-1 md:px-2">
+                          <td className="py-2 px-1 md:px-2 whitespace-nowrap">
                             <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
                               <button onClick={handleSaveEdit} className="text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition cursor-pointer min-w-[60px]">ذخیره</button>
                               <button onClick={resetForm} className="text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition cursor-pointer min-w-[60px]">لغو</button>
@@ -216,14 +217,14 @@ function AdminCoaches() {
                         </>
                       ) : (
                         <>
-                          <td className="py-2 px-1 md:px-2 truncate">{c.name}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{c.lastName}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{c.specialty}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{c.workExperience}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{c.age}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{c.phoneNumber}</td>
-                          <td className="py-2 px-1 md:px-2 min-w-[200px]">
-                            <div className="flex gap-1 md:gap-2 justify-center items-center">
+                          <td className="py-2 px-1 md:px-2 whitespace-nowrap truncate">{c.name}</td>
+                          <td className="py-2 px-1 md:px-2 whitespace-nowrap truncate">{c.lastName}</td>
+                          <td className="py-2 px-1 md:px-2 whitespace-nowrap truncate">{c.specialty}</td>
+                          <td className="py-2 px-1 md:px-2 whitespace-nowrap truncate">{c.workExperience}</td>
+                          <td className="py-2 px-1 md:px-2 whitespace-nowrap truncate">{c.age}</td>
+                          <td className="py-2 px-1 md:px-2 whitespace-nowrap truncate">{c.phoneNumber}</td>
+                          <td className="py-2 px-1 md:px-2 whitespace-nowrap min-w-[200px]">
+                            <div className="flex gap-1 md:gap-2 justify-center items-center flex-wrap">
                               <button onClick={() => handleEdit(c)} className="text-blue-600 bg-blue-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-blue-200 transition cursor-pointer whitespace-nowrap min-w-[60px]">ویرایش</button>
                               <button onClick={() => handleDeleteCoach(c.id)} className="text-red-600 bg-red-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-red-200 transition cursor-pointer whitespace-nowrap min-w-[60px]">حذف</button>
                               <button onClick={() => handleScheduleClass(c.id)} className="text-yellow-600 bg-yellow-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-yellow-200 transition cursor-pointer whitespace-nowrap min-w-[80px]">زمان کلاس</button>
@@ -238,11 +239,11 @@ function AdminCoaches() {
                     <tr
                       className="bg-[#F9F9F9] border-t"
                     >
-                      <td className="py-2 px-1 md:px-2">
+                      <td className="py-2 px-1 md:px-2 whitespace-nowrap">
                         <img src={assets.woman1} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; console.log('Avatar failed to load, using placeholder'); }} />
                       </td>
                       {['name', 'lastName', 'specialty', 'workExperience', 'age', 'phoneNumber'].map((key) => (
-                        <td key={key} className="py-2 px-1 md:px-2">
+                        <td key={key} className="py-2 px-1 md:px-2 whitespace-nowrap">
                           <input
                             value={formData[key]}
                             onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
@@ -251,7 +252,7 @@ function AdminCoaches() {
                           />
                         </td>
                       ))}
-                      <td className="py-2 px-1 md:px-2">
+                      <td className="py-2 px-1 md:px-2 whitespace-nowrap">
                         <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
                           <button onClick={handleAddCoach} className="text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition cursor-pointer min-w-[60px]">ثبت</button>
                           <button onClick={resetForm} className="text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition cursor-pointer min-w-[60px]">لغو</button>
@@ -277,6 +278,92 @@ function AdminCoaches() {
                   )}
                 </tbody>
               </table>
+            </div>
+          </motion.div>
+
+          {/* Mobile List */}
+          <motion.div
+            className="bg-[#D1E7D8] rounded-xl shadow p-4 w-full max-w-[95%] mx-auto block md:hidden"
+            initial="hidden"
+            animate="visible"
+            variants={fadeIn}
+          >
+            <div className="space-y-4">
+              {filteredCoaches.map((c) => (
+                <div key={c.id} className="bg-[#EAF4EF] rounded-lg p-3 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center">
+                      <img src={c.avatar} alt="avatar" className="w-10 h-10 rounded-full mr-2" onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; }} />
+                      <div>
+                        <h3 className="font-semibold text-[#055B5C]">{c.name} {c.lastName}</h3>
+                        <p className="text-xs text-gray-600">{c.specialty}</p>
+                      </div>
+                    </div>
+                    <div className="text-xs">
+                      <p>سن: {c.age}</p>
+                      <p>سابقه: {c.workExperience}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center mt-2">
+                    <a href={`tel:${c.phoneNumber}`} className="text-xs text-blue-600">{c.phoneNumber}</a>
+                    
+                    <div className="flex space-x-1">
+                      <button onClick={() => handleEdit(c)} className="text-blue-600 bg-blue-100 px-2 py-1 rounded text-xs cursor-pointer ">
+                        ویرایش
+                      </button>
+                      <button onClick={() => handleDeleteCoach(c.id)} className="text-red-600 bg-red-100 px-2 py-1 rounded text-xs cursor-pointer ">
+                        حذف
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <button 
+                    onClick={() => handleScheduleClass(c.id)}
+                    className="w-full mt-2 text-yellow-600 bg-yellow-100 py-1 rounded text-xs cursor-pointer "
+                  >
+                    زمان کلاس
+                  </button>
+                </div>
+              ))}
+
+              {addingNew && (
+                <div className="bg-[#F9F9F9] rounded-lg p-3 shadow-sm">
+                  <div className="flex items-center mb-2">
+                    <img src={assets.woman1} alt="avatar" className="w-10 h-10 rounded-full mr-2" onError={(e) => { e.target.src = 'https://via.placeholder.com/40'; }} />
+                    <div className="flex-1 space-y-1">
+                      {['name', 'lastName', 'specialty', 'workExperience', 'age', 'phoneNumber'].map((key) => (
+                        <input
+                          key={key}
+                          value={formData[key]}
+                          onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
+                          className="w-full px-2 py-1 border rounded text-xs text-right"
+                          placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : key === 'specialty' ? 'تخصص' : key === 'workExperience' ? 'سابقه کاری' : key === 'age' ? 'سن' : 'شماره تماس'}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex justify-center space-x-2 mt-2">
+                    <button onClick={handleAddCoach} className="text-green-600 bg-green-100 px-3 py-1 rounded text-xs cursor-pointer ">
+                      ثبت
+                    </button>
+                    <button onClick={resetForm} className="text-gray-600 bg-gray-200 px-3 py-1 rounded text-xs cursor-pointer ">
+                      لغو
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {!addingNew && !editIndex && (
+                <div className="flex justify-center">
+                  <button
+                    onClick={handleAddNewClick}
+                    className="text-3xl text-green-600 hover:text-green-700 transition cursor-pointer p-2"
+                  >
+                    +
+                  </button>
+                </div>
+              )}
             </div>
           </motion.div>
         </main>
