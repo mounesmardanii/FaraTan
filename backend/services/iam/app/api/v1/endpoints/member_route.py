@@ -72,7 +72,7 @@ async def update_info(
         member_service: Annotated[MemberService, Depends()]
 ):
     logger.info(f'🔃 Changing member info for member {current_member.id}')
-    return await member_service.update_member(current_member.id, dict(member_data))
+    return await member_service.update_member(current_member.id, dict(member_data.model_dump(exclude_unset=True)))
    
 
 @member_router.get("/Me", response_model=MemberResponseSchema, status_code=status.HTTP_200_OK)

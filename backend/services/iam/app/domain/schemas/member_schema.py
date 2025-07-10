@@ -68,13 +68,13 @@ class ForgetPasswordSchema(BaseModel):
 
 class UpdateMemberInfoSchema(BaseModel):
 
-    full_name: Optional[str]
-    phone_number: Optional[str] 
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
     national_id: Optional[
         Annotated[str, StringConstraints(min_length=10, max_length=10, pattern=r"^\d{10}$")]
-    ]
-    password: Optional[str]
-    confirm_password: Optional[str]
+    ]= None
+    password: Optional[str]= None
+    confirm_password: Optional[str]= None
 
     class Config:
         from_attributes = True

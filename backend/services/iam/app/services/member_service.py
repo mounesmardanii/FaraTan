@@ -44,8 +44,13 @@ class MemberService(BaseService):
 
     async def update_member(self, member_id: UUID, update_fields: Dict) -> Member:
         logger.info(f"🔃 Updating member with id {member_id}")
+        if "password" in update_fields:
+            password = update_fields.get("password")
+            confirm_password = update_fields.pop("confirm_password", None)
+            if password != confirm_password:
+                raise HTTPException(status_code=400, detail="Passwords do not match")
 
-        update_fields['password'] = self.hash_service.hash_password(update_fields['password'])
+            update_fields['password'] = self.hash_service.hash_password(update_fields['password'])
         
         update_fields = {key: value for key, value in update_fields.items() if value != ""}  
 
@@ -69,13 +74,13 @@ class MemberService(BaseService):
             raise HTTPException(status_code=400, detail='You need to verify the otp first')
 
         self.member_repository.update_member(member.id, {"can_reset_password": False})    
-        updated_member =  self.member_repository.update_member(member.id, update_fields)
+        updated_member = self.member_repository.update_member(member.id, update_fields)
         return MemberResponseSchema.from_orm(updated_member)
     
 
     
     async def get_profile_by_member_id(self, member_id: UUID) -> MemberProfile:
-        profile = self.member_repository.get_profile_by_member_id(member_id)
+        return self.member_repository.get_profile_by_member_id(member_id)
 
     async def create_profile(self, member_id: UUID, profile_data: MemberProfileCreateSchema) -> MemberProfile:
         if profile_data.gender not in ["male","female"]:
