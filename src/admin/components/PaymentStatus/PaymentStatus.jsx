@@ -131,7 +131,7 @@ const PaymentStatus = () => {
                                                 initial={{ opacity: 0, y: 5 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: i * 0.03 }}
-                                                className="bg-white border-b hover:bg-[#f0f0f0]"
+                                                className="bg-[#EAF4EF] border-b hover:bg-[#D1E7D8]"
                                             >
                                                 <td className="p-2">{p.name}</td>
                                                 <td className="p-2">{p.amount}</td>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -24,13 +24,12 @@ import MyPurchases from "./pages/MyPurchases";
 import SportsProgram from "./pages/SportsProgram";
 import NutritionProgram from "./pages/NutritionProgram";
 import NutritionPlanDetail from "./pages/NutritionPlanDetail";
-
-// Admin pages from remote
+import NutritionProgramPage from "./admin/pages/NutritionProgramPage";
+import FitnessProgramPage from "./admin/pages/FitnessProgramPage";
 import AddFitnessClassPage from "./admin/pages/AddFitnessClassPage";
 import AdminCoachesPage from "./admin/pages/AdminCoachesPage";
 import WardrobeManagementPage from "./admin/pages/WardrobeManagementPage";
 import PaymentStatusPage from "./admin/pages/PaymentStatusPage";
-
 import { useAuth } from "./context/AuthContext";
 import PaymentPage from "./pages/PaymentPage";
 
@@ -44,7 +43,13 @@ function AdminRoute({ children }) {
 function LayoutWrapper() {
   const location = useLocation();
 
-  const hideNavbarRoutes = [
+  // اسکرول به بالای صفحه هنگام تغییر مسیر
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  // لیست مسیرهایی که Navbar و Footer نباید نمایش داده شوند
+  const noNavbarFooterRoutes = [
     "/login",
     "/signup",
     "/verify",
@@ -54,22 +59,26 @@ function LayoutWrapper() {
     "/new-password",
     "/admin",
     "/admin/users",
-    "/payment",
     "/admin/fitness",
     "/admin/coaches",
     "/admin/wardrobes",
     "/admin/payments",
+    "/admin/add-nutrition",
+    "/admin/add-fitness",
   ];
 
+  // جداگانه: فقط Footer در این مسیر مخفی باشد
   const hideFooterRoutes = [
-    ...hideNavbarRoutes,
-    "/start-training", // فقط فوتر در این صفحه مخفی میشه
+    ...noNavbarFooterRoutes,
+    "/start-training", // فقط Footer
   ];
+
+  const showNavbar = !noNavbarFooterRoutes.includes(location.pathname);
+  const showFooter = !hideFooterRoutes.includes(location.pathname);
 
   return (
     <>
-      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
-
+      {showNavbar && <Navbar />}
       <Routes>
         {/* مسیرهای عمومی */}
         <Route path="/" element={<Home />} />
@@ -91,6 +100,8 @@ function LayoutWrapper() {
         <Route path="/sports-program" element={<SportsProgram />} />
         <Route path="/nutrition" element={<NutritionProgram />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/admin/add-nutrition" element={<NutritionProgramPage />} />
+        <Route path="/admin/add-fitness" element={<FitnessProgramPage />} />
         <Route
           path="/nutrition/:weekId/plan"
           element={<NutritionPlanDetail />}
@@ -146,8 +157,7 @@ function LayoutWrapper() {
           }
         />
       </Routes>
-
-      {!hideFooterRoutes.includes(location.pathname) && <Footer />}
+      {showFooter && <Footer />}
     </>
   );
 }

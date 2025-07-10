@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import AdminHeader from '../AdminHeader';
 import AdminSidebar from '../AdminSidebar';
 import { assets } from '../../../assets/assets';
+import UserTable from './UserTable';
+import UserModal from './UserModal';
+
 
 function AdminUsers() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -11,11 +14,25 @@ function AdminUsers() {
   const [editIndex, setEditIndex] = useState(null);
   const [formData, setFormData] = useState({ name: '', lastName: '', sport: '', course: '' });
   const [addingNew, setAddingNew] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const dummy = [
-      { id: 1, name: 'غزل', lastName: 'نادری', sport: 'ایروبیک', course: 'یک ساله', avatar: assets.woman4 },
-      { id: 2, name: 'مونِس', lastName: 'مردانی', sport: 'ایروبیک', course: 'سه ماهه', avatar: assets.woman4 },
+      {
+        id: 1, name: 'ملاحت', lastName: 'مردانی', sport: 'بدنسازی', course: 'VIP',
+        target: 'لاغری', height: 160, weight: 65, arm: 65, chest: 65, butt: 65, absence: 3,
+        avatar: assets.woman4
+      },
+      {
+        id: 2, name: 'غزل', lastName: 'نادری', sport: 'ایروبیک', course: 'خصوصی',
+        target: 'لاغری', height: 160, weight: 65, arm: 65, chest: 65, butt: 65, absence: 3,
+        avatar: assets.woman4
+      },
+      {
+        id: 3, name: 'مونس', lastName: 'مردانی', sport: 'ایروبیک', course: 'عمومی',
+        target: 'افزایش انعطاف', height: 158, weight: 60, arm: 60, chest: 60, butt: 62, absence: 1,
+        avatar: assets.woman4
+      },
     ];
     setUsers(dummy);
   }, []);
@@ -26,75 +43,45 @@ function AdminUsers() {
     );
   }, [searchTerm, users]);
 
+  const resetForm = () => {
+    setEditIndex(null);
+    setFormData({ name: '', lastName: '', sport: '', course: '' });
+    setAddingNew(false);
+  };
+
   const handleAddUser = () => {
     if (!formData.name.trim() || !formData.lastName.trim()) {
       alert('نام و نام خانوادگی الزامی است');
       return;
     }
-    try {
-      const newUser = {
-        ...formData,
-        id: Date.now(),
-        avatar: assets.woman4
-      };
-      setUsers([...users, newUser]);
-      resetForm();
-      console.log('New user added:', newUser);
-    } catch (error) {
-      console.error('Error adding user:', error);
-    }
-  };
-
-  const handleDeleteUser = (id) => {
-    try {
-      setUsers(users.filter(u => u.id !== id));
-      resetForm();
-      console.log('User deleted:', id);
-    } catch (error) {
-      console.error('Error deleting user:', error);
-    }
-  };
-
-  const handleSaveEdit = () => {
-    try {
-      setUsers(users.map(u => u.id === formData.id ? { ...formData, avatar: assets.woman4 } : u));
-      resetForm();
-      console.log('User edited:', formData);
-    } catch (error) {
-      console.error('Error saving edit:', error);
-    }
+    const newUser = {
+      ...formData,
+      id: Date.now(),
+      avatar: assets.woman4
+    };
+    setUsers([...users, newUser]);
+    resetForm();
   };
 
   const handleEdit = (user) => {
-    try {
-      setEditIndex(user.id);
-      setFormData(user);
-      setAddingNew(false);
-      console.log('Editing user:', user);
-    } catch (error) {
-      console.error('Error starting edit:', error);
-    }
+    setEditIndex(user.id);
+    setFormData(user);
+    setAddingNew(false);
   };
 
-  const resetForm = () => {
-    try {
-      setEditIndex(null);
-      setFormData({ name: '', lastName: '', sport: '', course: '' });
-      setAddingNew(false);
-      console.log('Form reset');
-    } catch (error) {
-      console.error('Error resetting form:', error);
-    }
+  const handleSaveEdit = () => {
+    setUsers(users.map(u => u.id === formData.id ? { ...formData, avatar: assets.woman4 } : u));
+    resetForm();
+  };
+
+  const handleDeleteUser = (id) => {
+    setUsers(users.filter(u => u.id !== id));
+    resetForm();
   };
 
   const handleAddNewClick = () => {
-    try {
-      console.log('Plus button clicked, adding new row');
-      setAddingNew(true);
-      setFormData({ name: '', lastName: '', sport: '', course: '' });
-    } catch (error) {
-      console.error('Error in handleAddNewClick:', error);
-    }
+    setAddingNew(true);
+    setFormData({ name: '', lastName: '', sport: '', course: '' });
   };
 
   const fadeIn = {
@@ -129,9 +116,7 @@ function AdminUsers() {
 
         <main
           dir="rtl"
-          className={`flex-1 p-4 md:p-8 relative z-10 border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white flex flex-col gap-6 text-right mt-3 ml-10 md:ml-10 ${
-            sidebarOpen ? 'pointer-events-none select-none' : ''
-          }`}
+          className={`flex-1 p-4 md:p-8 relative z-10 border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white flex flex-col gap-6 text-right mt-3 ml-10 md:ml-10 ${sidebarOpen ? 'pointer-events-none select-none' : ''}`}
         >
           <motion.div
             className="flex items-center border-2 border-[#9FC6C3] rounded-full px-3 py-1 md:px-4 md:py-2 w-full max-w-[80%] md:max-w-sm mx-auto"
@@ -157,108 +142,26 @@ function AdminUsers() {
             لیست اعضای باشگاه
           </motion.h2>
 
-          <motion.div
-            className="bg-[#D1E7D8] rounded-xl shadow p-4 w-full max-w-[95%] mx-auto"
-            initial="hidden"
-            animate="visible"
-            variants={fadeIn}
-          >
-            <div className="w-full">
-              <table className="w-full text-[10px] md:text-xs text-[#055B5C] text-center font-semibold table-fixed">
-                <thead>
-                  <tr className="bg-[#EAF4EF] border-b border-[#ccc]">
-                    <th className="py-2 px-1 md:px-2 w-[10%]">پروفایل</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">نام</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">نام خانوادگی</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">ورزش</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">دوره</th>
-                    <th className="py-2 px-1 md:px-2 w-[20%]">عملیات</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.map((u) => (
-                    <tr key={u.id} className="bg-[#EAF4EF] border-b border-[#ccc]">
-                      <td className="py-2 px-1 md:px-2">
-                        <img src={u.avatar} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" />
-                      </td>
-                      {editIndex === u.id ? (
-                        <>
-                          {['name', 'lastName', 'sport', 'course'].map((key) => (
-                            <td key={key} className="py-2 px-1 md:px-2">
-                              <input
-                                value={formData[key]}
-                                onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
-                                className="w-full px-1 md:px-2 py-1 border rounded text-[10px] md:text-xs text-right truncate"
-                                placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : key === 'sport' ? 'ورزش' : 'دوره'}
-                              />
-                            </td>
-                          ))}
-                          <td className="py-2 px-1 md:px-2">
-                            <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                              <button onClick={handleSaveEdit} className="cursor-pointer text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition">ذخیره</button>
-                              <button onClick={resetForm} className="cursor-pointer text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition">لغو</button>
-                            </div>
-                          </td>
-                        </>
-                      ) : (
-                        <>
-                          <td className="py-2 px-1 md:px-2 truncate">{u.name}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{u.lastName}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{u.sport}</td>
-                          <td className="py-2 px-1 md:px-2 truncate">{u.course}</td>
-                          <td className="py-2 px-1 md:px-2">
-                            <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                              <button onClick={() => handleEdit(u)} className="cursor-pointer text-blue-600 bg-blue-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-blue-200 transition">ویرایش</button>
-                              <button onClick={() => handleDeleteUser(u.id)} className="cursor-pointer text-red-600 bg-red-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-red-200 transition">حذف</button>
-                            </div>
-                          </td>
-                        </>
-                      )}
-                    </tr>
-                  ))}
-
-                  {addingNew && (
-                    <tr className="bg-[#F9F9F9] border-t">
-                      <td className="py-2 px-1 md:px-2">
-                        <img src={assets.woman4} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" />
-                      </td>
-                      {['name', 'lastName', 'sport', 'course'].map((key) => (
-                        <td key={key} className="py-2 px-1 md:px-2">
-                          <input
-                            value={formData[key]}
-                            onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
-                            className="w-full px-1 md:px-2 py-1 border rounded text-[10px] md:text-xs text-right truncate"
-                            placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : key === 'sport' ? 'ورزش' : 'دوره'}
-                          />
-                        </td>
-                      ))}
-                      <td className="py-2 px-1 md:px-2">
-                        <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                          <button onClick={handleAddUser} className="cursor-pointer text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition">ثبت</button>
-                          <button onClick={resetForm} className="cursor-pointer text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition">لغو</button>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-
-                  {!addingNew && !editIndex && (
-                    <tr key="add-row" className="bg-[#EAF4EF]">
-                      <td colSpan="6" className="text-center py-4">
-                        <button
-                          onClick={handleAddNewClick}
-                          className="cursor-pointer text-2xl md:text-3xl text-green-600 hover:text-green-700 transition"
-                        >
-                          +
-                        </button>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
+          <UserTable
+            users={filteredUsers}
+            formData={formData}
+            setFormData={setFormData}
+            handleAddUser={handleAddUser}
+            handleEdit={handleEdit}
+            handleSaveEdit={handleSaveEdit}
+            handleDeleteUser={handleDeleteUser}
+            handleAddNewClick={handleAddNewClick}
+            resetForm={resetForm}
+            editIndex={editIndex}
+            addingNew={addingNew}
+            setSelectedUser={setSelectedUser}
+          />
         </main>
       </div>
+
+      {selectedUser && (
+        <UserModal user={selectedUser} onClose={() => setSelectedUser(null)} />
+      )}
     </div>
   );
 }
