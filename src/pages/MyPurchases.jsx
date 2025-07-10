@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { motion } from "framer-motion";
 
-// متحرک‌سازی ردیف جدول
 const rowVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: (i) => ({
@@ -30,9 +29,7 @@ const MyPurchases = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="flex flex-col items-center px-4 sm:px-6 py-6 max-w-[1000px] mx-auto"
     >
-      {/* نوار بالایی */}
       <div className="w-full flex justify-between items-center mb-4">
-        {/* فقط دکمه پاک‌سازی شرطی باشه */}
         {purchases.length > 0 ? (
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -43,10 +40,8 @@ const MyPurchases = () => {
             پاک‌سازی لیست خریدها
           </motion.button>
         ) : (
-          <div /> // یک div خالی برای حفظ فاصله
+          <div />
         )}
-
-        {/* دکمه بازگشت همیشه باشد */}
         <motion.img
           whileHover={{ scale: 1.15 }}
           whileTap={{ scale: 0.9 }}
@@ -57,7 +52,6 @@ const MyPurchases = () => {
         />
       </div>
 
-      {/* محتوای خریدها */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -83,51 +77,104 @@ const MyPurchases = () => {
             هنوز هیچ دوره‌ای خریداری نکرده‌اید.
           </motion.div>
         ) : (
-          <div className="overflow-x-auto w-full">
-            <table className="w-full text-center bg-[#F7FDF9] rounded-lg">
-              <thead className="bg-[#256250] text-white text-xs sm:text-sm md:text-base">
-                <tr>
-                  <th className="p-2 sm:p-3 md:p-4">نوع دوره</th>
-                  <th className="p-2 sm:p-3 md:p-4">مربی</th>
-                  <th className="p-2 sm:p-3 md:p-4">روز</th>
-                  <th className="p-2 sm:p-3 md:p-4">سطح</th>
-                  <th className="p-2 sm:p-3 md:p-4">قیمت</th>
-                  <th className="p-2 sm:p-3 md:p-4">تاریخ خرید</th>
-                </tr>
-              </thead>
-              <tbody>
-                {purchases.map((item, i) => (
-                  <motion.tr
-                    key={`${item.id}-${item.coach}-${i}`}
-                    custom={i}
-                    initial="hidden"
-                    animate="visible"
-                    variants={rowVariants}
-                    className="border-b border-[#D1E7D8] hover:bg-[#EAF4ED] transition text-xs sm:text-sm md:text-base"
-                  >
-                    <td className="p-2 sm:p-3 md:p-4 text-[#256250]">
-                      {item.duration}
-                    </td>
-                    <td className="p-2 sm:p-3 md:p-4 text-[#256250] font-medium">
-                      {item.coach}
-                    </td>
-                    <td className="p-2 sm:p-3 md:p-4 text-[#055B5C]">
-                      {item.day}
-                    </td>
-                    <td className="p-2 sm:p-3 md:p-4 text-[#256250]">
-                      {item.level}
-                    </td>
-                    <td className="p-2 sm:p-3 md:p-4 text-[#256250] font-bold">
+          <>
+            {/* کارت در موبایل */}
+            <div className="block sm:hidden space-y-4">
+              {purchases.map((item, i) => (
+                <motion.div
+                  key={`${item.id}-${item.coach}-${i}`}
+                  initial="hidden"
+                  animate="visible"
+                  variants={rowVariants}
+                  custom={i}
+                  className="bg-[#F7FDF9] border border-[#D1E7D8] rounded-lg shadow p-4 text-[#256250] text-right"
+                >
+                  <div className="mb-3 text-[#055B5C] font-extrabold text-lg">
+                    {item.coach}
+                  </div>
+                  <div className="mb-1">
+                    <span className="font-semibold">نوع دوره: </span>
+                    <span className="font-normal">{item.duration}</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="font-semibold">روز: </span>
+                    <span className="font-normal">{item.day}</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="font-semibold">سطح: </span>
+                    <span className="font-normal">{item.level}</span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="font-semibold">قیمت: </span>
+                    <span className="font-bold text-[#FF6600]">
                       {item.price}
-                    </td>
-                    <td className="p-2 sm:p-3 md:p-4 text-[#888]">
-                      {item.date || "---"}
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </span>
+                  </div>
+                  <div className="mb-1">
+                    <span className="font-semibold">جلسات/ماه: </span>
+                    <span className="font-normal">
+                      {item.sessionsPerMonth || "---"} جلسه
+                    </span>
+                  </div>
+                  <div className="mt-3 text-[#888] text-sm">
+                    <span className="font-semibold">تاریخ خرید: </span>
+                    <span>{item.date || "---"}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* جدول در دسکتاپ */}
+            <div className="hidden sm:block overflow-x-auto w-full">
+              <table className="w-full text-center bg-[#F7FDF9] rounded-lg">
+                <thead className="bg-[#256250] text-white text-xs sm:text-sm md:text-base">
+                  <tr>
+                    <th className="p-2 sm:p-3 md:p-4">نوع دوره</th>
+                    <th className="p-2 sm:p-3 md:p-4">مربی</th>
+                    <th className="p-2 sm:p-3 md:p-4">روز</th>
+                    <th className="p-2 sm:p-3 md:p-4">سطح</th>
+                    <th className="p-2 sm:p-3 md:p-4">قیمت</th>
+                    <th className="p-2 sm:p-3 md:p-4">جلسات/ماه</th>
+                    <th className="p-2 sm:p-3 md:p-4">تاریخ خرید</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {purchases.map((item, i) => (
+                    <motion.tr
+                      key={`${item.id}-${item.coach}-${i}`}
+                      custom={i}
+                      initial="hidden"
+                      animate="visible"
+                      variants={rowVariants}
+                      className="border-b border-[#D1E7D8] hover:bg-[#EAF4ED] transition text-xs sm:text-sm md:text-base"
+                    >
+                      <td className="p-2 sm:p-3 md:p-4 text-[#256250]">
+                        {item.duration}
+                      </td>
+                      <td className="p-2 sm:p-3 md:p-4 text-[#256250] font-medium">
+                        {item.coach}
+                      </td>
+                      <td className="p-2 sm:p-3 md:p-4 text-[#055B5C]">
+                        {item.day}
+                      </td>
+                      <td className="p-2 sm:p-3 md:p-4 text-[#256250]">
+                        {item.level}
+                      </td>
+                      <td className="p-2 sm:p-3 md:p-4 text-[#256250] font-bold">
+                        {item.price}
+                      </td>
+                      <td className="p-2 sm:p-3 md:p-4 text-[#256250]">
+                        {item.sessionsPerMonth || "---"} جلسه
+                      </td>
+                      <td className="p-2 sm:p-3 md:p-4 text-[#888]">
+                        {item.date || "---"}
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </motion.div>
     </motion.div>

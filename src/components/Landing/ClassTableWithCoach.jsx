@@ -1,18 +1,14 @@
-// ✅ ClassTableWithCoach.jsx
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import SessionSelectModal from "./SessionSelectModal";
 
 const rowVariants = {
   hidden: { opacity: 0, x: 50 },
   visible: (i = 0) => ({
     opacity: 1,
     x: 0,
-    transition: {
-      delay: i * 0.15,
-      duration: 0.6,
-      ease: "easeOut",
-    },
+    transition: { delay: i * 0.15, duration: 0.6, ease: "easeOut" },
   }),
 };
 
@@ -22,77 +18,143 @@ const ClassTableWithCoach = ({
   classList = [],
 }) => {
   const navigate = useNavigate();
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const handleBuy = (item) => {
+  const handleBuyClick = (item) => {
     if (item.status === "ظرفیت دارد") {
-      navigate("/payment", {
-        state: {
-          ...item,
-          duration: classType,
-        },
-      });
+      setSelectedClass(item);
+      setModalOpen(true);
     }
   };
 
+  const handleSessionSelect = (sessionCount) => {
+    setModalOpen(false);
+    navigate("/payment", {
+      state: {
+        ...selectedClass,
+        duration: classType,
+        sessionsPerMonth: sessionCount,
+      },
+    });
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="bg-[#FEEDDB] p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] mx-auto mt-10 font-[Tahoma] text-right border border-[#D1E7D8] overflow-hidden"
-    >
-      <h3 className="text-[#256250] border-b-2 border-[#FF6600] pb-2 mb-4 text-xl font-bold text-center">
-        دوره‌های {category} - {classType}
-      </h3>
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="bg-[#FEEDDB] p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] mx-auto mt-10 font-[Tahoma] text-right border border-[#D1E7D8] overflow-hidden"
+      >
+        <h3 className="text-[#256250] border-b-2 border-[#FF6600] pb-2 mb-4 text-xl font-bold text-center">
+          دوره‌های {category} - {classType}
+        </h3>
 
-      <div>
-        <table className="w-full border-collapse">
-          <thead className="text-[#FF6600] text-xs md:text-base">
-            <tr>
-              <th className="p-1 text-center border-b border-[#B5D2C1]">
-                خرید
-              </th>
-              <th className="p-1 text-center border-b border-[#B5D2C1]">
-                وضعیت
-              </th>
-              <th className="p-1 text-center border-b border-[#B5D2C1]">
-                مربی
-              </th>
-              <th className="p-1 text-center border-b border-[#B5D2C1]">
-                قیمت
-              </th>
-              <th className="p-1 text-center border-b border-[#B5D2C1]">سطح</th>
-              <th className="p-1 text-center border-b border-[#B5D2C1]">روز</th>
-            </tr>
-          </thead>
+        {/* جدول برای دسکتاپ */}
+        <div className="hidden sm:block">
+          <table className="w-full border-collapse">
+            <thead className="text-[#FF6600] text-xs md:text-base">
+              <tr>
+                <th className="p-1 text-center border-b border-[#B5D2C1]">
+                  خرید
+                </th>
+                <th className="p-1 text-center border-b border-[#B5D2C1]">
+                  وضعیت
+                </th>
+                <th className="p-1 text-center border-b border-[#B5D2C1]">
+                  مربی
+                </th>
+                <th className="p-1 text-center border-b border-[#B5D2C1]">
+                  قیمت
+                </th>
+                <th className="p-1 text-center border-b border-[#B5D2C1]">
+                  سطح
+                </th>
+                <th className="p-1 text-center border-b border-[#B5D2C1]">
+                  روز
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-xs">
+              {classList.map((item, index) => (
+                <motion.tr
+                  key={item.id + "-" + item.coach + index}
+                  custom={index}
+                  initial="hidden"
+                  animate="visible"
+                  variants={rowVariants}
+                  className="bg-[#FFF8ED] border-b border-[#EBD9BD] hover:bg-[#FDF2E1] transition"
+                >
+                  <td className="p-1 md:p-2 text-center">
+                    <button
+                      onClick={() => handleBuyClick(item)}
+                      disabled={item.status !== "ظرفیت دارد"}
+                      className={`px-2 md:px-4 py-0.5 md:py-1 rounded-full text-[10px] md:text-sm font-bold transition ${
+                        item.status === "ظرفیت دارد"
+                          ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
+                          : "bg-gray-300 text-[#888] cursor-not-allowed"
+                      }`}
+                    >
+                      خرید دوره
+                    </button>
+                  </td>
+                  <td className="p-1 md:p-2 text-center">
+                    <span
+                      className={`text-white px-2 md:px-4 py-0.5 md:py-1 rounded-xl text-[10px] md:text-sm whitespace-nowrap ${
+                        item.status === "تکمیل شده"
+                          ? "bg-[#FF6600]"
+                          : "bg-[#256250]"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+                  </td>
+                  <td className="p-1 text-center whitespace-nowrap">
+                    {item.coach}
+                  </td>
+                  <td className="p-1 text-center">{item.price}</td>
+                  <td className="p-1 text-center">{item.level}</td>
+                  <td className="p-1 text-center text-[#256250] font-medium">
+                    {item.day}
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-          <tbody className="text-xs">
-            {classList.map((item, index) => (
-              <motion.tr
-                key={item.id + "-" + item.coach + index}
-                custom={index}
-                initial="hidden"
-                animate="visible"
-                variants={rowVariants}
-                className="bg-[#FFF8ED] border-b border-[#EBD9BD] hover:bg-[#FDF2E1] transition"
-              >
-                <td className="p-1 md:p-2 text-center">
-                  <button
-                    onClick={() => handleBuy(item)}
-                    disabled={item.status !== "ظرفیت دارد"}
-                    className={`px-2 md:px-4 py-0.5 md:py-1 rounded-full text-[10px] md:text-sm font-bold transition ${
-                      item.status === "ظرفیت دارد"
-                        ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
-                        : "bg-gray-300 text-[#888] cursor-not-allowed"
-                    }`}
-                  >
-                    خرید دوره
-                  </button>
-                </td>
-
-                <td className="p-1 md:p-2 text-center">
+        {/* کارت‌ها برای گوشی */}
+        <div className="block sm:hidden space-y-4">
+          {classList.map((item, index) => (
+            <motion.div
+              key={item.id + "-" + item.coach + index}
+              custom={index}
+              initial="hidden"
+              animate="visible"
+              variants={rowVariants}
+              className="bg-[#FFF8ED] rounded-lg p-4 border border-[#EBD9BD] shadow-md hover:bg-[#FDF2E1] transition"
+            >
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-between items-center">
+                  <span>{item.coach}</span>
+                  <span className="text-[#256250] font-bold"> :مربی </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>{item.day}</span>
+                  <span className="text-[#256250] font-bold"> :روز</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>{item.level}</span>
+                  <span className="text-[#256250] font-bold"> :سطح</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>{item.price}</span>
+                  <span className="text-[#256250] font-bold"> :قیمت</span>
+                </div>
+                <div className="flex justify-between items-center">
                   <span
-                    className={`text-white px-2 md:px-4 py-0.5 md:py-1 rounded-xl text-[10px] md:text-sm whitespace-nowrap ${
+                    className={`text-white px-3 py-1 rounded-xl text-sm ${
                       item.status === "تکمیل شده"
                         ? "bg-[#FF6600]"
                         : "bg-[#256250]"
@@ -100,22 +162,31 @@ const ClassTableWithCoach = ({
                   >
                     {item.status}
                   </span>
-                </td>
+                  <span className="text-[#256250] font-bold"> :وضعیت</span>
+                </div>
+                <button
+                  onClick={() => handleBuyClick(item)}
+                  disabled={item.status !== "ظرفیت دارد"}
+                  className={`mt-2 px-4 py-1 rounded-full text-sm font-bold transition w-full ${
+                    item.status === "ظرفیت دارد"
+                      ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
+                      : "bg-gray-300 text-[#888] cursor-not-allowed"
+                  }`}
+                >
+                  خرید دوره
+                </button>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
 
-                <td className="p-1 text-center whitespace-nowrap">
-                  {item.coach}
-                </td>
-                <td className="p-1 text-center">{item.price}</td>
-                <td className="p-1 text-center">{item.level}</td>
-                <td className="p-1 text-center text-[#256250] font-medium">
-                  {item.day}
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </motion.div>
+      <SessionSelectModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSelect={handleSessionSelect}
+      />
+    </>
   );
 };
 

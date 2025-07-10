@@ -79,6 +79,9 @@ const PaymentPage = () => {
           <p>
             <strong>قیمت:</strong> {state.price}
           </p>
+          <p>
+            <strong>تعداد جلسات در ماه:</strong> {state.sessionsPerMonth} جلسه
+          </p>
         </div>
 
         <Formik

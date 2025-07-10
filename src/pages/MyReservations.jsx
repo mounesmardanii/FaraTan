@@ -29,7 +29,7 @@ const MyReservations = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="flex flex-col items-center px-4 sm:px-6 py-6 max-w-[1000px] mx-auto"
     >
-      {/* آیکن برگشت بالا سمت راست */}
+      {/* آیکن برگشت */}
       <div className="w-full flex justify-end mb-4">
         <img
           src={assets.back}
@@ -49,46 +49,81 @@ const MyReservations = () => {
             شما هنوز هیچ کلاسی رزرو نکرده‌اید.
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl shadow-md mt-4">
-            <table className="w-full text-center rounded-lg overflow-hidden bg-[#F7FDF9]">
-              <thead className="bg-[#256250] text-white text-[15px]">
-                <tr>
-                  <th className="p-3">عملیات</th>
-                  <th className="p-3">نوع کلاس</th>
-                  <th className="p-3">ساعت</th>
-                  <th className="p-3">روز</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reservations.map((item, index) => (
-                  <motion.tr
-                    key={item.id}
-                    custom={index}
-                    initial="hidden"
-                    animate="visible"
-                    variants={rowVariants}
-                    className="border-b border-[#CDE7DA] hover:bg-[#EAF4ED] transition transform-gpu"
+          <>
+            {/* کارت‌ها در موبایل */}
+            <div className="block sm:hidden space-y-4">
+              {reservations.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  custom={index}
+                  initial="hidden"
+                  animate="visible"
+                  variants={rowVariants}
+                  className="bg-[#F7FDF9] border border-[#CDE7DA] rounded-xl shadow p-4 text-[#256250] text-right"
+                >
+                  <div className="font-extrabold text-[#055B5C] text-lg mb-2">
+                    بدنسازی
+                  </div>
+                  <div className="mb-1">
+                    <span className="font-semibold">ساعت: </span>
+                    <span>{item.time}</span>
+                  </div>
+                  <div className="mb-3">
+                    <span className="font-semibold">روز: </span>
+                    <span>{item.day}</span>
+                  </div>
+                  <button
+                    onClick={() => cancelReservation(item.id)}
+                    className="w-full bg-[#FFE5E5] text-[#D32F2F] px-3 py-2 rounded-xl text-sm font-semibold hover:bg-[#FFD1D1] transition cursor-pointer mt-2"
                   >
-                    <td className="p-3">
-                      <button
-                        onClick={() => cancelReservation(item.id)}
-                        className="bg-[#FFE5E5] text-[#D32F2F] px-3 py-1 rounded-xl text-sm hover:bg-[#FFD1D1] transition cursor-pointer"
-                      >
-                        لغو
-                      </button>
-                    </td>
-                    <td className="p-3 text-[#256250] font-semibold">
-                      بدنسازی
-                    </td>
-                    <td className="p-3 text-[#055B5C] font-bold">
-                      {item.time}
-                    </td>
-                    <td className="p-3 text-[#256250]">{item.day}</td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    لغو رزرو
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* جدول در دسکتاپ */}
+            <div className="hidden sm:block overflow-x-auto rounded-xl shadow-md mt-4">
+              <table className="w-full text-center rounded-lg overflow-hidden bg-[#F7FDF9]">
+                <thead className="bg-[#256250] text-white text-[15px]">
+                  <tr>
+                    <th className="p-3">عملیات</th>
+                    <th className="p-3">نوع کلاس</th>
+                    <th className="p-3">ساعت</th>
+                    <th className="p-3">روز</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reservations.map((item, index) => (
+                    <motion.tr
+                      key={item.id}
+                      custom={index}
+                      initial="hidden"
+                      animate="visible"
+                      variants={rowVariants}
+                      className="border-b border-[#CDE7DA] hover:bg-[#EAF4ED] transition transform-gpu"
+                    >
+                      <td className="p-3">
+                        <button
+                          onClick={() => cancelReservation(item.id)}
+                          className="bg-[#FFE5E5] text-[#D32F2F] px-3 py-1 rounded-xl text-sm hover:bg-[#FFD1D1] transition cursor-pointer"
+                        >
+                          لغو
+                        </button>
+                      </td>
+                      <td className="p-3 text-[#256250] font-semibold">
+                        بدنسازی
+                      </td>
+                      <td className="p-3 text-[#055B5C] font-bold">
+                        {item.time}
+                      </td>
+                      <td className="p-3 text-[#256250]">{item.day}</td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </motion.div>

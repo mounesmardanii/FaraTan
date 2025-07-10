@@ -32,10 +32,9 @@ const CoachInfoCard = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative w-full max-sm:w-[350px] max-w-full min-[800px]:max-w-[400px] min-w-[250px] h-[400px] mt-15
-        mx-2 sm:mx-4 font-[Tahoma] text-right border border-[#D1E7D8] rounded-4xl shadow-md p-4 bg-[#D1E7D8]"
+        className="relative w-full max-w-full min-[800px]:max-w-[400px] min-w-[250px] h-[400px] mt-15 mx-2 sm:mx-4 font-[Tahoma] text-right border border-[#D1E7D8] rounded-4xl shadow-md p-4 bg-[#D1E7D8]
+        max-sm:w-[350px]" // 👈 عرض یکسان در موبایل
       >
-        {/* تصویر مربی */}
         <motion.img
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -44,12 +43,10 @@ const CoachInfoCard = () => {
           className="w-28 h-28 object-cover rounded-xl absolute -left-10 -top-12 z-10"
         />
 
-        {/* اطلاعات مربی */}
         <div className="flex flex-col justify-start h-full mt-10 gap-2 text-gray-800 text-[15px] leading-relaxed">
           <h2 className="text-[#FF6600] font-extrabold text-[18px] border-b border-[#ccc] pb-1">
             {initialValues.name}
           </h2>
-
           <p>
             <span className="text-[#256250] font-semibold">تخصص:</span>{" "}
             {initialValues.specialty}
@@ -71,8 +68,6 @@ const CoachInfoCard = () => {
               {initialValues.phone}
             </a>
           </p>
-
-          {/* توضیح کوتاه */}
           <p className="text-sm text-[#444] mt-3 leading-6 text-center border-t border-b border-[#ccc] py-3">
             مربی با تجربه در تمرینات ذهن و بدن، با تمرکز بر آرامش، انعطاف‌پذیری
             و بهبود کیفیت زندگی
