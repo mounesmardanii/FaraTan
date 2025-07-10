@@ -2,7 +2,7 @@ from typing import Annotated, Dict
 from loguru import logger
 from fastapi import Depends, HTTPException
 from  app.domain.models.member_model import Member
-from  app.domain.schemas.member_schema import MemberCreateSchema
+from  app.domain.schemas.member_schema import MemberCreateSchema, MemberResponseSchema
 from  app.infrastructure.repositories.member_repository import MemberRepository
 from  app.services.auth_services.hash_service import HashService
 from  app.services.base_service import BaseService
@@ -55,14 +55,19 @@ class MemberService(BaseService):
         logger.info(f"🔃 Updating member with id {member_id}")
         return self.member_repository.update_member(member_id, update_fields)
 
-    async def change_member_password(self, phone_number:str, update_fields: Dict) -> Member:
+    async def change_member_password(self, phone_number:str, update_fields: Dict) -> MemberResponseSchema:
         logger.info(f"🔃 Changing password member with id {phone_number}")
+        password = update_fields.get("password")
+        confirm_password = update_fields.pop("confirm_password", None)
+        if password != confirm_password:
+            raise HTTPException(status_code=400, detail="Passwords do not match")
 
         update_fields['password'] = self.hash_service.hash_password(update_fields['password'])
 
         member = self.member_repository.get_member_by_number(phone_number)
-        if member.can_reset_password != True:
+        if self.config.ENABLE_OTP and member.can_reset_password != True:
             raise HTTPException(status_code=400, detail='You need to verify the otp first')
 
         self.member_repository.update_member(member.id, {"can_reset_password": False})    
-        return self.member_repository.update_member(member.id, update_fields)
+        updated_member =  self.member_repository.update_member(member.id, update_fields)
+        return MemberResponseSchema.from_orm(updated_member)
