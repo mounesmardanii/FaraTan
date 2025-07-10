@@ -115,3 +115,13 @@ async def create_member_profile(
     member_service: Annotated[MemberMainService, Depends()],
 ) -> MemberProfileResponseSchema:
     return await member_service.create_profile(current_member.id, profile_data)
+
+
+
+@member_router.get("/member/profile", response_model=MemberProfileResponseSchema, status_code=status.HTTP_200_OK)
+async def get_member_profile(current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+member_service: Annotated[MemberMainService, Depends()],
+) -> MemberProfileResponseSchema:
+    return await member_service.get_profile_by_member_id(current_member.id)
+
+
