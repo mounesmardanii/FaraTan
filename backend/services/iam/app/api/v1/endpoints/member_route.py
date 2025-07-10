@@ -5,7 +5,7 @@ from loguru import logger
 from app.domain.schemas.member_schema import( MemberCreateSchema, MemberResponseSchema,
                                              UpdateMemberInfoSchema, MemberLoginSchema,
                                                ForgetPasswordSchema,ResendOTPResponseSchema,
-                                               ResendOTPSchema,ResetPasswordSchema,
+                                               ResendOTPSchema,MemberProfileUpdateSchema,
                                                VerifyOTPResponseSchema,VerifyOTPSchema,
                                                 MemberProfileResponseSchema,MemberProfileCreateSchema )
 from app.domain.schemas.token_schema import TokenSchema, TokenDataSchema
@@ -72,7 +72,7 @@ async def update_info(
         member_service: Annotated[MemberService, Depends()]
 ):
     logger.info(f'🔃 Changing member info for member {current_member.id}')
-    return await member_service.update_member(current_member.id, dict(member_data.model_dump(exclude_unset=True)))
+    return await member_service.update_member(current_member.id, member_data)
    
 
 @member_router.get("/Me", response_model=MemberResponseSchema, status_code=status.HTTP_200_OK)
@@ -125,3 +125,14 @@ member_service: Annotated[MemberMainService, Depends()],
     return await member_service.get_profile_by_member_id(current_member.id)
 
 
+@member_router.put(
+    "/member/profile",
+    response_model=MemberProfileResponseSchema,
+    status_code=status.HTTP_200_OK,
+)
+async def update_member_profile(
+    profile_data: MemberProfileUpdateSchema,
+    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_service: Annotated[MemberService, Depends()],
+) -> MemberProfileResponseSchema:
+    return await member_service.update_profile(current_member.id, profile_data)

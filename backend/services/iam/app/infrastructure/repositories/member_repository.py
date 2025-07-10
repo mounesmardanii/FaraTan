@@ -53,3 +53,16 @@ class MemberRepository:
     logger.info(f"📥 Fetching profile for member with id: {member_id}")
     return self.db.query(MemberProfile).filter(MemberProfile.member_id == member_id).first()
   
+
+  def update_profile_by_member_id(self, member_id: UUID, update_fields: Dict) -> MemberProfile:
+    profile_query = self.db.query(MemberProfile).filter(MemberProfile.member_id == member_id)
+    profile_db = profile_query.first()
+    if profile_db:
+        profile_query.update(update_fields, synchronize_session=False)
+        self.db.commit()
+        self.db.refresh(profile_db)
+        logger.info(f"✅ Profile for member {member_id} updated")
+        return profile_db
+    else:
+        logger.warning(f"⚠️ Profile for member {member_id} not found")
+        return None

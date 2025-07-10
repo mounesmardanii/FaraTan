@@ -2,7 +2,7 @@ from typing import Annotated, Dict
 from loguru import logger
 from fastapi import Depends, HTTPException
 from  app.domain.models.member_model import Member, MemberProfile
-from  app.domain.schemas.member_schema import MemberCreateSchema, MemberResponseSchema, MemberProfileCreateSchema
+from  app.domain.schemas.member_schema import MemberCreateSchema, MemberResponseSchema, MemberProfileCreateSchema, MemberProfileUpdateSchema,MemberProfileResponseSchema
 from  app.infrastructure.repositories.member_repository import MemberRepository
 from  app.services.auth_services.hash_service import HashService
 from  app.services.base_service import BaseService
@@ -43,6 +43,7 @@ class MemberService(BaseService):
         return self.member_repository.update_member(member_id, update_fields)
 
     async def update_member(self, member_id: UUID, update_fields: Dict) -> Member:
+        update_fields = update_fields.model_dump(exclude_unset=True)
         logger.info(f"🔃 Updating member with id {member_id}")
         if "password" in update_fields:
             password = update_fields.get("password")
@@ -94,3 +95,17 @@ class MemberService(BaseService):
             fitness_goals=profile_data.fitness_goals,
         )
         return self.member_repository.create_profile(profile)
+    
+    async def update_profile(
+        self, member_id: UUID, update_data: MemberProfileUpdateSchema
+    ) -> MemberProfileResponseSchema:
+        update_fields = update_data.model_dump(exclude_unset=True)
+        member = await self.get_member_by_id(member_id)
+        if not member:
+            raise HTTPException(status_code=404, detail='Member not found')
+        # profile = await self.get_profile_by_member_id(member_id)
+        # if not profile:
+        #     raise HTTPException(status_code=400, detail='Profile not found')
+
+        updated_profile = self.member_repository.update_profile_by_member_id(member_id, update_fields)
+        return MemberProfileResponseSchema.from_orm(updated_profile)
