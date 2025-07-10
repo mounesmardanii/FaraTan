@@ -9,18 +9,24 @@ const ProfileTable = () => {
   const [showChart, setShowChart] = useState(false);
   const { purchases } = usePurchases();
 
-  const [profileData, setProfileData] = useState({
-    height: 160,
-    weight: 65,
-    waist: 65,
-    arm: 65,
-    chest: 65,
-    hip: 65,
+  // تغییرات: بارگیری داده‌ها از localStorage هنگام بارگذاری صفحه
+  const [profileData, setProfileData] = useState(() => {
+    const storedData = localStorage.getItem("profileData");
+    return storedData
+      ? JSON.parse(storedData)
+      : {
+          height: 160,
+          weight: 65,
+          waist: 65,
+          arm: 65,
+          chest: 65,
+          hip: 65,
+        };
   });
 
   const [formData, setFormData] = useState(profileData);
   const [monthlyData, setMonthlyData] = useState({
-    weight: [65, 66, 65, 64, 65, 63, 64, 65, 66, 65, 64, 63], // داده‌های نمونه برای یک سال
+    weight: [65, 66, 65, 64, 65, 63, 64, 65, 66, 65, 64, 63],
     months: [
       "فروردین",
       "اردیبهشت",
@@ -52,6 +58,9 @@ const ProfileTable = () => {
     }));
     setEditMode(false);
     setShowReminder(false);
+
+    // ذخیره‌سازی داده‌ها در localStorage
+    localStorage.setItem("profileData", JSON.stringify(formData));
     localStorage.setItem("lastUpdate", new Date());
   };
 
@@ -60,11 +69,9 @@ const ProfileTable = () => {
     setEditMode(false);
   };
 
-  const checkOneYearAccess = () => {
-    const hasOneYear = purchases.some(
-      (item) => item.duration === "دوره یک‌ساله"
-    );
-    if (!hasOneYear) {
+  const checkVIPAccess = () => {
+    const hasVIP = purchases.some((item) => item.duration === "VIP");
+    if (!hasVIP) {
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 10000);
     } else {
@@ -178,8 +185,8 @@ const ProfileTable = () => {
               ×
             </button>
             <p className="text-center text-[16px] sm:text-[18px] font-semibold leading-7 text-[#1F2D27] px-2 sm:px-6">
-              نتایج تمرین‌ها و پیشرفت رو لحظه به لحظه با اشتراک VIP ببین و قدرتت
-              رو بیشتر کن!
+              ببین <span className="text-orange-500 uppercase">VIP</span> تایج
+              تمرین‌ها و پیشرفت رو لحظه به لحظه با اشتراک
             </p>
           </div>
         </div>
@@ -312,7 +319,7 @@ const ProfileTable = () => {
                 به‌روزرسانی
               </button>
               <button
-                onClick={checkOneYearAccess}
+                onClick={checkVIPAccess}
                 className="bg-[#FF6600] hover:bg-orange-600 text-white px-4 py-2 rounded-md transition text-sm font-semibold w-full sm:w-auto cursor-pointer"
               >
                 نتایج تمرینات و تلاش‌ها

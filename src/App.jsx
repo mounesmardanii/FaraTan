@@ -43,7 +43,8 @@ function AdminRoute({ children }) {
 
 function LayoutWrapper() {
   const location = useLocation();
-  const hideLayout = [
+
+  const hideNavbarRoutes = [
     "/login",
     "/signup",
     "/verify",
@@ -57,14 +58,20 @@ function LayoutWrapper() {
     "/admin/fitness",
     "/admin/coaches",
     "/admin/wardrobes",
-    "/admin/payments", // Added from remote
-  ].includes(location.pathname);
+    "/admin/payments",
+  ];
+
+  const hideFooterRoutes = [
+    ...hideNavbarRoutes,
+    "/start-training", // فقط فوتر در این صفحه مخفی میشه
+  ];
 
   return (
     <>
-      {!hideLayout && <Navbar />}
+      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+
       <Routes>
-        {/* Public routes */}
+        {/* مسیرهای عمومی */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -89,7 +96,7 @@ function LayoutWrapper() {
           element={<NutritionPlanDetail />}
         />
 
-        {/* Admin routes */}
+        {/* مسیرهای ادمین */}
         <Route
           path="/admin"
           element={
@@ -139,7 +146,8 @@ function LayoutWrapper() {
           }
         />
       </Routes>
-      {!hideLayout && <Footer />}
+
+      {!hideFooterRoutes.includes(location.pathname) && <Footer />}
     </>
   );
 }

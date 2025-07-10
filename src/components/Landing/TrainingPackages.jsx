@@ -4,40 +4,41 @@ import { useNavigate } from "react-router-dom";
 
 const cardData = [
   {
-    title: "برنامه ۱ ساله – سرمایه‌گذاری روی بدن و ذهن",
+    title: " VIP برنامه",
     description:
-      "تعهد یک‌ساله یعنی جدی گرفتن خودت، در این مسیر ما همراهت هستیم",
+      "شامل مربی اختصاصی و استفاده از باشگاه به‌صورت خصوصی است، هیچ‌کس جز شما و مربی در باشگاه نیست",
     points: [
-      "بهترین قیمت نسبت به مدت",
-      "برنامه‌ریزی دقیق بلندمدت",
-      "پشتیبانی مداوم مربیان",
+      "مربی اختصاصی برای تمرینات شما",
+      "استفاده از باشگاه به‌صورت خصوصی",
+      "برنامه‌ریزی دقیق برای تمامی نیازهای شما",
     ],
-    footer: "!سال جدید رو با خودی قوی‌تر شروع کن",
+    footer: "مربی اختصاصی و باشگاه خصوصی، تجربه‌ای بی‌نظیر از تمرینات بدنسازی",
     crown: true,
     path: "/plan/1year",
   },
   {
-    title: "برنامه ۶ ماهه – ثبات، پیشرفت، انگیزه",
+    title: "برنامه خصوصی",
     description:
-      "با این پلن به قدم ذهنت نزدیک‌تر می‌شی و پیشرفت واقعی رو حس می‌کنی",
+      "مربی مخصوص شماست و تمامی تمرینات به‌طور کامل زیر نظر مربی انجام می‌شود",
     points: [
-      "مناسب برای ادامه‌دهنده‌ها",
-      "ترکیب برنامه تغذیه و تمرین",
-      "پیگیری و ارزیابی منظم",
+      "مربی اختصاصی برای تمرینات شما",
+      "پیگیری و ارزیابی مداوم تمرینات",
+      "تمرینات شخصی‌سازی‌شده بر اساس نیازهای شما",
     ],
-    footer: "!نیم‌سال سلامتی رو با انگیزه بساز",
+    footer:
+      "تمرینات شما تحت نظر مربی حرفه‌ای، آماده برای دستیابی به بهترین نتایج",
     path: "/plan/6months",
   },
   {
-    title: "برنامه ۳ ماهه – شروعی برای تغییر",
+    title: "برنامه عمومی ",
     description:
-      "اگر تازه می‌خوای ورزش رو شروع کنی یا به دنبال یک بازگشت جدی هستی، این دوره نقطه‌ی شروعه",
+      " فرد خود به تمرینات پرداخته و می‌تواند بر اساس برنامه ارائه‌شده، تمرینات را به‌صورت شخصی انجام دهد.",
     points: [
-      "مناسب برای مبتدی‌ها",
-      "رسیدن به فرم اولیه بدن",
-      "ایجاد عادت ورزشی منظم",
+      "تمرینات شخصی‌سازی‌شده برای افرادی که به‌طور مستقل تمرین می‌کنند",
+      "مدیریت خودکار برنامه تمرینی بدون نیاز به مربی",
+      "تمرینات انعطاف‌پذیر بر اساس نیازها و اهداف فردی",
     ],
-    footer: "!همین امروز شروع کن و خودتو به چالش بکش",
+    footer: "با تمرینات شخصی خودت، قدم اول رو بردار و به هدفت برس",
     path: "/plan/3months",
   },
 ];
@@ -53,12 +54,26 @@ const TrainingCard = ({
   <div
     onClick={onClick}
     className={`relative bg-[#D1E7D8] rounded-3xl p-4 md:p-6 w-full md:w-1/3 shadow-md text-xs md:text-sm leading-relaxed text-right cursor-pointer transition-all duration-300 transform hover:scale-105 hover:brightness-95 ${
-      crown ? "border-2 border-yellow-400" : ""
+      crown ? "border-2 border-[#ffa366]" : ""
     }`}
   >
-    <h3 className="font-extrabold text-[#055B5C] mb-2 text-sm md:text-base leading-snug">
-      {title}
-    </h3>
+    <div className="flex justify-center items-center">
+      <h3 className="font-extrabold text-[#055B5C] mb-2 text-sm md:text-base leading-snug">
+        {/* نمایش عنوان و اضافه کردن vip بعد از "برنامه" */}
+        {title.split(" – ").map((part, index) =>
+          index === 0 ? (
+            <span key={index}>{part} </span>
+          ) : (
+            crown && (
+              <span key={index} className="font-bold text-[#FF6600]">
+                vip
+              </span>
+            )
+          )
+        )}
+      </h3>
+    </div>
+
     <p className="mb-3 text-[11px] md:text-sm">{description}</p>
 
     <ul className="space-y-2 text-[11px] md:text-sm">
@@ -70,7 +85,8 @@ const TrainingCard = ({
       ))}
     </ul>
 
-    <p className="mt-4 font-bold text-[#055B5C] text-[11px] md:text-sm">
+    {/* وسط چین کردن فوتر */}
+    <p className="mt-4 font-bold text-[#055B5C] text-[11px] md:text-sm text-center">
       {footer}
     </p>
 

@@ -23,13 +23,13 @@ const ProfilePage = () => {
 
   return (
     <div className="relative p-4 sm:p-6 md:p-8 max-w-[1400px] w-full mx-auto mt-8">
-      <div className="flex flex-col gap-2 sm:gap-2 min-[800px]:flex-row min-[800px]:items-start ml-20">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center sm:items-start">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={fadeInUp}
           custom={1}
-          className="w-full min-[800px]:w-[300px]"
+          className="w-full sm:w-[300px] max-w-[350px] sm:max-w-[300px] flex justify-center"
         >
           <ProfileInfoCard />
         </motion.div>
@@ -39,7 +39,7 @@ const ProfilePage = () => {
           animate="visible"
           variants={fadeInUp}
           custom={2}
-          className="w-full"
+          className="w-full sm:w-[700px] max-w-[700px] sm:max-w-full"
         >
           <UserDashboard />
         </motion.div>

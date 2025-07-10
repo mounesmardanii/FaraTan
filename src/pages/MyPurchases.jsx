@@ -32,7 +32,8 @@ const MyPurchases = () => {
     >
       {/* نوار بالایی */}
       <div className="w-full flex justify-between items-center mb-4">
-        {purchases.length > 0 && (
+        {/* فقط دکمه پاک‌سازی شرطی باشه */}
+        {purchases.length > 0 ? (
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -41,7 +42,11 @@ const MyPurchases = () => {
           >
             پاک‌سازی لیست خریدها
           </motion.button>
+        ) : (
+          <div /> // یک div خالی برای حفظ فاصله
         )}
+
+        {/* دکمه بازگشت همیشه باشد */}
         <motion.img
           whileHover={{ scale: 1.15 }}
           whileTap={{ scale: 0.9 }}
@@ -57,13 +62,13 @@ const MyPurchases = () => {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-        className="w-full bg-[#FEEDDB] rounded-xl shadow-lg p-6 border border-[#FFD9A0]"
+        className="w-full bg-[#FEEDDB] rounded-xl shadow-lg p-4 sm:p-6 border border-[#FFD9A0]"
       >
         <motion.h1
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
-          className="text-2xl font-bold text-[#256250] text-center border-b-2 border-[#FF6600] pb-2 mb-6"
+          className="text-xl sm:text-2xl font-bold text-[#256250] text-center border-b-2 border-[#FF6600] pb-2 mb-4 sm:mb-6"
         >
           خریدهای من
         </motion.h1>
@@ -73,44 +78,56 @@ const MyPurchases = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-center text-[#FF6600] text-lg font-medium bg-[#FFF1E3] py-10 rounded-xl shadow-inner"
+            className="text-center text-[#FF6600] text-base sm:text-lg font-medium bg-[#FFF1E3] py-10 rounded-xl shadow-inner"
           >
             هنوز هیچ دوره‌ای خریداری نکرده‌اید.
           </motion.div>
         ) : (
-          <table className="w-full text-center bg-[#F7FDF9] rounded-lg overflow-hidden">
-            <thead className="bg-[#256250] text-white text-sm">
-              <tr>
-                <th className="p-3">نوع دوره</th>
-                <th className="p-3">مربی</th>
-                <th className="p-3">روز</th>
-                <th className="p-3">سطح</th>
-                <th className="p-3">قیمت</th>
-                <th className="p-3">تاریخ خرید</th>
-              </tr>
-            </thead>
-            <tbody>
-              {purchases.map((item, i) => (
-                <motion.tr
-                  key={`${item.id}-${item.coach}-${i}`}
-                  custom={i}
-                  initial="hidden"
-                  animate="visible"
-                  variants={rowVariants}
-                  className="border-b border-[#D1E7D8] hover:bg-[#EAF4ED] transition text-sm"
-                >
-                  <td className="p-3 text-[#256250]">{item.duration}</td>
-                  <td className="p-3 text-[#256250] font-medium">
-                    {item.coach}
-                  </td>
-                  <td className="p-3 text-[#055B5C]">{item.day}</td>
-                  <td className="p-3 text-[#256250]">{item.level}</td>
-                  <td className="p-3 text-[#256250] font-bold">{item.price}</td>
-                  <td className="p-3 text-[#888]">{item.date || "---"}</td>
-                </motion.tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="overflow-x-auto w-full">
+            <table className="w-full text-center bg-[#F7FDF9] rounded-lg">
+              <thead className="bg-[#256250] text-white text-xs sm:text-sm md:text-base">
+                <tr>
+                  <th className="p-2 sm:p-3 md:p-4">نوع دوره</th>
+                  <th className="p-2 sm:p-3 md:p-4">مربی</th>
+                  <th className="p-2 sm:p-3 md:p-4">روز</th>
+                  <th className="p-2 sm:p-3 md:p-4">سطح</th>
+                  <th className="p-2 sm:p-3 md:p-4">قیمت</th>
+                  <th className="p-2 sm:p-3 md:p-4">تاریخ خرید</th>
+                </tr>
+              </thead>
+              <tbody>
+                {purchases.map((item, i) => (
+                  <motion.tr
+                    key={`${item.id}-${item.coach}-${i}`}
+                    custom={i}
+                    initial="hidden"
+                    animate="visible"
+                    variants={rowVariants}
+                    className="border-b border-[#D1E7D8] hover:bg-[#EAF4ED] transition text-xs sm:text-sm md:text-base"
+                  >
+                    <td className="p-2 sm:p-3 md:p-4 text-[#256250]">
+                      {item.duration}
+                    </td>
+                    <td className="p-2 sm:p-3 md:p-4 text-[#256250] font-medium">
+                      {item.coach}
+                    </td>
+                    <td className="p-2 sm:p-3 md:p-4 text-[#055B5C]">
+                      {item.day}
+                    </td>
+                    <td className="p-2 sm:p-3 md:p-4 text-[#256250]">
+                      {item.level}
+                    </td>
+                    <td className="p-2 sm:p-3 md:p-4 text-[#256250] font-bold">
+                      {item.price}
+                    </td>
+                    <td className="p-2 sm:p-3 md:p-4 text-[#888]">
+                      {item.date || "---"}
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </motion.div>
     </motion.div>

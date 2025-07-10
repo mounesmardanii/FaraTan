@@ -18,7 +18,7 @@ import upload from "./upload.png";
 import bag from "./bag.png";
 import forgetpic from "./forgetpic.svg";
 import newpasspic from "./newpasspic.svg";
-
+import printer from "./printer.svg";
 import BodybuildingPic from "./BodybuildingPic.png";
 import woman1 from "./woman1.png";
 
@@ -39,6 +39,7 @@ import lock1 from "./lock1.png";
 import lock2 from "./lock2.png";
 
 export const assets = {
+  printer,
   plan,
   apple,
   payment1,
@@ -75,5 +76,5 @@ export const assets = {
   woman4,
   repair,
   lock1,
-  lock2
+  lock2,
 };

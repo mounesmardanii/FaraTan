@@ -20,6 +20,21 @@ const ProfileInfoCard = () => {
   const { userProfile, updateUserInfo } = useUserProfile(); // ✅
   const [editMode, setEditMode] = useState(false);
 
+  // برای بارگذاری و ذخیره داده‌ها از localStorage استفاده می‌کنیم
+  const [formData, setFormData] = useState(() => {
+    const storedData = localStorage.getItem("userProfile");
+    return storedData
+      ? JSON.parse(storedData)
+      : {
+          name: "",
+          age: "",
+          phone: "",
+          medicalCondition: "",
+          dietHistory: "",
+          exerciseHistory: "",
+        };
+  });
+
   const fields = [
     "name",
     "age",
@@ -29,8 +44,12 @@ const ProfileInfoCard = () => {
     "exerciseHistory",
   ];
 
+  // این تابع برای ذخیره‌سازی داده‌های فرم به‌کار می‌رود و در localStorage ذخیره می‌شود
   const handleSubmit = (values) => {
+    // ذخیره‌سازی در localStorage
+    localStorage.setItem("userProfile", JSON.stringify(values));
     updateUserInfo(values); // ✅ ذخیره در context
+    setFormData(values); // به‌روزرسانی فرم داده‌ها
     setEditMode(false);
   };
 
@@ -40,9 +59,11 @@ const ProfileInfoCard = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative w-full max-sm:w-[350px] max-w-full min-[800px]:max-w-[400px] min-w-[250px] h-[400px] mt-15
+        className={`relative w-full max-sm:w-[350px] max-w-full min-[800px]:max-w-[400px] min-w-[250px] mt-15
         mx-2 sm:mx-4 font-[Tahoma] text-right border border-[#D1E7D8] rounded-4xl shadow-md p-3 max-sm:p-2 sm:p-3 rtl transition-colors
-        duration-300 bg-[#9FC6C3] box-border"
+        duration-300 bg-[#9FC6C3] box-border ${
+          editMode ? "h-auto" : "h-[400px]"
+        }`}
       >
         <motion.img
           initial={{ opacity: 0, scale: 0.8 }}
@@ -55,13 +76,13 @@ const ProfileInfoCard = () => {
         {editMode ? (
           <Formik
             enableReinitialize
-            initialValues={userProfile}
+            initialValues={formData} // استفاده از داده‌های بارگذاری شده
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
           >
             {() => (
-              <Form className="flex flex-col h-full text-[11px] sm:text-[11px] mt-6 text-right">
-                <div className="flex flex-col gap-0.5 overflow-hidden">
+              <Form className="flex flex-col space-y-2 h-full text-[11px] sm:text-[11px] mt-6 text-right">
+                <div className="flex flex-col gap-2 overflow-hidden">
                   {fields.map((field, idx) => (
                     <div key={idx}>
                       <label className="text-gray-800 font-bold block mb-0 text-[11px] sm:text-[11px]">
@@ -107,33 +128,33 @@ const ProfileInfoCard = () => {
         ) : (
           <div className="flex flex-col justify-between h-full pt-16 space-y-1.5 text-gray-800 text-[18px] sm:text-[16px] leading-relaxed -mt-5">
             <h2 className="text-[#FF6600] font-extrabold text-[20px] sm:text-[18px] border-b border-white pb-1">
-              {userProfile.name}
+              {formData.name || "نام"}
             </h2>
             <div className="space-y-1.5">
               <p>
                 <strong className="text-[#256250]">سن:</strong>{" "}
-                {userProfile.age}
+                {formData.age || "سن"}
               </p>
               <p>
                 <strong className="text-[#256250]">شماره تلفن:</strong>{" "}
                 <a
-                  href={`tel:${userProfile.phone}`}
+                  href={`tel:${formData.phone}`}
                   className="text-[#256250] hover:underline font-semibold"
                 >
-                  {userProfile.phone}
+                  {formData.phone || "شماره تلفن"}
                 </a>
               </p>
               <p>
                 <strong className="text-[#256250]">شرایط پزشکی:</strong>{" "}
-                {userProfile.medicalCondition}
+                {formData.medicalCondition || "شرایط پزشکی"}
               </p>
               <p>
                 <strong className="text-[#256250]">سابقه رژیم:</strong>{" "}
-                {userProfile.dietHistory}
+                {formData.dietHistory || "سابقه رژیم"}
               </p>
               <p>
                 <strong className="text-[#256250]">سابقه ورزشی:</strong>{" "}
-                {userProfile.exerciseHistory}
+                {formData.exerciseHistory || "سابقه ورزشی"}
               </p>
             </div>
             <div className="pt-2 border-t border-white">

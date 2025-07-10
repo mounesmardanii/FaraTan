@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ScrollToTopButton from "../components/ScrollToTopButton";
 import { assets } from "../assets/assets";
+import html2pdf from "html2pdf.js";
 
 const NutritionPlanDetail = () => {
   const { weekId } = useParams();
   const navigate = useNavigate();
+  const contentRef = useRef(null); // ✅ برای PDF
+
+  const handlePrintPDF = () => {
+    const element = contentRef.current;
+    const opt = {
+      margin: 0.5,
+      filename: `nutrition-week-${weekId}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+    };
+    html2pdf().set(opt).from(element).save();
+  };
 
   const nutritionPlan = {
     "week-1": [
@@ -343,13 +357,24 @@ const NutritionPlanDetail = () => {
 
   const weekData = nutritionPlan[weekId] || nutritionPlan["week-1"];
   if (!weekData) {
-    console.error("No data for weekId:", weekId);
     return <div>خطا: داده‌ای برای این هفته پیدا نشد.</div>;
   }
 
   return (
     <div className="flex flex-col items-center p-4 sm:p-6 md:p-8 max-w-[1200px] mx-auto">
-      <div className="w-full flex justify-end mb-4">
+      {/* دکمه‌ها */}
+      <div className="w-full flex justify-between items-center mb-4 mt-2">
+        {/* دکمه پرینتر */}
+        <div className="block">
+          <img
+            src={assets.printer}
+            alt="پرینت"
+            className="w-8 h-8 cursor-pointer hover:scale-110 transition-transform duration-200"
+            onClick={handlePrintPDF}
+          />
+        </div>
+
+        {/* دکمه بازگشت */}
         <img
           src={assets.back}
           alt="بازگشت"
@@ -357,39 +382,47 @@ const NutritionPlanDetail = () => {
           onClick={() => navigate(-1)}
         />
       </div>
-      <h1 className="text-2xl font-bold text-[#055B5C] mb-6">
-        برنامه تغذیه - هفته {weekId.replace("week-", "")}
-      </h1>
-      <div className="w-full overflow-x-auto">
-        <table className="w-full text-center border-collapse border-2 border-[#055B5C] bg-[#D1E7D8]">
-          <thead>
-            <tr className="bg-[#055B5C] text-white">
-              <th className="border-2 border-[#055B5C] p-2">شام</th>
-              <th className="border-2 border-[#055B5C] p-2">میان وعده شب</th>
-              <th className="border-2 border-[#055B5C] p-2">ناهار</th>
-              <th className="border-2 border-[#055B5C] p-2">میان وعده</th>
-              <th className="border-2 border-[#055B5C] p-2">صبحانه</th>
-              <th className="border-2 border-[#055B5C] p-2">روز</th>
-            </tr>
-          </thead>
-          <tbody>
-            {weekData.map((day, index) => (
-              <tr key={index} className="border-2 border-[#055B5C]">
-                <td className="border-2 border-[#055B5C] p-2">{day.dinner}</td>
-                <td className="border-2 border-[#055B5C] p-2">
-                  {day.eveningSnack}
-                </td>
-                <td className="border-2 border-[#055B5C] p-2">{day.lunch}</td>
-                <td className="border-2 border-[#055B5C] p-2">{day.snack}</td>
-                <td className="border-2 border-[#055B5C] p-2">
-                  {day.breakfast}
-                </td>
-                <td className="border-2 border-[#055B5C] p-2">{day.day}</td>
+
+      {/* محتوای PDF */}
+      <div ref={contentRef} className="w-full">
+        <h1 className="text-2xl font-bold text-[#055B5C] mb-6 text-center">
+          برنامه تغذیه - هفته {weekId.replace("week-", "")}
+        </h1>
+
+        <div className="w-full overflow-x-auto">
+          <table className="w-full text-center border-collapse border-2 border-[#055B5C] bg-[#D1E7D8]">
+            <thead>
+              <tr className="bg-[#055B5C] text-white">
+                <th className="border-2 border-[#055B5C] p-2">شام</th>
+                <th className="border-2 border-[#055B5C] p-2">میان وعده شب</th>
+                <th className="border-2 border-[#055B5C] p-2">ناهار</th>
+                <th className="border-2 border-[#055B5C] p-2">میان وعده</th>
+                <th className="border-2 border-[#055B5C] p-2">صبحانه</th>
+                <th className="border-2 border-[#055B5C] p-2">روز</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {weekData.map((day, index) => (
+                <tr key={index} className="border-2 border-[#055B5C]">
+                  <td className="border-2 border-[#055B5C] p-2">
+                    {day.dinner}
+                  </td>
+                  <td className="border-2 border-[#055B5C] p-2">
+                    {day.eveningSnack}
+                  </td>
+                  <td className="border-2 border-[#055B5C] p-2">{day.lunch}</td>
+                  <td className="border-2 border-[#055B5C] p-2">{day.snack}</td>
+                  <td className="border-2 border-[#055B5C] p-2">
+                    {day.breakfast}
+                  </td>
+                  <td className="border-2 border-[#055B5C] p-2">{day.day}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+
       <ScrollToTopButton />
     </div>
   );

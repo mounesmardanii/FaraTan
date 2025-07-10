@@ -5,12 +5,12 @@ import ScrollToTopButton from "../../components/ScrollToTopButton";
 const OneYearPlan = () => {
   return (
     <div className="py-10 px-4">
-      <h1 className="text-center text-2xl font-bold text-[#055B5C] mb-6">
-        برنامه یک‌ساله - سرمایه‌گذاری روی بدن و ذهن
+      <h1 className="text-center text-base sm:text-xl md:text-2xl font-bold text-[#055B5C] mb-4 sm:mb-6 leading-relaxed">
+        VIP برنامه <br /> مربی اختصاصی و باشگاه خصوصی
       </h1>
       <ClassTableWithCoach
         category="بدنسازی"
-        classType="دوره یک‌ساله"
+        classType="VIP"
         classList={[
           {
             id: 2,
