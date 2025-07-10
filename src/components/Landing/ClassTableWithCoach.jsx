@@ -28,6 +28,14 @@ const ClassTableWithCoach = ({
     }
   };
 
+  const getButtonClass = (status) =>
+    status === "ظرفیت دارد"
+      ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
+      : "bg-gray-300 text-[#888] cursor-not-allowed";
+
+  const getStatusClass = (status) =>
+    status === "تکمیل شده" ? "bg-[#FF6600]" : "bg-[#256250]";
+
   const handleSessionSelect = (sessionCount) => {
     setModalOpen(false);
     navigate("/payment", {
@@ -41,11 +49,12 @@ const ClassTableWithCoach = ({
 
   return (
     <>
+      {/* عکس برگشت در بالا سمت راست */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="bg-[#FEEDDB] p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] mx-auto mt-10 font-[Tahoma] text-right border border-[#D1E7D8] overflow-hidden"
+        className="bg-[#FEEDDB] p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] mx-auto mt-4 font-[Tahoma] text-right border border-[#D1E7D8] overflow-hidden"
       >
         <h3 className="text-[#256250] border-b-2 border-[#FF6600] pb-2 mb-4 text-xl font-bold text-center">
           دوره‌های {category} - {classType}
@@ -90,22 +99,18 @@ const ClassTableWithCoach = ({
                     <button
                       onClick={() => handleBuyClick(item)}
                       disabled={item.status !== "ظرفیت دارد"}
-                      className={`px-2 md:px-4 py-0.5 md:py-1 rounded-full text-[10px] md:text-sm font-bold transition ${
-                        item.status === "ظرفیت دارد"
-                          ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
-                          : "bg-gray-300 text-[#888] cursor-not-allowed"
-                      }`}
+                      className={`px-2 md:px-4 py-0.5 md:py-1 rounded-full text-[10px] md:text-sm font-bold transition ${getButtonClass(
+                        item.status
+                      )}`}
                     >
                       خرید دوره
                     </button>
                   </td>
                   <td className="p-1 md:p-2 text-center">
                     <span
-                      className={`text-white px-2 md:px-4 py-0.5 md:py-1 rounded-xl text-[10px] md:text-sm whitespace-nowrap ${
-                        item.status === "تکمیل شده"
-                          ? "bg-[#FF6600]"
-                          : "bg-[#256250]"
-                      }`}
+                      className={`text-white px-2 md:px-4 py-0.5 md:py-1 rounded-xl text-[10px] md:text-sm whitespace-nowrap ${getStatusClass(
+                        item.status
+                      )}`}
                     >
                       {item.status}
                     </span>
@@ -154,11 +159,9 @@ const ClassTableWithCoach = ({
                 </div>
                 <div className="flex justify-between items-center">
                   <span
-                    className={`text-white px-3 py-1 rounded-xl text-sm ${
-                      item.status === "تکمیل شده"
-                        ? "bg-[#FF6600]"
-                        : "bg-[#256250]"
-                    }`}
+                    className={`text-white px-3 py-1 rounded-xl text-sm ${getStatusClass(
+                      item.status
+                    )}`}
                   >
                     {item.status}
                   </span>
@@ -167,11 +170,9 @@ const ClassTableWithCoach = ({
                 <button
                   onClick={() => handleBuyClick(item)}
                   disabled={item.status !== "ظرفیت دارد"}
-                  className={`mt-2 px-4 py-1 rounded-full text-sm font-bold transition w-full ${
-                    item.status === "ظرفیت دارد"
-                      ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
-                      : "bg-gray-300 text-[#888] cursor-not-allowed"
-                  }`}
+                  className={`mt-2 px-4 py-1 rounded-full text-sm font-bold transition w-full ${getButtonClass(
+                    item.status
+                  )}`}
                 >
                   خرید دوره
                 </button>

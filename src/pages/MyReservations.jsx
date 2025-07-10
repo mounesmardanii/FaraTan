@@ -1,8 +1,8 @@
 import React from "react";
 import { useReservations } from "../context/ReservationContext";
 import { useNavigate } from "react-router-dom";
-import { assets } from "../assets/assets";
 import { motion } from "framer-motion";
+import { assets } from "../assets/assets";
 
 const rowVariants = {
   hidden: { opacity: 0, scale: 0.95, rotateX: -10 },
@@ -29,8 +29,8 @@ const MyReservations = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="flex flex-col items-center px-4 sm:px-6 py-6 max-w-[1000px] mx-auto"
     >
-      {/* آیکن برگشت */}
-      <div className="w-full flex justify-end mb-4">
+      {/* دکمه برگشت بالای جدول و در سمت چپ */}
+      <div className="w-full flex justify-start mb-4">
         <img
           src={assets.back}
           alt="بازگشت"
