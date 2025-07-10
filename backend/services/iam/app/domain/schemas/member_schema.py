@@ -19,7 +19,6 @@ class MemberResponseSchema(BaseModel):
     full_name: str
     phone_number: str
     national_id: str
-    profile_image: Optional[str]
     is_verified:bool
     can_reset_password:bool
     created_at: Optional[datetime]
