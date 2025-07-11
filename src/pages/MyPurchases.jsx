@@ -74,7 +74,7 @@ const MyPurchases = () => {
             transition={{ delay: 0.5 }}
             className="text-center text-[#FF6600] text-base sm:text-lg font-medium bg-[#FFF1E3] py-10 rounded-xl shadow-inner"
           >
-            هنوز هیچ دوره‌ای خریداری نکرده‌اید.
+           .هنوز هیچ دوره‌ای خریداری نکرده‌اید
           </motion.div>
         ) : (
           <>

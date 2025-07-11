@@ -30,14 +30,14 @@ const MyReservations = () => {
       className="flex flex-col items-center px-4 sm:px-6 py-6 max-w-[1000px] mx-auto"
     >
       {/* دکمه برگشت بالای جدول و در سمت چپ */}
-      <div className="w-full flex justify-start mb-4">
-        <img
-          src={assets.back}
-          alt="بازگشت"
-          className="w-8 h-8 cursor-pointer hover:scale-110 transition-transform duration-200"
-          onClick={() => navigate(-1)}
-        />
-      </div>
+      <div className="w-full flex justify-end mb-4">
+  <img
+    src={assets.back}
+    alt="بازگشت"
+    className="w-8 h-8 cursor-pointer hover:scale-110 transition-transform duration-200"
+    onClick={() => navigate(-1)}
+  />
+</div>
 
       <div className="w-full bg-[#FEEDDB] bg-opacity-70 backdrop-blur-md rounded-2xl shadow-lg p-6 border border-[#FFD9A0]">
         <h1 className="text-2xl font-extrabold text-[#256250] mb-6 text-center border-b-2 border-[#FF6600] pb-2 tracking-tight">
@@ -46,7 +46,7 @@ const MyReservations = () => {
 
         {reservations.length === 0 ? (
           <div className="text-center text-[#FF6600] font-semibold text-lg bg-[#FFF1E3] py-10 rounded-xl shadow-inner mt-6">
-            شما هنوز هیچ کلاسی رزرو نکرده‌اید.
+            .شما هنوز هیچ کلاسی رزرو نکرده‌اید
           </div>
         ) : (
           <>

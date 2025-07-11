@@ -64,6 +64,7 @@ function LayoutWrapper() {
     "/admin/add-nutrition",
     "/admin/add-fitness",
     "/admin/coach-schedule/:id",
+    "/payment",
   ];
 
   const noFooterRoutes = [
@@ -84,6 +85,7 @@ function LayoutWrapper() {
     "/admin/add-fitness",
     "/admin/coach-schedule/:id",
     "/start-training", // اضافه کردن مسیر start-training فقط برای حذف فوتر
+    "/payment",
   ];
 
   const showNavbar = !noNavbarRoutes.some(route =>
