@@ -47,7 +47,7 @@ function LayoutWrapper() {
     document.documentElement.scrollTop = 0;
   }, [location.pathname]);
 
-  const noNavbarFooterRoutes = [
+  const noNavbarRoutes = [
     "/login",
     "/signup",
     "/verify",
@@ -63,16 +63,40 @@ function LayoutWrapper() {
     "/admin/payments",
     "/admin/add-nutrition",
     "/admin/add-fitness",
-    "/admin/coach-schedule/:id", // اطمینان از اضافه شدن این مسیر
+    "/admin/coach-schedule/:id",
   ];
 
-  const showNavbarFooter = !noNavbarFooterRoutes.some(route => 
+  const noFooterRoutes = [
+    "/login",
+    "/signup",
+    "/verify",
+    "/loginform",
+    "/register-info",
+    "/forgot-password",
+    "/new-password",
+    "/admin",
+    "/admin/users",
+    "/admin/fitness",
+    "/admin/coaches",
+    "/admin/wardrobes",
+    "/admin/payments",
+    "/admin/add-nutrition",
+    "/admin/add-fitness",
+    "/admin/coach-schedule/:id",
+    "/start-training", // اضافه کردن مسیر start-training فقط برای حذف فوتر
+  ];
+
+  const showNavbar = !noNavbarRoutes.some(route =>
+    location.pathname.startsWith(route.split(':')[0]) // تطابق دینامیک برای مسیرهای پارامتری
+  );
+
+  const showFooter = !noFooterRoutes.some(route =>
     location.pathname.startsWith(route.split(':')[0]) // تطابق دینامیک برای مسیرهای پارامتری
   );
 
   return (
     <>
-      {showNavbarFooter && <Navbar />}
+      {showNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
@@ -146,7 +170,7 @@ function LayoutWrapper() {
           }
         />
       </Routes>
-      {showNavbarFooter && <Footer />}
+      {showFooter && <Footer />}
     </>
   );
 }
