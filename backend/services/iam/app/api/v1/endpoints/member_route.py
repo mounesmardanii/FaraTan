@@ -8,7 +8,8 @@ from app.domain.schemas.member_schema import( MemberCreateSchema, MemberResponse
                                                ResendOTPSchema,MemberProfileUpdateSchema,
                                                VerifyOTPResponseSchema,VerifyOTPSchema,
                                                 MemberProfileResponseSchema,MemberProfileCreateSchema,
-                                                 BodyMeasurementCreateSchema, BodyMeasurementResponseSchema )
+                                                BodyMeasurementCreateSchema, BodyMeasurementResponseSchema,
+                                                BodyMeasurementUpdateSchema )
 from app.domain.schemas.token_schema import TokenSchema, TokenDataSchema
 from app.services.auth_services.auth_service import AuthService
 from app.services.member_main_service import MemberMainService
@@ -165,3 +166,14 @@ async def get_body_measurements(
 
 
 
+@member_router.put(
+    "/member/body-measurements",
+    response_model=BodyMeasurementResponseSchema,
+    status_code=status.HTTP_200_OK,
+)
+async def update_body_measurement(
+    measurement_data: BodyMeasurementUpdateSchema,
+    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_service: Annotated[MemberMainService, Depends()],
+) -> BodyMeasurementResponseSchema:
+    return await member_service.update_body_measurement(current_member.id, measurement_data)

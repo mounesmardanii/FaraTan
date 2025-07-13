@@ -124,3 +124,12 @@ class BodyMeasurementResponseSchema(BodyMeasurementBaseSchema):
 
     class Config:
         from_attributes = True
+
+
+class BodyMeasurementUpdateSchema(BaseModel):
+    weight: Optional[float] = None
+    waist_circumference: Optional[float] = None
+    hip_circumference: Optional[float] = None
+    arm_circumference: Optional[float] = None
+    chest_circumference: Optional[float] = None
+    thigh_circumference: Optional[float] = None

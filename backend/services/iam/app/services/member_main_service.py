@@ -5,7 +5,7 @@ from app.domain.schemas.member_schema import (
 MemberResponseSchema,MemberCreateSchema, VerifyOTPResponseSchema, VerifyOTPSchema,
 ResendOTPResponseSchema,ResendOTPSchema,
 MemberProfileResponseSchema, MemberProfileCreateSchema,
-BodyMeasurementCreateSchema, BodyMeasurementResponseSchema
+BodyMeasurementCreateSchema, BodyMeasurementResponseSchema, BodyMeasurementUpdateSchema
 
 )
 from app.services.auth_services.auth_service import AuthService
@@ -148,3 +148,19 @@ class MemberMainService(BaseService):
     async def get_member_body_measurements(self, member_id: UUID) -> BodyMeasurementResponseSchema:
         measurement = await self.member_service.get_member_body_measurements(member_id)
         return BodyMeasurementResponseSchema.from_orm(measurement)
+
+
+    async def update_body_measurement(
+        self, member_id: UUID, update_data: BodyMeasurementUpdateSchema
+    ) -> BodyMeasurementResponseSchema:
+        logger.info(f"📥 Start updating body measurement for member {member_id}")
+
+        last_measurement = await self.get_member_body_measurements(member_id)
+        if not last_measurement:
+            raise HTTPException(status_code=404, detail="No measurement found to update")
+
+        updated = await self.member_service.update_body_measurement(member_id,update_data)
+
+        logger.info(f"✅ Measurement {updated.id} updated successfully")
+
+        return BodyMeasurementResponseSchema.from_orm(updated)

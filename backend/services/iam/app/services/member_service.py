@@ -3,7 +3,8 @@ from loguru import logger
 from fastapi import Depends, HTTPException, status
 from  app.domain.models.member_model import Member, MemberProfile, BodyMeasurement
 from  app.domain.schemas.member_schema import (MemberCreateSchema, MemberResponseSchema,
-                                                MemberProfileCreateSchema, MemberProfileUpdateSchema,MemberProfileResponseSchema, BodyMeasurementCreateSchema
+                                                MemberProfileCreateSchema, MemberProfileUpdateSchema,MemberProfileResponseSchema,
+                                                BodyMeasurementCreateSchema, BodyMeasurementUpdateSchema
 )
 from  app.infrastructure.repositories.member_repository import MemberRepository
 from  app.services.auth_services.hash_service import HashService
@@ -102,9 +103,19 @@ class MemberService(BaseService):
         self, member_id: UUID, update_data: MemberProfileUpdateSchema
     ) -> MemberProfileResponseSchema:
         update_fields = update_data.model_dump(exclude_unset=True)
+
         member = await self.get_member_by_id(member_id)
         if not member:
             raise HTTPException(status_code=404, detail='Member not found')
+        
+        if "height" in update_fields:
+            measurement = self.get_member_body_measurements(member_id)
+        if measurement and measurement.weight:
+            new_height = update_fields["height"]
+            new_bmi = self._calculate_bmi(measurement.weight, new_height)
+            self.member_repository.update_body_measurement(
+                member_id, {"bmi": new_bmi}
+            )
 
         updated_profile = self.member_repository.update_profile_by_member_id(member_id, update_fields)
         return MemberProfileResponseSchema.from_orm(updated_profile)
@@ -140,9 +151,22 @@ class MemberService(BaseService):
             return None
         return round(weight / (height ** 2), 2)
     
-
-
-
-
     async def get_member_body_measurements(self, member_id: UUID) -> BodyMeasurement:
         return self.member_repository.get_body_measurements_by_member_id(member_id)
+
+    async def update_body_measurement(
+        self, member_id:UUID, update_data: BodyMeasurementUpdateSchema
+    ) -> BodyMeasurement:
+        logger.info(f"🔧 Updating BodyMeasurement ID: {member_id}")
+
+        update_fields = update_data.model_dump(exclude_unset=True)
+
+        if "weight" in update_fields:
+            profile = self.member_repository.get_profile_by_member_id(member_id)
+            update_fields["bmi"] = self._calculate_bmi(update_fields["weight"], profile.height)
+
+        # for key, value in update_fields.items():
+        #     setattr(existing, key, value)
+
+        updated = self.member_repository.update_body_measurement(member_id, update_fields)
+        return updated
