@@ -109,7 +109,7 @@ class MemberService(BaseService):
             raise HTTPException(status_code=404, detail='Member not found')
         
         if "height" in update_fields:
-            measurement = self.get_member_body_measurements(member_id)
+            measurement = await self.get_member_body_measurements(member_id)
         if measurement and measurement.weight:
             new_height = update_fields["height"]
             new_bmi = self._calculate_bmi(measurement.weight, new_height)

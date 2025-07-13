@@ -61,6 +61,38 @@ class AuthService(BaseService):
         return TokenSchema(access_token=access_token, token_type="bearer")
 
 
+#     async def authenticate_buyer(self, buyer: BuyerLoginSchema) -> TokenSchema:
+    
+#         existing_buyer = await self.buyer_service.get_buyer_by_phone_number(buyer.website_id, buyer.phone_number)
+#         logger.info(f"Authenticating buyer with phone_number: {buyer.phone_number}")
+
+#         if not existing_buyer:
+#             logger.error(f"Buyer with phone_number {buyer.phone_number} does not exist")
+#             raise HTTPException(
+#                 status_code=status.HTTP_400_BAD_REQUEST, detail="Buyer does not exist"
+#             )
+
+#         if not existing_buyer.is_verified:
+#             logger.error(f"Buyer with phone_number {buyer.phone_number} is not verified")
+#             raise HTTPException(
+#                 status_code=status.HTTP_400_BAD_REQUEST, detail="Buyer is not verified"
+#             )
+
+#         if not self.hash_service.verify_password(buyer.password, existing_buyer.password):
+#             logger.error(f"Invalid password for buyer with phone_number {buyer.phone_number}")
+#             raise HTTPException(
+#                 status_code=status.HTTP_401_UNAUTHORIZED,
+#                 detail="Incorrect phone_number or password",
+#                 headers={"WWW-Authenticate": "Bearer"},
+#             )
+
+#         access_token = self.create_access_token(data={"sub": str(existing_buyer.buyer_id), "role": "buyer"})
+
+#         logger.info(f"Buyer with phone_number {buyer.phone_number} authenticated successfully")
+#         return TokenSchema(access_token=access_token, token_type="bearer")
+    
+
+
     async def authenticate_admin(self, admin: AdminLoginSchema) -> TokenSchema:
         existing_admin = await self.admin_service.get_admin_by_phone_number(
             admin.phone_number

@@ -3,7 +3,7 @@ from loguru import logger
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.core.postgres_db.database import get_db
-from app.domain.models.member_model import Member, MemberProfile
+from app.domain.models.member_model import Member, MemberProfile, BodyMeasurement
 from uuid import UUID
 
 
@@ -65,4 +65,32 @@ class MemberRepository:
         return profile_db
     else:
         logger.warning(f"⚠️ Profile for member {member_id} not found")
+        return None
+    
+  def create_body_measurement(self, measurement: BodyMeasurement) -> BodyMeasurement:
+      self.db.add(measurement)
+      self.db.commit()
+      logger.info("✅ Body measurement created")
+      self.db.refresh(measurement)
+      return measurement
+  
+  def get_body_measurements_by_member_id(self, member_id: UUID) -> BodyMeasurement:
+    return (
+        self.db.query(BodyMeasurement)
+        .filter(BodyMeasurement.member_id == member_id)
+        .first()
+
+    )
+  def update_body_measurement(self, member_id: UUID, update_fields: Dict) -> BodyMeasurement:
+    measurement_query = self.db.query(BodyMeasurement).filter(BodyMeasurement.member_id == member_id)
+    measurement_db = measurement_query.first()
+
+    if measurement_db:
+        measurement_query.update(update_fields, synchronize_session=False)
+        self.db.commit()
+        self.db.refresh(measurement_db)
+        logger.info(f"✅ BodyMeasurement for {member_id} updated")
+        return measurement_db
+    else:
+        logger.warning(f"⚠️ BodyMeasurement for {member_id} not found")
         return None

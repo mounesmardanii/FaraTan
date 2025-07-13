@@ -9,9 +9,6 @@ from app.services.auth_services.auth_service import AuthService
 admin_router = APIRouter()
 
 
-
-
-
 @admin_router.post("/login", response_model=TokenSchema, status_code=status.HTTP_200_OK)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
