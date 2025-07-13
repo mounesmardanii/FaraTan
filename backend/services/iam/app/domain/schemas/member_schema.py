@@ -102,3 +102,25 @@ class MemberProfileResponseSchema(MemberProfileBaseSchema):
     age: int
     class Config:
         from_attributes = True
+
+
+class BodyMeasurementBaseSchema(BaseModel):
+    weight: Optional[float] = None
+    waist_circumference: Optional[float] = None
+    hip_circumference: Optional[float] = None
+    arm_circumference: Optional[float] = None
+    chest_circumference: Optional[float] = None
+    thigh_circumference: Optional[float] = None
+
+class BodyMeasurementCreateSchema(BodyMeasurementBaseSchema):
+    pass
+
+class BodyMeasurementResponseSchema(BodyMeasurementBaseSchema):
+    id: UUID
+    member_id: UUID
+    bmi: Optional[float] = None
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True

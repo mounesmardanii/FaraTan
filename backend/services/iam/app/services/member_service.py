@@ -1,8 +1,10 @@
-from typing import Annotated, Dict
+from typing import Annotated, Dict, Optional
 from loguru import logger
-from fastapi import Depends, HTTPException
-from  app.domain.models.member_model import Member, MemberProfile
-from  app.domain.schemas.member_schema import MemberCreateSchema, MemberResponseSchema, MemberProfileCreateSchema, MemberProfileUpdateSchema,MemberProfileResponseSchema
+from fastapi import Depends, HTTPException, status
+from  app.domain.models.member_model import Member, MemberProfile, BodyMeasurement
+from  app.domain.schemas.member_schema import (MemberCreateSchema, MemberResponseSchema,
+                                                MemberProfileCreateSchema, MemberProfileUpdateSchema,MemberProfileResponseSchema, BodyMeasurementCreateSchema
+)
 from  app.infrastructure.repositories.member_repository import MemberRepository
 from  app.services.auth_services.hash_service import HashService
 from  app.services.base_service import BaseService
@@ -103,9 +105,40 @@ class MemberService(BaseService):
         member = await self.get_member_by_id(member_id)
         if not member:
             raise HTTPException(status_code=404, detail='Member not found')
-        # profile = await self.get_profile_by_member_id(member_id)
-        # if not profile:
-        #     raise HTTPException(status_code=400, detail='Profile not found')
 
         updated_profile = self.member_repository.update_profile_by_member_id(member_id, update_fields)
         return MemberProfileResponseSchema.from_orm(updated_profile)
+
+
+
+
+
+    async def create_body_measurement(
+        self, member_id: UUID, data: BodyMeasurementCreateSchema
+    ) -> BodyMeasurement:
+        profile = await self.get_profile_by_member_id(member_id)
+        if not profile or not profile.height:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Member profile or height not found",
+            )
+
+        bmi = self._calculate_bmi(data.weight, profile.height)
+
+        measurement = BodyMeasurement(
+            member_id=member_id,
+            bmi=bmi,
+            weight=data.weight,
+            waist_circumference=data.waist_circumference,
+            hip_circumference=data.hip_circumference,
+            arm_circumference=data.arm_circumference,
+            chest_circumference=data.chest_circumference,
+            thigh_circumference=data.thigh_circumference,
+        )
+
+        return self.member_repository.create_body_measurement(measurement)
+
+    def _calculate_bmi(self, weight: float, height: float) -> Optional[float]:
+        if not weight or not height:
+            return None
+        return round(weight / (height ** 2), 2)

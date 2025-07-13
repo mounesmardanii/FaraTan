@@ -4,7 +4,8 @@ from fastapi import Depends, HTTPException, status
 from app.domain.schemas.member_schema import (
 MemberResponseSchema,MemberCreateSchema, VerifyOTPResponseSchema, VerifyOTPSchema,
 ResendOTPResponseSchema,ResendOTPSchema,
-MemberProfileResponseSchema, MemberProfileCreateSchema
+MemberProfileResponseSchema, MemberProfileCreateSchema,
+BodyMeasurementCreateSchema, BodyMeasurementResponseSchema
 
 )
 from app.services.auth_services.auth_service import AuthService
@@ -135,3 +136,11 @@ class MemberMainService(BaseService):
             )
         return MemberProfileResponseSchema.from_orm(profile)
 
+
+    async def create_body_measurement(
+        self,
+        member_id: UUID,
+        measurement_data: BodyMeasurementCreateSchema
+    ) -> BodyMeasurementResponseSchema:
+        measurement = await self.member_service.create_body_measurement(member_id, measurement_data)
+        return BodyMeasurementResponseSchema.from_orm(measurement)
