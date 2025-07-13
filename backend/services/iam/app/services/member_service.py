@@ -160,13 +160,27 @@ class MemberService(BaseService):
         logger.info(f"🔧 Updating BodyMeasurement ID: {member_id}")
 
         update_fields = update_data.model_dump(exclude_unset=True)
-
+        measurement = self.get_member_body_measurements(member_id)
+        if not measurement:
+            raise HTTPException(status_code=404, detail="Body measurement not found")
+        if measurement.needs_update:
+            required_fields = [
+                "weight",
+                "waist_circumference",
+                "hip_circumference",
+                "arm_circumference",
+                "chest_circumference",
+                "thigh_circumference"
+            ]
+            missing = [f for f in required_fields if f not in update_fields or update_fields[f] is None]
+            if missing:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"All fields are required during mandatory update. Missing: {', '.join(missing)}"
+                )
         if "weight" in update_fields:
             profile = self.member_repository.get_profile_by_member_id(member_id)
             update_fields["bmi"] = self._calculate_bmi(update_fields["weight"], profile.height)
-
-        # for key, value in update_fields.items():
-        #     setattr(existing, key, value)
 
         updated = self.member_repository.update_body_measurement(member_id, update_fields)
         return updated

@@ -3,8 +3,9 @@ from loguru import logger
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.core.postgres_db.database import get_db
-from app.domain.models.member_model import Member, MemberProfile, BodyMeasurement
+from app.domain.models.member_model import Member, MemberProfile, BodyMeasurement, BodyMeasurementHistory
 from uuid import UUID
+from datetime import datetime, timedelta
 
 
 class MemberRepository:
@@ -94,3 +95,33 @@ class MemberRepository:
     else:
         logger.warning(f"⚠️ BodyMeasurement for {member_id} not found")
         return None
+    
+  def process_outdated_measurements(self, one_month_ago:datetime):
+     
+      outdated_measurements = (
+            self.db.query(BodyMeasurement)
+            .filter(BodyMeasurement.updated_at <= one_month_ago)
+            .all()
+        )
+
+      for m in outdated_measurements:
+            logger.info(f"📦 Archiving measurement for member {m.member_id}")
+
+            history = BodyMeasurementHistory(
+                member_id=m.member_id,
+                bmi=m.bmi,
+                weight=m.weight,
+                waist_circumference=m.waist_circumference,
+                hip_circumference=m.hip_circumference,
+                arm_circumference=m.arm_circumference,
+                chest_circumference=m.chest_circumference,
+                thigh_circumference=m.thigh_circumference,
+                created_at=m.updated_at
+            )
+            self.db.add(history)
+
+            m.needs_update = True
+            m.updated_at =  datetime.now()  
+
+      self.db.commit()
+      logger.info(f"✅ {len(outdated_measurements)} measurement(s) archived and flagged.")  

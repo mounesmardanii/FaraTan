@@ -69,6 +69,7 @@ CREATE TABLE body_measurements (
     arm_circumference FLOAT,
     chest_circumference FLOAT,
     thigh_circumference FLOAT,
+    needs_update BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
