@@ -119,6 +119,7 @@ class BodyMeasurementResponseSchema(BodyMeasurementBaseSchema):
     id: UUID
     member_id: UUID
     bmi: Optional[float] = None
+    needs_update:bool
     created_at: datetime
     updated_at: datetime
 

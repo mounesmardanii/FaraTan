@@ -55,8 +55,29 @@ class BodyMeasurement(Base):
     arm_circumference = Column(Float)
     chest_circumference = Column(Float)
     thigh_circumference = Column(Float)
+    needs_update = Column(Boolean, nullable=False, default=False)
 
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), onupdate=func.now())
 
     member = relationship("Member", back_populates="body_measurements", lazy="joined")    
+
+
+
+class BodyMeasurementHistory(Base):
+    __tablename__ = 'body_measurements_history'
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    member_id = Column(UUID(as_uuid=True), ForeignKey("members.id", ondelete="CASCADE"), nullable=False)
+
+    bmi = Column(Float)
+    weight = Column(Float)
+    waist_circumference = Column(Float)
+    hip_circumference = Column(Float)
+    arm_circumference = Column(Float)
+    chest_circumference = Column(Float)
+    thigh_circumference = Column(Float)
+
+    created_at = Column(TIMESTAMP(timezone=True), server_default=func.now())
+
+    member = relationship("Member", backref="body_measurements_history")
