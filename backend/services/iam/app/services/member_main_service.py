@@ -144,3 +144,7 @@ class MemberMainService(BaseService):
     ) -> BodyMeasurementResponseSchema:
         measurement = await self.member_service.create_body_measurement(member_id, measurement_data)
         return BodyMeasurementResponseSchema.from_orm(measurement)
+    
+    async def get_member_body_measurements(self, member_id: UUID) -> BodyMeasurementResponseSchema:
+        measurement = await self.member_service.get_member_body_measurements(member_id)
+        return BodyMeasurementResponseSchema.from_orm(measurement)

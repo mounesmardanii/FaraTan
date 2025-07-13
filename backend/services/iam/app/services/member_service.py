@@ -110,9 +110,6 @@ class MemberService(BaseService):
         return MemberProfileResponseSchema.from_orm(updated_profile)
 
 
-
-
-
     async def create_body_measurement(
         self, member_id: UUID, data: BodyMeasurementCreateSchema
     ) -> BodyMeasurement:
@@ -142,3 +139,10 @@ class MemberService(BaseService):
         if not weight or not height:
             return None
         return round(weight / (height ** 2), 2)
+    
+
+
+
+
+    async def get_member_body_measurements(self, member_id: UUID) -> BodyMeasurement:
+        return self.member_repository.get_body_measurements_by_member_id(member_id)

@@ -150,3 +150,18 @@ async def create_body_measurement(
     member_service: Annotated[MemberMainService, Depends()],
 ) -> BodyMeasurementResponseSchema:
     return await member_service.create_body_measurement(current_member.id, measurement_data)
+
+
+@member_router.get(
+    "/member/body-measurements",
+    response_model=BodyMeasurementResponseSchema,
+    status_code=status.HTTP_200_OK,
+)
+async def get_body_measurements(
+    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_service: Annotated[MemberMainService, Depends()],
+) -> BodyMeasurementResponseSchema:
+    return await member_service.get_member_body_measurements(current_member.id)
+
+
+
