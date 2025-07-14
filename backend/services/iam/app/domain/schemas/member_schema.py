@@ -21,6 +21,7 @@ class MemberResponseSchema(BaseModel):
     national_id: str
     is_verified:bool
     can_reset_password:bool
+    profile_image: Optional[str] = None
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
 
@@ -31,7 +32,9 @@ class MemberResponseSchema(BaseModel):
 class VerifyOTPSchema(BaseModel):
     phone_number: str
     otp: str
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True
+
 
 class VerifyOTPResponseSchema(BaseModel):
     verified: bool
@@ -49,7 +52,6 @@ class ResendOTPSchema(BaseModel):
 class ResendOTPResponseSchema(BaseModel):
     phone_number: str
     message: str        
-
 
 
 

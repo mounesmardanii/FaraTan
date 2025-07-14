@@ -9,7 +9,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE admins (
     admin_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     phone_number VARCHAR(20) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    can_reset_password BOOLEAN DEFAULT FALSE
 );
 
 -- Members table
@@ -21,6 +22,7 @@ CREATE TABLE members (
     password VARCHAR(255) NOT NULL,
     is_verified BOOLEAN NOT NULL DEFAULT FALSE,
     can_reset_password BOOLEAN NOT NULL DEFAULT FALSE,
+    profile_image Text,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -54,7 +56,7 @@ CREATE TABLE member_profiles (
     age INT,
     health_conditions TEXT,
     fitness_goals VARCHAR(100),
-    profile_image VARCHAR(255)
+    profile_image Text,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -93,7 +95,9 @@ CREATE TABLE trainers (
     full_name VARCHAR(100),
     phone_number VARCHAR(20),
     gender VARCHAR(10),
-    bio TEXT,
+    years_of_experience INT,
+    biography TEXT,
+    age INT;
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     profile_image VARCHAR(255)
@@ -215,11 +219,6 @@ CREATE TABLE videos (
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-ALTER TABLE trainers
-ADD COLUMN years_of_experience INT,
-ADD COLUMN biography TEXT,
-ADD COLUMN age INT;
 
 
 

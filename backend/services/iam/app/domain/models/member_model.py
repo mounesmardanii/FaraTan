@@ -15,6 +15,7 @@ class Member(Base):
     password = Column(String(20), nullable=False)
     is_verified = Column(Boolean, default=False, nullable=False)
     can_reset_password = Column(Boolean, default=False, nullable=False)
+    profile_image = Column(Text, nullable=True)
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
     
