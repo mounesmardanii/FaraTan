@@ -95,3 +95,13 @@ async def get_all_trainers(
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
     return await trainer_service.get_all_trainers()
+
+
+@admin_router.get("/{trainer_id}", response_model=TrainerResponseSchema)
+async def get_trainer_by_id(
+    trainer_id: UUID,
+    trainer_service: Annotated[TrainerService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+):
+    return await trainer_service.get_trainer_by_id(trainer_id)
+

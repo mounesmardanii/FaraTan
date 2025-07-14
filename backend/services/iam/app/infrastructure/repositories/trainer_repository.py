@@ -24,3 +24,6 @@ class TrainerRepository:
 
     def get_all_trainers(self):
         return self.db.query(Trainer).all()
+    
+    def get_trainer_by_id(self, trainer_id: int):
+        return self.db.query(Trainer).filter(Trainer.id == trainer_id).first()

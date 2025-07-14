@@ -34,3 +34,19 @@ class TrainerService:
     async def get_all_trainers(self) -> list[TrainerResponseSchema]:
         trainers = self.trainer_repository.get_all_trainers()
         return [TrainerResponseSchema.from_orm(t) for t in trainers]
+    
+
+    async def get_trainer_by_id(self, trainer_id: int) -> TrainerResponseSchema:
+        trainer = self.trainer_repository.get_trainer_by_id(trainer_id)
+        if not trainer:
+            raise HTTPException(status_code=404, detail="Trainer not found")
+        return TrainerResponseSchema.from_orm(trainer)
+    
+
+    async def get_trainer_by_id(self, trainer_id: int) -> TrainerResponseSchema:
+        trainer = self.trainer_repository.get_trainer_by_id(trainer_id)
+        if not trainer:
+            raise HTTPException(status_code=404, detail="Trainer not found")
+        return TrainerResponseSchema.from_orm(trainer)
+    
+    
