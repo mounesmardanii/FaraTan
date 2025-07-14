@@ -2,15 +2,20 @@ from fastapi import Depends, status, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from loguru import logger
-from app.domain.schemas.admin_schema import( AdminLoginSchema, SendOTPResponseSchema,
-                                            SendOTPSchema,ForgetPasswordSchema,
-                                            ResetPasswordSchema, VerifyOTPSchema,VerifyOTPResponseSchema   )
+from app.domain.schemas.admin_schema import(
+AdminLoginSchema,
+SendOTPResponseSchema,
+SendOTPSchema,
+ForgetPasswordSchema,
+VerifyOTPSchema,
+AdminResponseSchema
+)
 from app.domain.schemas.token_schema import TokenSchema
 from app.services.auth_services.auth_service import AuthService
-from app.services.admin_main_service import AdminMainervice
+from app.services.admin_main_service import AdminMainService
 from app.services.admin_service import AdminService
 from uuid import UUID
-from  app.services.auth_services.auth_service import get_current_admin
+from app.services.auth_services.auth_service import get_current_admin
 from app.services.member_main_service import MemberMainService
 from app.domain.schemas.token_schema import TokenSchema, TokenDataSchema
 
@@ -22,56 +27,50 @@ async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     auth_service: Annotated[AuthService, Depends()],
 ) -> TokenSchema:
-
-    logger.info(f"Logging in admin with phone_number {form_data.username}")
+    logger.info(f"🔐 Admin login attempt: {form_data.username}")
     return await auth_service.authenticate_admin(
         AdminLoginSchema(phone_number=form_data.username, password=form_data.password)
-    )    
+    )
 
-@admin_router.post(
-    "/SendOTP",
-    response_model=SendOTPResponseSchema,
-    status_code=status.HTTP_200_OK,
-)
+@admin_router.get("/Me", response_model=AdminResponseSchema, status_code=status.HTTP_200_OK)
+async def read_me(current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+) -> AdminResponseSchema:
+    logger.info(f"📥 Getting member with phone_number {current_admin.phone_number}")
+    return current_admin
+
+@admin_router.post("/send-otp", response_model=SendOTPResponseSchema, status_code=status.HTTP_200_OK)
 async def send_otp(
     data: SendOTPSchema,
-    admin_service: Annotated[AdminMainervice, Depends()],
+    admin_service: Annotated[AdminMainService, Depends()],
 ) -> SendOTPResponseSchema:
-    logger.info(f"Sending OTP for admin with phone_number {data.phone_number}")
+    logger.info(f"📨 Sending OTP to admin: {data.phone_number}")
     return await admin_service.send_otp(data)
 
 
-@admin_router.post(
-    "/VerifyOTPForgetPassword", status_code=status.HTTP_200_OK
-)
+@admin_router.post("/verify-otp-forget-password", status_code=status.HTTP_200_OK)
 async def verify_otp_for_password(
     data: VerifyOTPSchema,
-    admin_service: Annotated[AdminMainervice, Depends()],
-) :
-    logger.info(f"Verifying OTP for admin with phone_number {data.phone_number}")
+    admin_service: Annotated[AdminMainService, Depends()],
+):
+    logger.info(f"🔍 Verifying OTP for admin: {data.phone_number}")
     return await admin_service.verify_otp_forget_password(data)
 
-@admin_router.put(
-    "/ForgetPassword",
-    status_code=status.HTTP_200_OK)
+
+@admin_router.put("/forget-password", status_code=status.HTTP_200_OK)
 async def forget_password(
-        admin_data: ForgetPasswordSchema,
-        admin_service: Annotated[AdminService, Depends()]
+    admin_data: ForgetPasswordSchema,
+    admin_service: Annotated[AdminService, Depends()],
 ):
-    logger.info(f'🔃 Changing password for admin {admin_data.phone_number}')
-    return await admin_service.change_admin_password(admin_data.phone_number, dict(admin_data)) 
+    logger.info(f"🔃 Changing password for admin: {admin_data.phone_number}")
+    return await admin_service.change_admin_password(admin_data.phone_number, dict(admin_data))
 
 
-@admin_router.delete(
-    "/members/{member_id}",
-    status_code=status.HTTP_200_OK,
-)
+@admin_router.delete("/members/{member_id}", status_code=status.HTTP_200_OK)
 async def delete_member(
     member_id: UUID,
     member_service: Annotated[MemberMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
-    logger.info(f"🗑️ Admin requested to delete member with ID: {member_id}")
+    logger.info(f"🗑️ Admin [{current_admin.sub}] requested to delete member ID: {member_id}")
     await member_service.delete_member(member_id)
-    return {"message": f"Member deleted successfully"}
-
+    return {"message": f"✅ Member {member_id} deleted successfully"}
