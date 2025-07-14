@@ -88,15 +88,16 @@ class MemberMainService(BaseService):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST, detail="OTP already exists"
             )
+        
 
-        otp = self.otp_service.send_otp(resend_otp_schema.phone_number)
-
-        logger.info(f"OTP resent to phone_number {resend_otp_schema.phone_number}")
-        return ResendOTPResponseSchema(
-            phone_number=resend_otp_schema.phone_number,
-            OTP=otp,
-            message="OTP sent to phone_number",
-        )   
+        if self.config.ENABLE_OTP:
+            self.otp_service.send_otp(resend_otp_schema.phone_number)
+            logger.info(f"OTP resent to phone_number {resend_otp_schema.phone_number}")
+            return ResendOTPResponseSchema(
+                phone_number=resend_otp_schema.phone_number,
+                message="OTP sent to phone_number",
+            )   
+            
 
     async def verify_otp_forget_password(
         self, verify_member_schema: VerifyOTPSchema
