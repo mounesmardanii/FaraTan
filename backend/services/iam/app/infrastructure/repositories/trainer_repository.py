@@ -27,3 +27,7 @@ class TrainerRepository:
     
     def get_trainer_by_id(self, trainer_id: int):
         return self.db.query(Trainer).filter(Trainer.id == trainer_id).first()
+    
+    def delete_trainer(self, trainer: Trainer):
+        self.db.delete(trainer)
+        self.db.commit()

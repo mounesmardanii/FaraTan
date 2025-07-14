@@ -49,4 +49,8 @@ class TrainerService:
             raise HTTPException(status_code=404, detail="Trainer not found")
         return TrainerResponseSchema.from_orm(trainer)
     
-    
+    async def delete_trainer(self, trainer_id: int) -> None:
+        trainer = self.trainer_repository.get_trainer_by_id(trainer_id)
+        if not trainer:
+            raise HTTPException(status_code=404, detail="Trainer not found")
+        self.trainer_repository.delete_trainer(trainer)

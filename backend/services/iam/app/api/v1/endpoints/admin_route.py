@@ -105,3 +105,12 @@ async def get_trainer_by_id(
 ):
     return await trainer_service.get_trainer_by_id(trainer_id)
 
+
+@admin_router.delete("/{trainer_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_trainer(
+    trainer_id: UUID,
+    trainer_service: Annotated[TrainerService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+):
+    await trainer_service.delete_trainer(trainer_id)
+    return {"message": f"✅ Trainer deleted successfully"}
