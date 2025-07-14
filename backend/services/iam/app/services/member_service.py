@@ -184,3 +184,6 @@ class MemberService(BaseService):
 
         updated = self.member_repository.update_body_measurement(member_id, update_fields)
         return updated
+    
+    async def delete_member(self, member_id:UUID):
+        return self.member_repository.delete_member_by_id(member_id)

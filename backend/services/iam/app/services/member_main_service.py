@@ -171,3 +171,17 @@ class MemberMainService(BaseService):
         logger.info(f"✅ Measurement {updated.id} updated successfully")
 
         return BodyMeasurementResponseSchema.from_orm(updated)
+
+
+    async def delete_member(self, member_id: UUID) -> None:
+        existing_member = await self.member_service.get_member_by_id(member_id)
+
+        if not existing_member:
+            logger.error(f"❌ Member with ID {member_id} not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Member not found"
+            )
+
+        await self.member_service.delete_member(member_id)
+        logger.info(f"✅ Member with ID {member_id} deleted successfully")

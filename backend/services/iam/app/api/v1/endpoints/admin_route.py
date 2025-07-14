@@ -9,8 +9,10 @@ from app.domain.schemas.token_schema import TokenSchema
 from app.services.auth_services.auth_service import AuthService
 from app.services.admin_main_service import AdminMainervice
 from app.services.admin_service import AdminService
-
-
+from uuid import UUID
+from  app.services.auth_services.auth_service import get_current_admin
+from app.services.member_main_service import MemberMainService
+from app.domain.schemas.token_schema import TokenSchema, TokenDataSchema
 
 admin_router = APIRouter()
 
@@ -58,3 +60,18 @@ async def forget_password(
 ):
     logger.info(f'🔃 Changing password for admin {admin_data.phone_number}')
     return await admin_service.change_admin_password(admin_data.phone_number, dict(admin_data)) 
+
+
+@admin_router.delete(
+    "/members/{member_id}",
+    status_code=status.HTTP_200_OK,
+)
+async def delete_member(
+    member_id: UUID,
+    member_service: Annotated[MemberMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+):
+    logger.info(f"🗑️ Admin requested to delete member with ID: {member_id}")
+    await member_service.delete_member(member_id)
+    return {"message": f"Member deleted successfully"}
+
