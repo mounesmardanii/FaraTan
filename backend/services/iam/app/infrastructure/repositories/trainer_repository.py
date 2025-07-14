@@ -31,3 +31,9 @@ class TrainerRepository:
     def delete_trainer(self, trainer: Trainer):
         self.db.delete(trainer)
         self.db.commit()
+
+
+    def update_trainer(self, trainer: Trainer):
+        self.db.commit()
+        self.db.refresh(trainer)
+        return trainer    

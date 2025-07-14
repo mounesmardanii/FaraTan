@@ -1,5 +1,5 @@
 from app.domain.models.trainer_model import Trainer
-from app.domain.schemas.trainer_schema import TrainerCreateSchema, TrainerResponseSchema
+from app.domain.schemas.trainer_schema import TrainerCreateSchema, TrainerResponseSchema, TrainerUpdateSchema
 from app.infrastructure.repositories.trainer_repository import TrainerRepository
 from typing import Annotated, Dict, Optional
 from loguru import logger
@@ -54,3 +54,20 @@ class TrainerService:
         if not trainer:
             raise HTTPException(status_code=404, detail="Trainer not found")
         self.trainer_repository.delete_trainer(trainer)
+
+
+    async def update_trainer(self, trainer_id: int, update_data: TrainerUpdateSchema) -> TrainerResponseSchema:
+        trainer = self.trainer_repository.get_trainer_by_id(trainer_id)
+        if not trainer:
+            raise HTTPException(status_code=404, detail="Trainer not found")
+
+        for field, value in update_data.dict(exclude_unset=True).items():
+            setattr(trainer, field, value)
+
+        if update_data.birth_date:
+            trainer.age = self._calculate_years_between(update_data.birth_date)
+        if update_data.start_date:
+            trainer.years_of_experience = self._calculate_years_between(update_data.start_date)
+
+        updated = self.trainer_repository.update_trainer(trainer)
+        return TrainerResponseSchema.from_orm(updated)    

@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from datetime import date
 from uuid import UUID
+from typing import Optional
+
 
 class TrainerCreateSchema(BaseModel):
     first_name: str
@@ -24,3 +26,13 @@ class TrainerResponseSchema(BaseModel):
 
     class Config:
         from_attributes = True 
+
+
+
+class TrainerUpdateSchema(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone_number: Optional[str] = None
+    specialty: Optional[str] = None
+    birth_date: Optional[date] = None
+    start_date: Optional[date] = None       

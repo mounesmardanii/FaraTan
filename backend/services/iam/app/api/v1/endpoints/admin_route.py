@@ -8,10 +8,11 @@ SendOTPResponseSchema,
 SendOTPSchema,
 ForgetPasswordSchema,
 VerifyOTPSchema,
-AdminResponseSchema
+AdminResponseSchema,
 )
+
 from app.services.trainer_service import TrainerService
-from app.domain.schemas.trainer_schema import TrainerCreateSchema, TrainerResponseSchema
+from app.domain.schemas.trainer_schema import TrainerCreateSchema, TrainerResponseSchema, TrainerUpdateSchema
 from app.domain.schemas.token_schema import TokenSchema
 from app.services.auth_services.auth_service import AuthService
 from app.services.admin_main_service import AdminMainService
@@ -114,3 +115,15 @@ async def delete_trainer(
 ):
     await trainer_service.delete_trainer(trainer_id)
     return {"message": f"✅ Trainer deleted successfully"}
+
+
+
+
+@admin_router.put("/{trainer_id}", response_model=TrainerResponseSchema)
+async def update_trainer(
+    trainer_id: UUID,
+    update_data: TrainerUpdateSchema,
+    trainer_service: Annotated[TrainerService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+):
+    return await trainer_service.update_trainer(trainer_id, update_data)
