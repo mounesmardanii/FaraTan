@@ -7,7 +7,7 @@ from  app.services.base_service import BaseService
 from uuid import UUID
 from app.services.auth_services.otp_service import OTPService
 from fastapi import Depends, HTTPException
-
+from app.domain.schemas.admin_schema import AdminResponseSchema
 class AdminService(BaseService):
     def __init__(
         self,
@@ -34,17 +34,24 @@ class AdminService(BaseService):
         logger.info(f"🔃 Updating admin with id {admin_id}")
         return self.admin_repository.update_admin(admin_id, update_fields)
 
-    # async def change_admin_password(self, phone_number:str, update_fields: Dict) -> Admin:
-    #     logger.info(f"🔃 Changing password admin with id {phone_number}")
-    
-        # update_fields['password'] = self.hash_service.hash_password(update_fields['password'])
+    async def change_admin_password(self, phone_number:str, update_fields: Dict) -> AdminResponseSchema:
+        logger.info(f"🔃 Changing password admin with id {phone_number}")
 
-        # admin = self.admin_repository.get_admin_by_phone_number(phone_number)
-        # if admin.can_reset_password != True:
-        #     raise HTTPException(status_code=400, detail='You need to verify the otp first')
+        password = update_fields.get("password")
+        confirm_password = update_fields.pop("confirm_password", None)
+        if password != confirm_password:
+            raise HTTPException(status_code=400, detail="Passwords do not match")
+        
+        update_fields['password'] = self.hash_service.hash_password(update_fields['password'])
 
-        # self.admin_repository.update_admin(admin.admin_id, {"can_reset_password": False})    
-        # return self.admin_repository.update_admin(admin.admin_id, update_fields)
+        admin = self.admin_repository.get_admin_by_phone_number(phone_number)
+
+        if self.config.ENABLE_OTP and admin.can_reset_password != True:
+            raise HTTPException(status_code=400, detail='You need to verify the otp first')
+
+        self.admin_repository.update_admin(admin.admin_id, {"can_reset_password": False})    
+        updated_admin = self.admin_repository.update_admin(admin.admin_id, update_fields)
+        return AdminResponseSchema.from_orm(updated_admin)
     
     async def update_verified_status(self, admin_id: UUID, update_fields: Dict) -> Admin: 
         logger.info(f"🔃 Updating admin with id {admin_id}")
