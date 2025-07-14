@@ -28,7 +28,7 @@ class MemberService(BaseService):
         full_name=member_body.full_name,
         phone_number=member_body.phone_number,
         password=self.hash_service.hash_password(member_body.password),
-        national_id=member_body.national_id
+        national_id=member_body.national_id,
         )
         return self.member_repository.create_member(member)
 

@@ -86,7 +86,7 @@ async def update_info(
     return await member_service.update_member(current_member.id, member_data)
 
 
-@member_router.get("/me", response_model=MemberResponseSchema, status_code=status.HTTP_200_OK)
+@member_router.get("/Me", response_model=MemberResponseSchema, status_code=status.HTTP_200_OK)
 async def read_me(
     current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
 ) -> MemberResponseSchema:

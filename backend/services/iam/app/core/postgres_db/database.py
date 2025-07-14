@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from loguru import logger
 
-# DATABASE_URL = "postgresql://postgres:admin@postgres_container:5432/shopifygym_system"
+# DATABASE_URL = "postgresql://postgres:admin@postgres_container:5432/gym_system"
 DATABASE_URL = "postgresql://postgres:admin@localhost:5432/gym_system"
 
 engine = create_engine(DATABASE_URL, future=True)

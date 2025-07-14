@@ -10,7 +10,7 @@ from app.domain.schemas.admin_schema import SendOTPResponseSchema,SendOTPSchema,
 from app.services.auth_services.otp_service import OTPService
 
 
-class AdminMainervice(BaseService):
+class AdminMainService(BaseService):
     def __init__(
         self,
         admin_service: Annotated[AdminService, Depends()],

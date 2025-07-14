@@ -1,4 +1,4 @@
-from typing import Annotated, Dict
+from typing import Annotated, Dict, List
 from loguru import logger
 from fastapi import Depends
 from sqlalchemy.orm import Session
@@ -124,4 +124,15 @@ class MemberRepository:
             m.updated_at =  datetime.now()  
 
       self.db.commit()
-      logger.info(f"✅ {len(outdated_measurements)} measurement(s) archived and flagged.")  
+      logger.info(f"✅ {len(outdated_measurements)} measurement(s) archived and flagged.")
+
+
+  def get_all_profiles(self) -> List[MemberProfile]:
+    return self.db.query(MemberProfile).all()     
+
+
+  def delete_member_by_id(self, member_id: int) -> None:
+      member = self.db.query(Member).filter(Member.id == member_id).first()
+      self.db.delete(member)
+      self.db.commit()
+      logger.info(f"🗑️ Member with ID {member_id} deleted from DB")

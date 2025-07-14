@@ -35,7 +35,7 @@ async def login_for_access_token(
 @admin_router.get("/Me", response_model=AdminResponseSchema, status_code=status.HTTP_200_OK)
 async def read_me(current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ) -> AdminResponseSchema:
-    logger.info(f"📥 Getting member with phone_number {current_admin.phone_number}")
+    logger.info(f"📥 Getting admin with phone_number {current_admin.phone_number}")
     return current_admin
 
 @admin_router.post("/send-otp", response_model=SendOTPResponseSchema, status_code=status.HTTP_200_OK)
@@ -71,6 +71,6 @@ async def delete_member(
     member_service: Annotated[MemberMainService, Depends()],
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
-    logger.info(f"🗑️ Admin [{current_admin.sub}] requested to delete member ID: {member_id}")
+    logger.info(f"🗑️ Admin [{current_admin.admin_id}] requested to delete member ID: {member_id}")
     await member_service.delete_member(member_id)
-    return {"message": f"✅ Member {member_id} deleted successfully"}
+    return {"message": f"✅ Member deleted successfully"}
