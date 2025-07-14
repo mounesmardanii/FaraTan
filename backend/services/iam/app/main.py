@@ -14,7 +14,7 @@ from fastapi.security import OAuth2PasswordBearer
 from app.api.v1.endpoints.member_route import member_router
 from app.api.v1.endpoints.admin_route import admin_router
 from app.utils.scheduler_starter import starter
-
+from app.api.v1.endpoints.utility_routes import utility_router
 app = FastAPI()
 
 @app.on_event("startup")
@@ -33,6 +33,7 @@ logging.info("IAM Service Started")
 
 app.include_router(member_router, prefix="/api/v1/members", tags=["members"])
 app.include_router(admin_router, prefix="/api/v1/admins", tags=["admins"])
+app.include_router(utility_router, prefix="/api/v1/utility", tags=["utilities"])
 
 
 @app.get("/")
