@@ -3,54 +3,86 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { assets } from "../../assets/assets";
-import { useUserProfile } from "../../context/UserProfileContext"; // ✅
+import { useUserProfile } from "../../context/UserProfileContext";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("نام الزامی است"),
-  age: Yup.number().required("سن الزامی است").positive("عدد معتبر نیست"),
+  birthDate: Yup.string()
+    .required("تاریخ تولد الزامی است")
+    .matches(/^\d{4}-\d{2}-\d{2}$/, "فرمت تاریخ باید yyyy-mm-dd باشد"),
   phone: Yup.string()
     .matches(/^09\d{9}$/, "شماره تلفن معتبر نیست")
     .required("شماره تلفن الزامی است"),
   medicalCondition: Yup.string().required("شرایط پزشکی الزامی است"),
-  dietHistory: Yup.string().required("سابقه رژیم الزامی است"),
-  exerciseHistory: Yup.string().required("سابقه ورزشی الزامی است"),
+  goal: Yup.string().required("هدف ورزشی الزامی است"),
 });
 
 const ProfileInfoCard = () => {
-  const { userProfile, updateUserInfo } = useUserProfile(); // ✅
+  const { updateUserInfo } = useUserProfile();
   const [editMode, setEditMode] = useState(false);
+  const [age, setAge] = useState(null);
 
-  // برای بارگذاری و ذخیره داده‌ها از localStorage استفاده می‌کنیم
   const [formData, setFormData] = useState(() => {
     const storedData = localStorage.getItem("userProfile");
     return storedData
       ? JSON.parse(storedData)
       : {
           name: "",
-          age: "",
+          birthDate: "",
           phone: "",
           medicalCondition: "",
-          dietHistory: "",
-          exerciseHistory: "",
+          goal: "",
         };
   });
 
+  useEffect(() => {
+    // اگر داده‌ای نبود، داده تستی قرار بده
+    const stored = localStorage.getItem("userProfile");
+    if (!stored) {
+      const mockData = {
+        name: "آزاده ملکی",
+        birthDate: "1992-07-15",
+        phone: "09121234567",
+        medicalCondition: "مشکلات کمر",
+        goal: "تناسب اندام و افزایش انعطاف‌پذیری",
+      };
+      localStorage.setItem("userProfile", JSON.stringify(mockData));
+      setFormData(mockData);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (formData.birthDate) {
+      const birthYear = new Date(formData.birthDate).getFullYear();
+      const currentYear = new Date().getFullYear();
+      setAge(currentYear - birthYear);
+    }
+  }, [formData.birthDate]);
+
   const fields = [
-    "name",
-    "age",
-    "phone",
-    "medicalCondition",
-    "dietHistory",
-    "exerciseHistory",
+    { name: "name", label: "نام" },
+    { name: "birthDate", label: "تاریخ تولد (yyyy-mm-dd)" },
+    { name: "phone", label: "شماره تلفن" },
+    { name: "medicalCondition", label: "شرایط پزشکی" },
+    { name: "goal", label: "هدف ورزشی" },
   ];
 
-  // این تابع برای ذخیره‌سازی داده‌های فرم به‌کار می‌رود و در localStorage ذخیره می‌شود
   const handleSubmit = (values) => {
-    // ذخیره‌سازی در localStorage
     localStorage.setItem("userProfile", JSON.stringify(values));
-    updateUserInfo(values); // ✅ ذخیره در context
-    setFormData(values); // به‌روزرسانی فرم داده‌ها
+    updateUserInfo(values);
+    setFormData(values);
     setEditMode(false);
+  };
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date instanceof Date && !isNaN(date)
+      ? date.toLocaleDateString("fa-IR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : "نامشخص";
   };
 
   return (
@@ -76,48 +108,37 @@ const ProfileInfoCard = () => {
         {editMode ? (
           <Formik
             enableReinitialize
-            initialValues={formData} // استفاده از داده‌های بارگذاری شده
+            initialValues={formData}
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
           >
             {() => (
-              <Form className="flex flex-col space-y-2 h-full text-[11px] sm:text-[11px] mt-6 text-right">
-                <div className="flex flex-col gap-2 overflow-hidden">
+              <Form className="flex flex-col space-y-2 h-full text-[11px] mt-6 text-right">
+                <div className="flex flex-col gap-2">
                   {fields.map((field, idx) => (
                     <div key={idx}>
-                      <label className="text-gray-800 font-bold block mb-0 text-[11px] sm:text-[11px]">
-                        {field === "name"
-                          ? ": نام"
-                          : field === "age"
-                          ? ": سن"
-                          : field === "phone"
-                          ? ": شماره تلفن"
-                          : field === "medicalCondition"
-                          ? ": شرایط پزشکی"
-                          : field === "dietHistory"
-                          ? ": سابقه رژیم"
-                          : ": سابقه ورزشی"}
+                      <label className="text-gray-800 font-bold block mb-0 text-[11px]">
+                        {field.label}:
                       </label>
                       <Field
-                        name={field}
-                        type={field === "age" ? "number" : "text"}
-                        className="w-full px-1 py-0.5 border border-gray-200 rounded-md text-[11px] sm:text-[11px] text-right"
+                        name={field.name}
+                        type={field.name === "birthDate" ? "date" : "text"}
+                        className="w-full px-1 py-0.5 border border-gray-200 rounded-md text-[11px] text-right"
                       />
                       <div className="min-h-[12px]">
                         <ErrorMessage
-                          name={field}
+                          name={field.name}
                           component="div"
-                          className="text-red-600 text-[7px] sm:text-[8px] mt-0"
+                          className="text-red-600 text-[8px] mt-0"
                         />
                       </div>
                     </div>
                   ))}
                 </div>
-
                 <div className="mt-2">
                   <button
                     type="submit"
-                    className="w-full bg-[#055B5C] text-white py-1 rounded-md hover:bg-[#1E4D43] transition text-[11px] sm:text-[11px]"
+                    className="w-full bg-[#055B5C] text-white py-1 rounded-md hover:bg-[#1E4D43] transition text-[11px]"
                   >
                     ذخیره تغییرات
                   </button>
@@ -126,14 +147,16 @@ const ProfileInfoCard = () => {
             )}
           </Formik>
         ) : (
-          <div className="flex flex-col justify-between h-full pt-16 space-y-1.5 text-gray-800 text-[18px] sm:text-[16px] leading-relaxed -mt-5">
-            <h2 className="text-[#FF6600] font-extrabold text-[20px] sm:text-[18px] border-b border-white pb-1">
+          <div className="flex flex-col justify-between h-full pt-16 space-y-1.5 text-gray-800 text-[18px] leading-relaxed -mt-5">
+            <h2 className="text-[#FF6600] font-extrabold text-[20px] border-b border-white pb-1">
               {formData.name || "نام"}
             </h2>
             <div className="space-y-1.5">
               <p>
-                <strong className="text-[#256250]">سن:</strong>{" "}
-                {formData.age || "سن"}
+                <strong className="text-[#256250]">تاریخ تولد:</strong>{" "}
+                {formData.birthDate
+                  ? `${formatDate(formData.birthDate)} (${age} ساله)`
+                  : "نامشخص"}
               </p>
               <p>
                 <strong className="text-[#256250]">شماره تلفن:</strong>{" "}
@@ -141,26 +164,22 @@ const ProfileInfoCard = () => {
                   href={`tel:${formData.phone}`}
                   className="text-[#256250] hover:underline font-semibold"
                 >
-                  {formData.phone || "شماره تلفن"}
+                  {formData.phone || "نامشخص"}
                 </a>
               </p>
               <p>
                 <strong className="text-[#256250]">شرایط پزشکی:</strong>{" "}
-                {formData.medicalCondition || "شرایط پزشکی"}
+                {formData.medicalCondition || "نامشخص"}
               </p>
               <p>
-                <strong className="text-[#256250]">سابقه رژیم:</strong>{" "}
-                {formData.dietHistory || "سابقه رژیم"}
-              </p>
-              <p>
-                <strong className="text-[#256250]">سابقه ورزشی:</strong>{" "}
-                {formData.exerciseHistory || "سابقه ورزشی"}
+                <strong className="text-[#256250]">هدف ورزشی:</strong>{" "}
+                {formData.goal || "نامشخص"}
               </p>
             </div>
             <div className="pt-2 border-t border-white">
               <button
                 onClick={() => setEditMode(true)}
-                className="w-full bg-[#055B5C] text-white py-1 sm:py-2 rounded-md hover:bg-[#1E4D43] text-[12px] sm:text-base transition cursor-pointer"
+                className="w-full bg-[#055B5C] text-white py-1 rounded-md hover:bg-[#1E4D43] text-[12px] transition cursor-pointer"
               >
                 ویرایش اطلاعات
               </button>

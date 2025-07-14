@@ -16,16 +16,24 @@ export const PurchaseProvider = ({ children }) => {
 
   const addPurchase = (item) => {
     const exists = purchases.some(
-      (p) => p.id === item.id && p.coach === item.coach
+      (p) =>
+        p.id === item.id &&
+        p.coach === item.coach &&
+        p.sessionsPerMonth === item.sessionsPerMonth
     );
     if (!exists) {
       const fullItem = {
         ...item,
         duration: item.duration || "",
-        date: new Date().toLocaleDateString("fa-IR"), // ⬅ تاریخ شمسی
+        date: new Date().toLocaleDateString("fa-IR"),
       };
       setPurchases((prev) => [...prev, fullItem]);
     }
+  };
+
+  const removePurchase = (index) => {
+    const updated = purchases.filter((_, i) => i !== index);
+    setPurchases(updated);
   };
 
   const clearPurchases = () => {
@@ -35,7 +43,7 @@ export const PurchaseProvider = ({ children }) => {
 
   return (
     <PurchaseContext.Provider
-      value={{ purchases, addPurchase, clearPurchases }}
+      value={{ purchases, addPurchase, removePurchase, clearPurchases }}
     >
       {children}
     </PurchaseContext.Provider>

@@ -3,28 +3,68 @@ import { motion } from "framer-motion";
 import { assets } from "../../assets/assets";
 
 const CoachInfoCard = () => {
-  const [initialValues, setInitialValues] = useState({
-    name: "",
-    age: "",
-    phone: "",
-    specialty: "",
-    experience: "",
-  });
+  const [coachData, setCoachData] = useState(null);
+  const [age, setAge] = useState(null);
+  const [experienceYears, setExperienceYears] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("coach"));
-    if (saved) {
-      setInitialValues(saved);
-    } else {
-      setInitialValues({
-        name: "مریم عبدی",
-        age: 31,
-        phone: "09116868921",
-        specialty: "یوگا",
-        experience: "۸ سال",
-      });
-    }
+    // ✳ داده‌ی ساختگی (موقتی تا بک اضافه بشه)
+    const mockCoachData = {
+      name: "مریم عبدی",
+      birthDate: "1993-05-21", // تاریخ تولد در فرمت ISO
+      phone: "09116868921",
+      specialty: "بدنسازی",
+      startYear: 2016,
+    };
+
+    // شبیه‌سازی دریافت داده از سرور با تاخیر
+    setTimeout(() => {
+      const data = mockCoachData;
+      setCoachData(data);
+
+      const currentYear = new Date().getFullYear();
+
+      // محاسبه سن
+      const birth = new Date(data.birthDate);
+      const birthYear =
+        birth instanceof Date && !isNaN(birth) ? birth.getFullYear() : null;
+      setAge(birthYear ? currentYear - birthYear : null);
+
+      // محاسبه سابقه کاری
+      const startYearParsed = Number(data.startYear);
+      setExperienceYears(
+        !isNaN(startYearParsed) ? currentYear - startYearParsed : null
+      );
+
+      setLoading(false);
+    }, 500); // نیم‌ثانیه تاخیر ساختگی
   }, []);
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date instanceof Date && !isNaN(date)
+      ? date.toLocaleDateString("fa-IR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : "نامشخص";
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center mt-8 text-[#256250]">در حال بارگذاری...</div>
+    );
+  }
+
+  if (!coachData) {
+    return (
+      <div className="text-center mt-8 text-red-600">
+        خطا در بارگذاری اطلاعات
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center">
@@ -32,8 +72,7 @@ const CoachInfoCard = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative w-full max-w-full min-[800px]:max-w-[400px] min-w-[250px] h-[400px] mt-15 mx-2 sm:mx-4 font-[Tahoma] text-right border border-[#D1E7D8] rounded-4xl shadow-md p-4 bg-[#D1E7D8]
-        max-sm:w-[350px]" // 👈 عرض یکسان در موبایل
+        className="relative w-full max-w-full min-[800px]:max-w-[400px] min-w-[250px] h-[400px] mt-15 mx-2 sm:mx-4 font-[Tahoma] text-right border border-[#D1E7D8] rounded-4xl shadow-md p-4 bg-[#D1E7D8] max-sm:w-[350px]"
       >
         <motion.img
           initial={{ opacity: 0, scale: 0.8 }}
@@ -45,29 +84,38 @@ const CoachInfoCard = () => {
 
         <div className="flex flex-col justify-start h-full mt-10 gap-2 text-gray-800 text-[15px] leading-relaxed">
           <h2 className="text-[#FF6600] font-extrabold text-[18px] border-b border-[#ccc] pb-1">
-            {initialValues.name}
+            {coachData.name}
           </h2>
+
           <p>
             <span className="text-[#256250] font-semibold">تخصص:</span>{" "}
-            {initialValues.specialty}
+            {coachData.specialty || "نامشخص"}
           </p>
+
           <p>
             <span className="text-[#256250] font-semibold">سابقه کاری:</span>{" "}
-            {initialValues.experience}
+            {coachData.startYear && experienceYears !== null
+              ? `از ${coachData.startYear} تاکنون (${experienceYears} سال)`
+              : "نامشخص"}
           </p>
+
           <p>
-            <span className="text-[#256250] font-semibold">سن:</span>{" "}
-            {initialValues.age} سال
+            <span className="text-[#256250] font-semibold">تاریخ تولد:</span>{" "}
+            {coachData.birthDate && age !== null
+              ? `${formatDate(coachData.birthDate)} (${age} ساله)`
+              : "نامشخص"}
           </p>
+
           <p>
             <span className="text-[#256250] font-semibold">شماره تماس:</span>{" "}
             <a
-              href={`tel:${initialValues.phone}`}
+              href={`tel:${coachData.phone}`}
               className="text-[#256250] hover:underline font-semibold"
             >
-              {initialValues.phone}
+              {coachData.phone || "نامشخص"}
             </a>
           </p>
+
           <p className="text-sm text-[#444] mt-3 leading-6 text-center border-t border-b border-[#ccc] py-3">
             مربی با تجربه در تمرینات ذهن و بدن، با تمرکز بر آرامش، انعطاف‌پذیری
             و بهبود کیفیت زندگی

@@ -8,42 +8,42 @@ const initialClasses = [
     id: 1,
     day: "شنبه",
     time: "15 - 17",
-    status: "تکمیل شده",
+    capacity: 1,
     courseType: "خصوصی",
   },
   {
     id: 2,
     day: "پنجشنبه",
     time: "11 - 13",
-    status: "ظرفیت دارد",
+    capacity: 5,
     courseType: "عمومی",
   },
   {
     id: 3,
     day: "دوشنبه",
     time: "8 - 10",
-    status: "ظرفیت دارد",
+    capacity: 10,
     courseType: "VIP",
   },
   {
     id: 4,
     day: "دوشنبه",
     time: "11 - 13",
-    status: "تکمیل شده",
+    capacity: 0,
     courseType: "عمومی",
   },
   {
     id: 5,
     day: "سه‌شنبه",
     time: "14 - 16",
-    status: "ظرفیت دارد",
+    capacity: 1,
     courseType: "خصوصی",
   },
   {
     id: 6,
     day: "جمعه",
     time: "10 - 12",
-    status: "ظرفیت دارد",
+    capacity: 2,
     courseType: "VIP",
   },
 ];
@@ -62,7 +62,7 @@ const rowVariants = {
 };
 
 const ClassTable = () => {
-  const [classes] = useState(initialClasses);
+  const [classes, setClasses] = useState(initialClasses);
   const { reservations, reserveClass } = useReservations();
   const { purchases } = usePurchases();
 
@@ -72,8 +72,13 @@ const ClassTable = () => {
       (p) => p.duration === classItem.courseType
     );
 
-    if (classItem.status === "ظرفیت دارد" && !alreadyReserved && hasPurchased) {
+    if (classItem.capacity > 0 && !alreadyReserved && hasPurchased) {
       reserveClass(classItem);
+      setClasses((prev) =>
+        prev.map((cls) =>
+          cls.id === classItem.id ? { ...cls, capacity: cls.capacity - 1 } : cls
+        )
+      );
       alert(
         `کلاس ${classItem.day} در ساعت ${classItem.time} با موفقیت رزرو شد.`
       );
@@ -91,7 +96,7 @@ const ClassTable = () => {
         لیست کلاس‌های مربی
       </h3>
 
-      {/* حالت دسکتاپ */}
+      {/* دسکتاپ */}
       <div className="hidden sm:block">
         <table className="w-full table-fixed border-collapse rounded-xl overflow-hidden">
           <thead className="text-[#FF6600] text-[14px] md:text-[16px]">
@@ -100,7 +105,7 @@ const ClassTable = () => {
                 رزرو
               </th>
               <th className="p-2 text-center border-b border-[#B5D2C1]">
-                وضعیت
+                ظرفیت باقی‌مانده
               </th>
               <th className="p-2 text-center border-b border-[#B5D2C1]">
                 ساعت
@@ -121,7 +126,7 @@ const ClassTable = () => {
                 (p) => p.duration === item.courseType
               );
               const disabled =
-                item.status === "تکمیل شده" || isReserved || !hasPurchased;
+                item.capacity === 0 || isReserved || !hasPurchased;
 
               return (
                 <motion.tr
@@ -149,16 +154,10 @@ const ClassTable = () => {
                         : "رزرو"}
                     </button>
                   </td>
-                  <td className="p-2 text-center">
-                    <span
-                      className={`text-white px-3 py-1 rounded-xl text-sm whitespace-nowrap ${
-                        item.status === "تکمیل شده"
-                          ? "bg-[#FF6600]"
-                          : "bg-[#256250]"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
+                  <td className="p-2 text-center font-bold text-sm text-[#256250]">
+                    {item.capacity > 0
+                      ? `${item.capacity} :ظرفیت باقی‌مانده`
+                      : "تکمیل شده"}
                   </td>
                   <td className="p-2 text-center">{item.time}</td>
                   <td className="p-2 text-center">{item.day}</td>
@@ -175,15 +174,14 @@ const ClassTable = () => {
         </table>
       </div>
 
-      {/* حالت موبایل */}
+      {/* موبایل */}
       <div className="flex flex-col gap-4 sm:hidden">
         {[...classes].reverse().map((item, index) => {
           const isReserved = reservations.some((r) => r.id === item.id);
           const hasPurchased = purchases.some(
             (p) => p.duration === item.courseType
           );
-          const disabled =
-            item.status === "تکمیل شده" || isReserved || !hasPurchased;
+          const disabled = item.capacity === 0 || isReserved || !hasPurchased;
 
           return (
             <motion.div
@@ -206,10 +204,12 @@ const ClassTable = () => {
               </div>
               <span
                 className={`text-white px-3 py-1 rounded-xl text-xs whitespace-nowrap inline-block mb-2 ${
-                  item.status === "تکمیل شده" ? "bg-[#FF6600]" : "bg-[#256250]"
+                  item.capacity === 0 ? "bg-[#FF6600]" : "bg-[#256250]"
                 }`}
               >
-                {item.status}
+                {item.capacity > 0
+                  ? `${item.capacity} ظرفیت باقی‌مانده`
+                  : "تکمیل شده"}
               </span>
               <button
                 onClick={() => handleReserve(item)}

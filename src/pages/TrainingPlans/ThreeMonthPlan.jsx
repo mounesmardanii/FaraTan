@@ -14,52 +14,37 @@ const ThreeMonthPlan = () => {
         classType="عمومی"
         classList={[
           {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
-            coach: "یگانه عالمی",
-            status: "ظرفیت دارد",
-          },
-          {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
-            coach: "آتنا حسینی",
-            status: "تکمیل شده",
-          },
-          {
             id: 1,
-            day: "شنبه",
-            level: "پیشرفته",
-            price: "۲,۵۰۰,۰۰۰ تومان",
-            coach: "مریم عیدی",
-            status: "ظرفیت دارد",
-          },
-          {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
-            coach: "مریم عیدی",
-            status: "ظرفیت دارد",
-          },
-          {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
             coach: "یگانه عالمی",
-            status: "تکمیل شده",
+            capacity: 3,
+            sessionOptions: [
+              { sessions: 8, price: "۱,۳۰۰,۰۰۰ تومان" },
+              { sessions: 12, price: "۱,۷۰۰,۰۰۰ تومان" },
+              { sessions: 16, price: "۲,۰۵۰,۰۰۰ تومان" },
+              { sessions: 20, price: "۲,۳۰۰,۰۰۰ تومان" },
+            ],
           },
           {
             id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
             coach: "آتنا حسینی",
-            status: "ظرفیت دارد",
+            capacity: 0,
+            sessionOptions: [
+              { sessions: 8, price: "۱,۴۰۰,۰۰۰ تومان" },
+              { sessions: 12, price: "۱,۸۰۰,۰۰۰ تومان" },
+              { sessions: 16, price: "۲,۲۵۰,۰۰۰ تومان" },
+              { sessions: 20, price: "۲,۵۰۰,۰۰۰ تومان" },
+            ],
+          },
+          {
+            id: 3,
+            coach: "مریم عیدی",
+            capacity: 5,
+            sessionOptions: [
+              { sessions: 8, price: "۱,۶۰۰,۰۰۰ تومان" },
+              { sessions: 12, price: "۲,۰۰۰,۰۰۰ تومان" },
+              { sessions: 16, price: "۲,۴۰۰,۰۰۰ تومان" },
+              { sessions: 20, price: "۲,۷۰۰,۰۰۰ تومان" },
+            ],
           },
         ]}
       />

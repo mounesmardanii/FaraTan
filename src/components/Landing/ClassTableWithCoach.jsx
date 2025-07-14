@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import SessionSelectModal from "./SessionSelectModal";
+import PurchasePreviewModal from "./PurchasePreviewModal";
 
 const rowVariants = {
   hidden: { opacity: 0, x: 50 },
@@ -17,175 +16,133 @@ const ClassTableWithCoach = ({
   classType = "نوع دوره",
   classList = [],
 }) => {
-  const navigate = useNavigate();
   const [selectedClass, setSelectedClass] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const handleBuyClick = (item) => {
-    if (item.status === "ظرفیت دارد") {
-      setSelectedClass(item);
-      setModalOpen(true);
+    if (item.capacity > 0) {
+      const buyer = JSON.parse(localStorage.getItem("userProfile"));
+      const date = new Date().toLocaleDateString("fa-IR");
+
+      setSelectedClass({
+        ...item,
+        buyerName: buyer?.name || "بدون نام",
+        date,
+        duration: classType,
+        sessions: item.sessions || item.sessionCount || 8,
+      });
+
+      setPreviewOpen(true);
     }
   };
 
-  const getButtonClass = (status) =>
-    status === "ظرفیت دارد"
+  const getButtonClass = (capacity) =>
+    capacity > 0
       ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
       : "bg-gray-300 text-[#888] cursor-not-allowed";
 
-  const getStatusClass = (status) =>
-    status === "تکمیل شده" ? "bg-[#FF6600]" : "bg-[#256250]";
-
-  const handleSessionSelect = (sessionCount) => {
-    setModalOpen(false);
-    navigate("/payment", {
-      state: {
-        ...selectedClass,
-        duration: classType,
-        sessionsPerMonth: sessionCount,
-      },
-    });
-  };
-
   return (
     <>
-      {/* عکس برگشت در بالا سمت راست */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="bg-[#FEEDDB] p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] mx-auto mt-4 font-[Tahoma] text-right border border-[#D1E7D8] overflow-hidden"
+        className="overflow-hidden bg-[#FEEDDB] p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] mx-auto mt-4 font-[Tahoma] text-right border border-[#D1E7D8]"
       >
         <h3 className="text-[#256250] border-b-2 border-[#FF6600] pb-2 mb-4 text-xl font-bold text-center">
           دوره‌های {category} - {classType}
         </h3>
 
-        {/* جدول برای دسکتاپ */}
-        <div className="hidden sm:block">
+        {/* جدول دسکتاپ */}
+        <div className="hidden sm:block overflow-hidden">
           <table className="w-full border-collapse">
-            <thead className="text-[#FF6600] text-xs md:text-base">
+            <thead className="text-[#FF6600] text-sm md:text-base">
               <tr>
-                <th className="p-1 text-center border-b border-[#B5D2C1]">
-                  خرید
-                </th>
-                <th className="p-1 text-center border-b border-[#B5D2C1]">
-                  وضعیت
-                </th>
-                <th className="p-1 text-center border-b border-[#B5D2C1]">
-                  مربی
-                </th>
-                <th className="p-1 text-center border-b border-[#B5D2C1]">
-                  قیمت
-                </th>
-                <th className="p-1 text-center border-b border-[#B5D2C1]">
-                  سطح
-                </th>
-                <th className="p-1 text-center border-b border-[#B5D2C1]">
-                  روز
-                </th>
+                <th className="p-2 border-b text-center">خرید</th>
+                <th className="p-2 border-b text-center">ظرفیت</th>
+                <th className="p-2 border-b text-center">قیمت</th>
+                <th className="p-2 border-b text-center">مربی</th>
+                <th className="p-2 border-b text-center">تعداد جلسات</th>
+                <th className="p-2 border-b text-center">نوع دوره</th>
               </tr>
             </thead>
-            <tbody className="text-xs">
-              {classList.map((item, index) => (
-                <motion.tr
-                  key={item.id + "-" + item.coach + index}
-                  custom={index}
-                  initial="hidden"
-                  animate="visible"
-                  variants={rowVariants}
-                  className="bg-[#FFF8ED] border-b border-[#EBD9BD] hover:bg-[#FDF2E1] transition"
-                >
-                  <td className="p-1 md:p-2 text-center">
-                    <button
-                      onClick={() => handleBuyClick(item)}
-                      disabled={item.status !== "ظرفیت دارد"}
-                      className={`px-2 md:px-4 py-0.5 md:py-1 rounded-full text-[10px] md:text-sm font-bold transition ${getButtonClass(
-                        item.status
-                      )}`}
-                    >
-                      خرید دوره
-                    </button>
-                  </td>
-                  <td className="p-1 md:p-2 text-center">
-                    <span
-                      className={`text-white px-2 md:px-4 py-0.5 md:py-1 rounded-xl text-[10px] md:text-sm whitespace-nowrap ${getStatusClass(
-                        item.status
-                      )}`}
-                    >
-                      {item.status}
-                    </span>
-                  </td>
-                  <td className="p-1 text-center whitespace-nowrap">
-                    {item.coach}
-                  </td>
-                  <td className="p-1 text-center">{item.price}</td>
-                  <td className="p-1 text-center">{item.level}</td>
-                  <td className="p-1 text-center text-[#256250] font-medium">
-                    {item.day}
-                  </td>
-                </motion.tr>
-              ))}
+            <tbody className="text-sm md:text-base text-center">
+              {classList.map((item, index) =>
+                item.sessionOptions?.map((option, idx) => (
+                  <motion.tr
+                    key={`${item.id}-${option.sessions}`}
+                    custom={index * 4 + idx}
+                    initial="hidden"
+                    animate="visible"
+                    variants={rowVariants}
+                    className="bg-[#FFF8ED] border-b border-[#EBD9BD] hover:bg-[#FDF2E1] transition"
+                  >
+                    <td className="p-2">
+                      <button
+                        onClick={() => handleBuyClick({ ...item, ...option })}
+                        disabled={item.capacity <= 0}
+                        className={`px-3 py-1 rounded-full text-sm font-bold transition ${getButtonClass(
+                          item.capacity
+                        )}`}
+                      >
+                        خرید دوره
+                      </button>
+                    </td>
+                    <td className="p-2">{item.capacity}</td>
+                    <td className="p-2">{option.price}</td>
+                    <td className="p-2 whitespace-nowrap">{item.coach}</td>
+                    <td className="p-2">{option.sessions}</td>
+                    <td className="p-2">{classType}</td>
+                  </motion.tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
-        {/* کارت‌ها برای گوشی */}
-        <div className="block sm:hidden space-y-4">
-          {classList.map((item, index) => (
-            <motion.div
-              key={item.id + "-" + item.coach + index}
-              custom={index}
-              initial="hidden"
-              animate="visible"
-              variants={rowVariants}
-              className="bg-[#FFF8ED] rounded-lg p-4 border border-[#EBD9BD] shadow-md hover:bg-[#FDF2E1] transition"
-            >
-              <div className="flex flex-col space-y-2">
-                <div className="flex justify-between items-center">
-                  <span>{item.coach}</span>
-                  <span className="text-[#256250] font-bold"> :مربی </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>{item.day}</span>
-                  <span className="text-[#256250] font-bold"> :روز</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>{item.level}</span>
-                  <span className="text-[#256250] font-bold"> :سطح</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>{item.price}</span>
-                  <span className="text-[#256250] font-bold"> :قیمت</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span
-                    className={`text-white px-3 py-1 rounded-xl text-sm ${getStatusClass(
-                      item.status
-                    )}`}
-                  >
-                    {item.status}
+        {/* کارت‌های موبایل */}
+        <div className="sm:hidden flex flex-col gap-4 mt-4">
+          {classList.map((item, index) =>
+            item.sessionOptions?.map((option, idx) => (
+              <motion.div
+                key={`${item.id}-${option.sessions}-mobile`}
+                custom={index * 4 + idx}
+                initial="hidden"
+                animate="visible"
+                variants={rowVariants}
+                className="bg-[#FFF8ED] rounded-xl shadow-md border border-[#EBD9BD] p-4"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-[#FF6600] font-bold">
+                    {item.coach}
                   </span>
-                  <span className="text-[#256250] font-bold"> :وضعیت</span>
+                  <span className="text-xs text-gray-500">{classType}</span>
+                </div>
+                <div className="text-sm space-y-1 mb-3">
+                  <div>تعداد جلسات: {option.sessions}</div>
+                  <div>قیمت: {option.price} تومان</div>
+                  <div>ظرفیت باقی‌مانده: {item.capacity}</div>
                 </div>
                 <button
-                  onClick={() => handleBuyClick(item)}
-                  disabled={item.status !== "ظرفیت دارد"}
-                  className={`mt-2 px-4 py-1 rounded-full text-sm font-bold transition w-full ${getButtonClass(
-                    item.status
+                  onClick={() => handleBuyClick({ ...item, ...option })}
+                  disabled={item.capacity <= 0}
+                  className={`w-full py-2 rounded-full text-sm font-bold transition ${getButtonClass(
+                    item.capacity
                   )}`}
                 >
                   خرید دوره
                 </button>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))
+          )}
         </div>
       </motion.div>
 
-      <SessionSelectModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSelect={handleSessionSelect}
+      {/* مودال پیش‌نمایش خرید */}
+      <PurchasePreviewModal
+        isOpen={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+        data={selectedClass}
       />
     </>
   );

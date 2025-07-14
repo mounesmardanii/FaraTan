@@ -13,71 +13,31 @@ const OneYearPlan = () => {
         classType="VIP"
         classList={[
           {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
+            id: 1,
             coach: "پردیس محمدی",
-            status: "ظرفیت دارد",
+            capacity: 8,
+            sessionOptions: [
+              { sessions: 8, price: "۱,۵۰۰,۰۰۰ تومان" },
+              { sessions: 12, price: "۲,۰۰۰,۰۰۰ تومان" },
+              { sessions: 16, price: "۲,۴۰۰,۰۰۰ تومان" },
+              { sessions: 20, price: "۲,۷۰۰,۰۰۰ تومان" },
+            ],
           },
           {
             id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
             coach: "نازنین عزتی",
-            status: "تکمیل شده",
+            capacity: 0,
+            sessionOptions: [
+              { sessions: 8, price: "۱,۴۰۰,۰۰۰ تومان" },
+              { sessions: 12, price: "۱,۸۰۰,۰۰۰ تومان" },
+              { sessions: 16, price: "۲,۲۵۰,۰۰۰ تومان" },
+              { sessions: 20, price: "۲,۵۰۰,۰۰۰ تومان" },
+            ],
           },
-          {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
-            coach: "نیکی امیری",
-            status: "ظرفیت دارد",
-          },
-          {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
-            coach: "مریم عیدی",
-            status: "تکمیل شده",
-          },
-          {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
-            coach: "پردیس محمدی",
-            status: "ظرفیت دارد",
-          },
-          {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
-            coach: "نازنین عزتی",
-            status: "تکمیل شده",
-          },
-          {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
-            coach: "نیکی امیری",
-            status: "ظرفیت دارد",
-          },
-          {
-            id: 2,
-            day: "سه‌شنبه",
-            level: "متوسط",
-            price: "۲,۰۰۰,۰۰۰ تومان",
-            coach: "بهاره نصیری",
-            status: "ظرفیت دارد",
-          },
+          // کلاس‌های بیشتر...
         ]}
       />
+
       <ScrollToTopButton />
     </div>
   );
