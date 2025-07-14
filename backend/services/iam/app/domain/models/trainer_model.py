@@ -1,7 +1,7 @@
-from sqlalchemy import Column, String, Date, TIMESTAMP, func
+from sqlalchemy import Column, String, Date, TIMESTAMP, func, Integer
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
-from uuid import UUID
+from sqlalchemy.dialects.postgresql import UUID
 
 Base = declarative_base()
 
@@ -14,6 +14,8 @@ class Trainer(Base):
     phone_number = Column(String, unique=True, nullable=False)
     specialty = Column(String, nullable=False)
     birth_date = Column(Date, nullable=False)
+    age = Column(Integer)
+    years_of_experience = Column(Integer)
     start_date = Column(Date, nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
 
