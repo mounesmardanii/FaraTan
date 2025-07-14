@@ -10,6 +10,8 @@ ForgetPasswordSchema,
 VerifyOTPSchema,
 AdminResponseSchema
 )
+from app.services.trainer_service import TrainerService
+from app.domain.schemas.trainer_schema import TrainerCreateSchema, TrainerResponseSchema
 from app.domain.schemas.token_schema import TokenSchema
 from app.services.auth_services.auth_service import AuthService
 from app.services.admin_main_service import AdminMainService
@@ -74,3 +76,14 @@ async def delete_member(
     logger.info(f"🗑️ Admin [{current_admin.admin_id}] requested to delete member ID: {member_id}")
     await member_service.delete_member(member_id)
     return {"message": f"✅ Member deleted successfully"}
+
+
+
+@admin_router.post("/trainers/register", status_code=status.HTTP_201_CREATED, response_model=TrainerResponseSchema)
+async def register_trainer(
+    trainer_data: TrainerCreateSchema,
+    trainer_service: Annotated[TrainerService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+) -> TrainerResponseSchema:
+    logger.info(f"👤 Admin [{current_admin.admin_id}] registering trainer: {trainer_data.phone_number}")
+    return await trainer_service.create_trainer(trainer_data)
