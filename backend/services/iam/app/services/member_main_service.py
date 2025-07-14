@@ -41,7 +41,17 @@ class MemberMainService(BaseService):
         if self.config.ENABLE_OTP:
             self.otp_service.send_otp(new_member.phone_number)
         logger.info(f"member with number: {member.phone_number} created successfully")
-        return MemberResponseSchema.from_orm(new_member)
+        return MemberResponseSchema(
+            id=new_member.id,
+            full_name=new_member.full_name,
+            phone_number=new_member.phone_number,
+            national_id= new_member.national_id, 
+            is_verified= new_member.is_verified,
+            can_reset_password= new_member.can_reset_password,
+            otp_required= self.config.ENABLE_OTP, 
+            created_at= new_member.created_at, 
+            updated_at= new_member.updated_at 
+        )
 
     async def verify_member(
         self, verify_member_schema: VerifyOTPSchema
@@ -97,7 +107,13 @@ class MemberMainService(BaseService):
                 phone_number=resend_otp_schema.phone_number,
                 message="OTP sent to phone_number",
             )   
-            
+        else:
+            logger.info("OTP service is disabled, skipping OTP sending")
+            return ResendOTPResponseSchema(
+                phone_number=resend_otp_schema.phone_number,
+                message="OTP feature is disabled",
+            )
+                    
 
     async def verify_otp_forget_password(
         self, verify_member_schema: VerifyOTPSchema
