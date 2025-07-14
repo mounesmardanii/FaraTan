@@ -21,3 +21,6 @@ class TrainerRepository:
         self.db.refresh(trainer)
         logger.info(f"✅ Trainer [{trainer.phone_number}] created")
         return trainer
+
+    def get_all_trainers(self):
+        return self.db.query(Trainer).all()

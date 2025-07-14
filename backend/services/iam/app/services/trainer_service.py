@@ -30,3 +30,7 @@ class TrainerService:
     def _calculate_years_between(self,start: date) -> int:
       today = date.today()
       return today.year - start.year - ((today.month, today.day) < (start.month, start.day))
+
+    async def get_all_trainers(self) -> list[TrainerResponseSchema]:
+        trainers = self.trainer_repository.get_all_trainers()
+        return [TrainerResponseSchema.from_orm(t) for t in trainers]

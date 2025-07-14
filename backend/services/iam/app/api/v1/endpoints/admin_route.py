@@ -1,6 +1,6 @@
 from fastapi import Depends, status, APIRouter
 from fastapi.security import OAuth2PasswordRequestForm
-from typing import Annotated
+from typing import Annotated, List
 from loguru import logger
 from app.domain.schemas.admin_schema import(
 AdminLoginSchema,
@@ -87,3 +87,11 @@ async def register_trainer(
 ) -> TrainerResponseSchema:
     logger.info(f"👤 Admin [{current_admin.admin_id}] registering trainer: {trainer_data.phone_number}")
     return await trainer_service.create_trainer(trainer_data)
+
+
+@admin_router.get("/", response_model=List[TrainerResponseSchema])
+async def get_all_trainers(
+    trainer_service: Annotated[TrainerService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+):
+    return await trainer_service.get_all_trainers()
