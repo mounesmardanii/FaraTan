@@ -27,20 +27,51 @@ function RegisterInfoStep() {
     }),
     onSubmit: async (values) => {
       try {
-        console.log('ثبت موفق:', values);
-        navigate('/');
+        const prevData = JSON.parse(localStorage.getItem('signupFinal')) ||
+                         JSON.parse(localStorage.getItem('signupComplete')) ||
+                         JSON.parse(localStorage.getItem('signupBasic'));
+
+        if (!prevData || !prevData.name || !prevData.phone) {
+          alert('اطلاعات مراحل قبل ناقص است. لطفاً از اول ثبت‌نام کنید.');
+          navigate('/signup');
+          return;
+        }
+
+        const fullData = {
+          ...prevData,
+          waist: Number(values.waist),
+          hips: Number(values.hips),
+          chest: Number(values.chest),
+          arm: Number(values.arm),
+          thigh: Number(values.thigh),
+          weight: Number(values.weight),
+          avatar: assets.woman4,
+          id: Date.now(),
+        };
+
+        localStorage.setItem('signupComplete', JSON.stringify(fullData));
+
+        // ذخیره در لیست کاربران
+        const existingUsers = JSON.parse(localStorage.getItem('usersList')) || [];
+        const isExisting = existingUsers.some(u => u.phone === fullData.phone);
+
+        if (!isExisting) {
+          existingUsers.push(fullData);
+          localStorage.setItem('usersList', JSON.stringify(existingUsers));
+          console.log('👥 کاربر به لیست کاربران اضافه شد.');
+        }
+
+        console.log('✅ اطلاعات نهایی ثبت‌نام:', fullData);
+        navigate('/login');
       } catch (error) {
-        console.error('خطا در ثبت اطلاعات:', error);
-        alert('خطا در ثبت اطلاعات');
+        console.error('❌ خطا در ثبت اطلاعات:', error);
+        alert('خطا در ثبت اطلاعات. لطفاً دوباره تلاش کنید.');
       }
     },
   });
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center bg-[#9FC6C3] px-4 py-10 relative overflow-hidden"
-      dir="rtl"
-    >
+    <div className="min-h-screen flex items-center justify-center bg-[#9FC6C3] px-4 py-10 relative overflow-hidden" dir="rtl">
       <img
         src={assets.bag}
         alt="پس‌زمینه موج"
@@ -70,7 +101,7 @@ function RegisterInfoStep() {
 
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 text-black">
-            {[ 
+            {[
               { name: 'waist', placeholder: 'دور کمر' },
               { name: 'hips', placeholder: 'دور باسن' },
               { name: 'chest', placeholder: 'دور سینه' },

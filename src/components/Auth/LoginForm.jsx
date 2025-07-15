@@ -28,9 +28,46 @@ function LoginForm() {
       medicalCondition: Yup.string(),
       sportGoal: Yup.string(),
     }),
-    onSubmit: (values) => {
-      console.log('اطلاعات فرم:', values);
-      navigate('/register-info');
+    onSubmit: async (values) => {
+      try {
+        const basicData = JSON.parse(localStorage.getItem('signupBasic'));
+        if (!basicData) {
+          alert('اطلاعات اولیه یافت نشد. لطفاً از اول ثبت‌نام کنید.');
+          navigate('/signup');
+          return;
+        }
+
+        // اگر عکس وجود دارد، تبدیل به base64 شود
+        const getBase64 = (file) => {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (err) => reject(err);
+            reader.readAsDataURL(file);
+          });
+        };
+
+        const photoBase64 = values.photo ? await getBase64(values.photo) : null;
+
+        const combinedData = {
+          ...basicData,
+          gender: values.gender,
+          birthDate: values.birthDate?.format?.() || values.birthDate,
+          height: values.height,
+          medicalCondition: values.medicalCondition,
+          sportGoal: values.sportGoal,
+          photo: photoBase64,
+        };
+
+        // ذخیره داده نهایی
+        localStorage.setItem('signupFinal', JSON.stringify(combinedData));
+
+        console.log('✅ داده نهایی ثبت‌نام:', combinedData);
+
+        navigate('/register-info'); // یا هر صفحه بعدی
+      } catch (err) {
+        console.error('خطا در پردازش فرم:', err);
+      }
     },
   });
 
@@ -72,10 +109,8 @@ function LoginForm() {
             <p className="text-xs md:text-base">پیش از ادامه اطلاعات خود را وارد کن</p>
           </div>
 
-          <form
-            onSubmit={formik.handleSubmit}
-            className="flex flex-col space-y-4 text-xs md:text-sm"
-          >
+          <form onSubmit={formik.handleSubmit} className="flex flex-col space-y-4 text-xs md:text-sm">
+            {/* جنسیت */}
             <div className="flex items-center justify-between gap-4">
               <label htmlFor="gender" className="w-1/3 text-right text-white font-semibold">جنسیت</label>
               <select
@@ -95,6 +130,7 @@ function LoginForm() {
               <div className="text-red-300 text-xs text-right">{formik.errors.gender}</div>
             )}
 
+            {/* تاریخ تولد */}
             <div className="flex items-center justify-between gap-4">
               <label htmlFor="birthDate" className="w-1/3 text-right text-white font-semibold">تاریخ تولد</label>
               <div className="w-2/3">
@@ -115,6 +151,7 @@ function LoginForm() {
               <div className="text-red-300 text-xs text-right">{formik.errors.birthDate}</div>
             )}
 
+            {/* قد */}
             <div className="flex items-center justify-between gap-4">
               <label htmlFor="height" className="w-1/3 text-right text-white font-semibold">قد</label>
               <input
@@ -132,6 +169,7 @@ function LoginForm() {
               <div className="text-red-300 text-xs text-right">{formik.errors.height}</div>
             )}
 
+            {/* شرایط پزشکی */}
             <div className="flex items-center justify-between gap-4">
               <label htmlFor="medicalCondition" className="w-1/3 text-right text-white font-semibold">شرایط پزشکی:</label>
               <input
@@ -141,11 +179,11 @@ function LoginForm() {
                 placeholder="در صورت وجود، وارد کنید"
                 value={formik.values.medicalCondition}
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
                 className="w-2/3 rounded p-2 text-black text-right bg-gray-200"
               />
             </div>
 
+            {/* هدف ورزش */}
             <div className="flex items-center justify-between gap-4">
               <label htmlFor="sportGoal" className="w-1/3 text-right text-white font-semibold">هدف شما از ورزش چیست؟</label>
               <input
@@ -155,11 +193,11 @@ function LoginForm() {
                 placeholder="مثلا کاهش وزن یا عضله‌سازی"
                 value={formik.values.sportGoal}
                 onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
                 className="w-2/3 rounded p-2 text-black text-right bg-gray-200"
               />
             </div>
 
+            {/* عکس */}
             <div className="flex items-center gap-4 justify-between">
               <label htmlFor="photoInput" className="text-white font-semibold" style={{ minWidth: '150px' }}>عکس خود را انتخاب کنید</label>
               <div className="flex items-center gap-4 flex-grow">
@@ -204,7 +242,6 @@ function LoginForm() {
             className="w-full max-w-[300px] md:max-w-[600px]"
           />
         </motion.div>
-
       </div>
     </div>
   );

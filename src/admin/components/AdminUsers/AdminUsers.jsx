@@ -6,87 +6,90 @@ import { assets } from '../../../assets/assets';
 import UserTable from './UserTable';
 import UserModal from './UserModal';
 
-
 function AdminUsers() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
-  const [formData, setFormData] = useState({ name: '', lastName: '', sport: '', course: '' });
-  const [addingNew, setAddingNew] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    lastName: '',
+    phone: '',
+    birthDate: '',
+    medicalCondition: '',
+    sportGoal: '',
+    avatar: assets.woman4,
+  });
   const [selectedUser, setSelectedUser] = useState(null);
 
+  // Load users from localStorage including new signup
   useEffect(() => {
-    const dummy = [
-      {
-        id: 1, name: 'ملاحت', lastName: 'مردانی', sport: 'بدنسازی', course: 'VIP',
-        target: 'لاغری', height: 160, weight: 65, arm: 65, chest: 65, butt: 65, absence: 3,
-        avatar: assets.woman4
-      },
-      {
-        id: 2, name: 'غزل', lastName: 'نادری', sport: 'ایروبیک', course: 'خصوصی',
-        target: 'لاغری', height: 160, weight: 65, arm: 65, chest: 65, butt: 65, absence: 3,
-        avatar: assets.woman4
-      },
-      {
-        id: 3, name: 'مونس', lastName: 'مردانی', sport: 'ایروبیک', course: 'عمومی',
-        target: 'افزایش انعطاف', height: 158, weight: 60, arm: 60, chest: 60, butt: 62, absence: 1,
-        avatar: assets.woman4
-      },
-    ];
-    setUsers(dummy);
+    const savedUsers = JSON.parse(localStorage.getItem('usersList')) || [];
+    const signupUser = JSON.parse(localStorage.getItem('signupComplete'));
+
+    if (signupUser && !savedUsers.some(u => u.phone === signupUser.phone)) {
+      const newUser = {
+        id: Date.now(),
+        name: signupUser.name || '',
+        lastName: signupUser.lastName || '',
+        phone: signupUser.phone || '',
+        birthDate: signupUser.birthDate || '',
+        medicalCondition: signupUser.medicalCondition || '',
+        sportGoal: signupUser.sportGoal || '',
+        avatar: signupUser.photo || assets.woman4,
+      };
+
+      const updated = [...savedUsers, newUser];
+      setUsers(updated);
+      localStorage.setItem('usersList', JSON.stringify(updated));
+    } else {
+      setUsers(savedUsers);
+    }
   }, []);
 
   const filteredUsers = useMemo(() => {
-    return users.filter(user =>
+    return users.filter((user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, users]);
 
   const resetForm = () => {
     setEditIndex(null);
-    setFormData({ name: '', lastName: '', sport: '', course: '' });
-    setAddingNew(false);
-  };
-
-  const handleAddUser = () => {
-    if (!formData.name.trim() || !formData.lastName.trim()) {
-      alert('نام و نام خانوادگی الزامی است');
-      return;
-    }
-    const newUser = {
-      ...formData,
-      id: Date.now(),
-      avatar: assets.woman4
-    };
-    setUsers([...users, newUser]);
-    resetForm();
+    setFormData({
+      name: '',
+      lastName: '',
+      phone: '',
+      birthDate: '',
+      medicalCondition: '',
+      sportGoal: '',
+      avatar: assets.woman4,
+    });
   };
 
   const handleEdit = (user) => {
     setEditIndex(user.id);
-    setFormData(user);
-    setAddingNew(false);
+    setFormData({ ...user });
   };
 
   const handleSaveEdit = () => {
-    setUsers(users.map(u => u.id === formData.id ? { ...formData, avatar: assets.woman4 } : u));
+    const updatedUsers = users.map((u) =>
+      u.id === formData.id ? formData : u
+    );
+    setUsers(updatedUsers);
+    localStorage.setItem('usersList', JSON.stringify(updatedUsers));
     resetForm();
   };
 
   const handleDeleteUser = (id) => {
-    setUsers(users.filter(u => u.id !== id));
+    const updated = users.filter((u) => u.id !== id);
+    setUsers(updated);
+    localStorage.setItem('usersList', JSON.stringify(updated));
     resetForm();
-  };
-
-  const handleAddNewClick = () => {
-    setAddingNew(true);
-    setFormData({ name: '', lastName: '', sport: '', course: '' });
   };
 
   const fadeIn = {
     hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
   };
 
   return (
@@ -116,7 +119,9 @@ function AdminUsers() {
 
         <main
           dir="rtl"
-          className={`flex-1 p-4 md:p-8 relative z-10 border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white flex flex-col gap-6 text-right mt-3 ml-10 md:ml-10 ${sidebarOpen ? 'pointer-events-none select-none' : ''}`}
+          className={`flex-1 p-4 md:p-8 relative z-10 border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white flex flex-col gap-6 text-right mt-3 ml-10 md:ml-10 ${
+            sidebarOpen ? 'pointer-events-none select-none' : ''
+          }`}
         >
           <motion.div
             className="flex items-center border-2 border-[#9FC6C3] rounded-full px-3 py-1 md:px-4 md:py-2 w-full max-w-[80%] md:max-w-sm mx-auto"
@@ -146,14 +151,11 @@ function AdminUsers() {
             users={filteredUsers}
             formData={formData}
             setFormData={setFormData}
-            handleAddUser={handleAddUser}
             handleEdit={handleEdit}
             handleSaveEdit={handleSaveEdit}
             handleDeleteUser={handleDeleteUser}
-            handleAddNewClick={handleAddNewClick}
             resetForm={resetForm}
             editIndex={editIndex}
-            addingNew={addingNew}
             setSelectedUser={setSelectedUser}
           />
         </main>

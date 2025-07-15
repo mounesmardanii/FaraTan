@@ -40,22 +40,31 @@ function Login() {
             role: "admin",
           });
         } else {
-          login({
-            name: `کاربر ${values.phone.slice(-4)}`,
-            email: `${values.phone}@example.com`,
-            phone: values.phone,
-            role: "user",
-          });
+          const users = JSON.parse(localStorage.getItem("usersList")) || [];
+
+          const matchedUser = users.find(
+            (u) => u.phone === values.phone && u.password === values.password
+          );
+
+          if (matchedUser) {
+            login({
+              name: matchedUser.name,
+              phone: matchedUser.phone,
+              role: "user",
+            });
+          } else {
+            setErrors({ submit: "شماره یا رمز عبور اشتباه است" });
+            return;
+          }
         }
 
         navigate("/");
       } catch (error) {
-        setErrors({ submit: "خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید." });
+        setErrors({ submit: "خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید" });
       } finally {
         setSubmitting(false);
       }
     },
-
   });
 
   return (

@@ -4,6 +4,16 @@ import { useNavigate } from 'react-router-dom';
 function UserModal({ user, onClose }) {
   const navigate = useNavigate();
 
+  // بررسی و استخراج اطلاعات بدنی اگر داخل bodyMeasurements باشه
+  const {
+    weight,
+    waist,
+    hips,
+    chest,
+    arm,
+    thigh
+  } = user.bodyMeasurements || {};
+
   return (
     <div className="fixed inset-0 bg-black/40 flex items-start justify-center z-50">
       <div
@@ -32,43 +42,47 @@ function UserModal({ user, onClose }) {
           </button>
         </div>
 
+        {/* جدول دسکتاپ */}
         <table className="w-full text-xs font-bold text-[#055B5C] text-center hidden md:table">
           <thead>
             <tr className="border-b border-green-900">
               <th>پروفایل</th>
               <th>نام</th>
               <th>نام خانوادگی</th>
-              <th>ورزش</th>
-              <th>دوره</th>
-              <th>هدف ماه</th>
+              <th>شماره تلفن</th>
+              <th>تاریخ تولد</th>
+              <th>شرایط پزشکی</th>
+              <th>هدف ورزش</th>
               <th>قد</th>
               <th>وزن</th>
               <th>دور بازو</th>
               <th>دور سینه</th>
               <th>دور باسن</th>
-              <th>تعداد غیبت‌ها</th>
+              <th>دور کمر</th>
+              <th>دور ران</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>
-                <img src={user.avatar} alt="avatar" className="w-6 h-6 rounded-full mx-auto" />
-              </td>
+              <td><img src={user.avatar} alt="avatar" className="w-6 h-6 rounded-full mx-auto" /></td>
               <td>{user.name}</td>
               <td>{user.lastName}</td>
-              <td>{user.sport}</td>
-              <td>{user.course}</td>
-              <td>{user.target}</td>
+              <td>{user.phone}</td>
+              <td>{user.birthDate}</td>
+              <td>{user.medicalCondition}</td>
+              <td>{user.sportGoal}</td>
               <td>{user.height}</td>
-              <td>{user.weight}</td>
-              <td>{user.arm}</td>
-              <td>{user.chest}</td>
-              <td>{user.butt}</td>
-              <td>{user.absence}</td>
+              <td>{weight}</td>
+              <td>{arm}</td>
+              <td>{chest}</td>
+              <td>{hips}</td>
+              <td>{waist}</td>
+              <td>{thigh}</td>
             </tr>
           </tbody>
         </table>
 
+        {/* موبایل */}
         <div className="block md:hidden text-xs font-bold text-[#055B5C] space-y-1 mt-2">
           <div className="flex items-center gap-2">
             <span>پروفایل:</span>
@@ -76,15 +90,17 @@ function UserModal({ user, onClose }) {
           </div>
           <div>نام: {user.name}</div>
           <div>نام خانوادگی: {user.lastName}</div>
-          <div>ورزش: {user.sport}</div>
-          <div>دوره: {user.course}</div>
-          <div>هدف ماه: {user.target}</div>
+          <div>شماره تلفن: {user.phone}</div>
+          <div>تاریخ تولد: {user.birthDate}</div>
+          <div>شرایط پزشکی: {user.medicalCondition}</div>
+          <div>هدف ورزش: {user.sportGoal}</div>
           <div>قد: {user.height}</div>
-          <div>وزن: {user.weight}</div>
-          <div>دور بازو: {user.arm}</div>
-          <div>دور سینه: {user.chest}</div>
-          <div>دور باسن: {user.butt}</div>
-          <div>تعداد غیبت‌ها: {user.absence}</div>
+          <div>وزن: {weight}</div>
+          <div>دور بازو: {arm}</div>
+          <div>دور سینه: {chest}</div>
+          <div>دور باسن: {hips}</div>
+          <div>دور کمر: {waist}</div>
+          <div>دور ران: {thigh}</div>
         </div>
       </div>
     </div>

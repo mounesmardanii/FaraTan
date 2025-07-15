@@ -5,103 +5,132 @@ function UserTable({
   users,
   formData,
   setFormData,
-  handleAddUser,
   handleEdit,
   handleSaveEdit,
   handleDeleteUser,
-  handleAddNewClick,
   resetForm,
   editIndex,
-  addingNew,
   setSelectedUser,
 }) {
-  const renderInputCell = (key) => (
-    <td key={key} className="py-2 px-1 md:px-2">
-      <input
-        value={formData[key]}
-        onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
-        className="w-full px-1 md:px-2 py-1 border rounded text-[10px] md:text-xs text-right truncate"
-        placeholder={key === 'name' ? 'نام' : key === 'lastName' ? 'نام خانوادگی' : key === 'sport' ? 'ورزش' : 'دوره'}
-      />
-    </td>
-  );
-
   return (
-    <div className="w-full">
-      <table className="w-full text-[10px] md:text-xs text-[#055B5C] text-center font-semibold table-fixed">
-        <thead>
-          <tr className="bg-[#EAF4EF] border-b border-[#ccc]">
-            <th className="py-2 px-1 md:px-2 w-[10%]">پروفایل</th>
-            <th className="py-2 px-1 md:px-2 w-[20%]">نام</th>
-            <th className="py-2 px-1 md:px-2 w-[20%]">نام خانوادگی</th>
-            <th className="py-2 px-1 md:px-2 w-[20%]">ورزش</th>
-            <th className="py-2 px-1 md:px-2 w-[20%]">دوره</th>
-            <th className="py-2 px-1 md:px-2 w-[20%]">عملیات</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((u) => (
-            <tr key={u.id} className="bg-[#EAF4EF] border-b border-[#ccc]">
-              <td className="py-2 px-1 md:px-2">
-                <img src={u.avatar} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" />
-              </td>
-              {editIndex === u.id ? (
-                <>
-                  {["name", "lastName", "sport", "course"].map(renderInputCell)}
-                  <td className="py-2 px-1 md:px-2">
-                    <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                      <button onClick={handleSaveEdit} className="cursor-pointer text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition">ذخیره</button>
-                      <button onClick={resetForm} className="cursor-pointer text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition">لغو</button>
-                    </div>
-                  </td>
-                </>
-              ) : (
-                <>
-                  <td className="py-2 px-1 md:px-2 truncate">{u.name}</td>
-                  <td className="py-2 px-1 md:px-2 truncate">{u.lastName}</td>
-                  <td className="py-2 px-1 md:px-2 truncate">{u.sport}</td>
-                  <td className="py-2 px-1 md:px-2 truncate">{u.course}</td>
-                  <td className="py-2 px-1 md:px-2">
-                    <div className="flex flex-col md:flex-row gap-1 md:gap-2 justify-center items-center">
-                      <button onClick={() => handleEdit(u)} className="cursor-pointer text-blue-600 bg-blue-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-blue-200 transition">ویرایش</button>
-                      <button onClick={() => handleDeleteUser(u.id)} className="cursor-pointer text-red-600 bg-red-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-red-200 transition">حذف</button>
-                      <button onClick={() => setSelectedUser(u)} className="cursor-pointer text-yellow-600 bg-yellow-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-yellow-200 transition">نمایش</button>
-                    </div>
-                  </td>
-                </>
-              )}
+    <div className="w-full bg-[#D1E7D8] rounded-2xl p-4">
+      {/* دسکتاپ */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="min-w-full text-sm text-[#055B5C] text-center font-medium border border-[#D1E7D8] rounded-xl overflow-hidden">
+          <thead className="bg-[#eaf4ef] border-b border-[#D1E7D8] text-[#055B5C]">
+            <tr>
+              <th className="py-3 px-4">پروفایل</th>
+              <th className="py-3 px-4">نام</th>
+              <th className="py-3 px-4">نام خانوادگی</th>
+              <th className="py-3 px-4">تاریخ تولد</th>
+              <th className="py-3 px-4">شماره تلفن</th>
+              <th className="py-3 px-4">شرایط پزشکی</th>
+              <th className="py-3 px-4">هدف ورزش</th>
+              <th className="py-3 px-4">عملیات</th>
             </tr>
-          ))}
+          </thead>
+          <tbody>
+            {users.map((u) => {
+              const isEditing = editIndex === u.id;
+              return (
+                <tr key={u.id} className="bg-[#eaf4ef] border-b border-[#D1E7D8] hover:bg-[#f4fdf8] transition">
+                  <td className="py-3 px-4">
+                    <img src={u.avatar} alt="avatar" className="w-9 h-9 rounded-full mx-auto border-2 border-white shadow-md" />
+                  </td>
 
-          {addingNew && (
-            <tr className="bg-[#F9F9F9] border-t">
-              <td className="py-2 px-1 md:px-2">
-                <img src={assets.woman4} alt="avatar" className="w-6 h-6 md:w-8 md:h-8 rounded-full mx-auto" />
-              </td>
-              {["name", "lastName", "sport", "course"].map(renderInputCell)}
-              <td className="py-2 px-1 md:px-2">
-                <div className="flex gap-1 md:gap-2 justify-center flex-wrap">
-                  <button onClick={handleAddUser} className="cursor-pointer text-green-600 bg-green-100 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-green-200 transition">ثبت</button>
-                  <button onClick={resetForm} className="cursor-pointer text-gray-600 bg-gray-200 px-2 md:px-3 py-1 rounded text-[10px] md:text-xs hover:bg-gray-300 transition">لغو</button>
+                  {isEditing ? (
+                    <>
+                      <td className="py-3 px-4">
+                        <input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-3 py-1 border rounded text-xs" placeholder="نام" />
+                      </td>
+                      <td className="py-3 px-4">
+                        <input value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} className="w-full px-3 py-1 border rounded text-xs" placeholder="نام خانوادگی" />
+                      </td>
+                      <td className="py-3 px-4">
+                        <input type="text" value={formData.birthDate} onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })} className="w-full px-3 py-1 border rounded text-xs" placeholder="تاریخ تولد" />
+                      </td>
+                      <td className="py-3 px-4">
+                        <input value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-3 py-1 border rounded text-xs" placeholder="شماره تلفن" />
+                      </td>
+                      <td className="py-3 px-4">
+                        <input value={formData.medicalCondition} onChange={(e) => setFormData({ ...formData, medicalCondition: e.target.value })} className="w-full px-3 py-1 border rounded text-xs" placeholder="شرایط پزشکی" />
+                      </td>
+                      <td className="py-3 px-4">
+                        <input value={formData.sportGoal} onChange={(e) => setFormData({ ...formData, sportGoal: e.target.value })} className="w-full px-3 py-1 border rounded text-xs" placeholder="هدف ورزش" />
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex gap-2 justify-center">
+                          <button onClick={handleSaveEdit} className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600">ذخیره</button>
+                          <button onClick={resetForm} className="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-400">لغو</button>
+                        </div>
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="py-3 px-4">{u.name}</td>
+                      <td className="py-3 px-4">{u.lastName}</td>
+                      <td className="py-3 px-4">{u.birthDate}</td>
+                      <td className="py-3 px-4">{u.phone}</td>
+                      <td className="py-3 px-4">{u.medicalCondition}</td>
+                      <td className="py-3 px-4">{u.sportGoal}</td>
+                      <td className="py-3 px-4">
+                        <div className="flex gap-2 justify-center">
+                          <button onClick={() => handleEdit(u)} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg hover:bg-blue-200">ویرایش</button>
+                          <button onClick={() => handleDeleteUser(u.id)} className="bg-red-100 text-red-600 px-3 py-1 rounded-lg hover:bg-red-200">حذف</button>
+                          <button onClick={() => setSelectedUser(u)} className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg hover:bg-yellow-200">نمایش</button>
+                        </div>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* موبایل */}
+      <div className="flex flex-col gap-4 md:hidden mt-4">
+        {users.map((u) => (
+          <div key={u.id} className="bg-[#eaf4ef] rounded-xl border border-[#D1E7D8] p-4 space-y-2">
+            <div className="flex justify-between items-center">
+              <div className="text-sm font-bold text-[#055B5C]">{u.name} {u.lastName}</div>
+              <img src={u.avatar} alt="avatar" className="w-10 h-10 rounded-full border-2 border-white" />
+            </div>
+
+            {editIndex === u.id ? (
+              <>
+                <div className="flex flex-col gap-2">
+                  <input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="px-3 py-1 border rounded-md text-xs" placeholder="نام" />
+                  <input value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} className="px-3 py-1 border rounded-md text-xs" placeholder="نام خانوادگی" />
+                  <input value={formData.birthDate} onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })} className="px-3 py-1 border rounded-md text-xs" placeholder="تاریخ تولد" />
+                  <input value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="px-3 py-1 border rounded-md text-xs" placeholder="شماره تلفن" />
+                  <input value={formData.medicalCondition} onChange={(e) => setFormData({ ...formData, medicalCondition: e.target.value })} className="px-3 py-1 border rounded-md text-xs" placeholder="شرایط پزشکی" />
+                  <input value={formData.sportGoal} onChange={(e) => setFormData({ ...formData, sportGoal: e.target.value })} className="px-3 py-1 border rounded-md text-xs" placeholder="هدف ورزش" />
                 </div>
-              </td>
-            </tr>
-          )}
-
-          {!addingNew && !editIndex && (
-            <tr key="add-row" className="bg-[#EAF4EF]">
-              <td colSpan="6" className="text-center py-4">
-                <button
-                  onClick={handleAddNewClick}
-                  className="cursor-pointer text-2xl md:text-3xl text-green-600 hover:text-green-700 transition"
-                >
-                  +
-                </button>
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button onClick={handleSaveEdit} className="bg-green-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-green-600">ذخیره</button>
+                  <button onClick={resetForm} className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-lg hover:bg-gray-400">لغو</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="text-xs text-[#055B5C] space-y-1">
+                  <div><strong>تاریخ تولد:</strong> {u.birthDate}</div>
+                  <div><strong>شماره تلفن:</strong> {u.phone}</div>
+                  <div><strong>شرایط پزشکی:</strong> {u.medicalCondition}</div>
+                  <div><strong>هدف ورزش:</strong> {u.sportGoal}</div>
+                </div>
+                <div className="flex justify-end flex-wrap gap-2 pt-2">
+                  <button onClick={() => handleEdit(u)} className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-lg hover:bg-blue-200">ویرایش</button>
+                  <button onClick={() => handleDeleteUser(u.id)} className="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-lg hover:bg-red-200">حذف</button>
+                  <button onClick={() => setSelectedUser(u)} className="bg-yellow-100 text-yellow-700 text-xs px-3 py-1 rounded-lg hover:bg-yellow-200">نمایش</button>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

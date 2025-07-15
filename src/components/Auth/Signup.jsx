@@ -15,12 +15,14 @@ function Signup() {
   const formik = useFormik({
     initialValues: {
       name: '',
+      lastName: '',
       phone: '',
       nationalCode: '',
       password: '',
     },
     validationSchema: Yup.object({
       name: Yup.string().required('نام الزامی است'),
+      lastName: Yup.string().required('نام خانوادگی الزامی است'),
       phone: Yup.string().required('شماره تلفن الزامی است'),
       nationalCode: Yup.string().required('کد ملی الزامی است'),
       password: Yup.string().required('رمز عبور الزامی است'),
@@ -28,6 +30,11 @@ function Signup() {
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         console.log('ورودی‌های ثبت‌نام:', values);
+
+        // ذخیره در localStorage
+        localStorage.setItem('signupBasic', JSON.stringify(values));
+
+        // رفتن به مرحله بعد
         navigate('/verify');
       } catch (error) {
         setErrors({ submit: 'خطایی در ثبت‌نام رخ داد. دوباره تلاش کنید.' });
@@ -39,7 +46,6 @@ function Signup() {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-[#9FC6C3] font-sans px-4 overflow-hidden">
-
       <img
         src={assets.bag}
         alt="پس‌زمینه موج"
@@ -57,7 +63,6 @@ function Signup() {
       />
 
       <div className="flex flex-col md:flex-row w-full max-w-6xl z-10">
-
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -99,6 +104,19 @@ function Signup() {
             />
             {formik.touched.name && formik.errors.name && (
               <div className="text-red-300 text-xs mt-1">{formik.errors.name}</div>
+            )}
+
+            <input
+              type="text"
+              name="lastName"
+              placeholder="نام خانوادگی خود را وارد کنید"
+              className="w-full p-2 rounded bg-[#d9d9d9] border border-gray-300 text-black text-right"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.lastName}
+            />
+            {formik.touched.lastName && formik.errors.lastName && (
+              <div className="text-red-300 text-xs mt-1">{formik.errors.lastName}</div>
             )}
 
             <input
