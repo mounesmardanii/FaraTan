@@ -1,45 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useParams } from "react-router-dom";
 import { assets } from "../../assets/assets";
 
-const CoachInfoCard = () => {
+const CoachInfoCard = ({ coachId }) => {
+  console.log("coachId:", coachId);
+  const { id } = useParams();
   const [coachData, setCoachData] = useState(null);
   const [age, setAge] = useState(null);
   const [experienceYears, setExperienceYears] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ✳ داده‌ی ساختگی (موقتی تا بک اضافه بشه)
-    const mockCoachData = {
-      name: "مریم عبدی",
-      birthDate: "1993-05-21", // تاریخ تولد در فرمت ISO
-      phone: "09116868921",
-      specialty: "بدنسازی",
-      startYear: 2016,
-    };
+    const stored = localStorage.getItem("coachesList");
+    const allCoaches = JSON.parse(stored || "[]");
+    const foundCoach = allCoaches.find((c) => c.id.toString() === coachId);
 
-    // شبیه‌سازی دریافت داده از سرور با تاخیر
-    setTimeout(() => {
-      const data = mockCoachData;
-      setCoachData(data);
+    if (foundCoach) {
+      setCoachData(foundCoach);
 
-      const currentYear = new Date().getFullYear();
+      const birth = new Date(foundCoach.birthDate);
+      const start = new Date(foundCoach.startDate);
+      const now = new Date();
 
-      // محاسبه سن
-      const birth = new Date(data.birthDate);
-      const birthYear =
-        birth instanceof Date && !isNaN(birth) ? birth.getFullYear() : null;
-      setAge(birthYear ? currentYear - birthYear : null);
+      const calculatedAge =
+        now.getFullYear() -
+        birth.getFullYear() -
+        (now.getMonth() < birth.getMonth() ||
+        (now.getMonth() === birth.getMonth() && now.getDate() < birth.getDate())
+          ? 1
+          : 0);
+      setAge(calculatedAge);
 
-      // محاسبه سابقه کاری
-      const startYearParsed = Number(data.startYear);
-      setExperienceYears(
-        !isNaN(startYearParsed) ? currentYear - startYearParsed : null
-      );
+      const calculatedExp =
+        now.getFullYear() -
+        start.getFullYear() -
+        (now.getMonth() < start.getMonth() ||
+        (now.getMonth() === start.getMonth() && now.getDate() < start.getDate())
+          ? 1
+          : 0);
+      setExperienceYears(calculatedExp);
 
       setLoading(false);
-    }, 500); // نیم‌ثانیه تاخیر ساختگی
-  }, []);
+    } else {
+      setLoading(false);
+    }
+  }, [id]);
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -61,7 +67,7 @@ const CoachInfoCard = () => {
   if (!coachData) {
     return (
       <div className="text-center mt-8 text-red-600">
-        خطا در بارگذاری اطلاعات
+        .مربی موردنظر پیدا نشد
       </div>
     );
   }
@@ -78,13 +84,13 @@ const CoachInfoCard = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          src={assets.woman1}
+          src={coachData.avatar || assets.woman1}
           className="w-28 h-28 object-cover rounded-xl absolute -left-10 -top-12 z-10"
         />
 
         <div className="flex flex-col justify-start h-full mt-10 gap-2 text-gray-800 text-[15px] leading-relaxed">
           <h2 className="text-[#FF6600] font-extrabold text-[18px] border-b border-[#ccc] pb-1">
-            {coachData.name}
+            {coachData.name} {coachData.lastName}
           </h2>
 
           <p>
@@ -94,9 +100,7 @@ const CoachInfoCard = () => {
 
           <p>
             <span className="text-[#256250] font-semibold">سابقه کاری:</span>{" "}
-            {coachData.startYear && experienceYears !== null
-              ? `از ${coachData.startYear} تاکنون (${experienceYears} سال)`
-              : "نامشخص"}
+            {experienceYears !== null ? `${experienceYears} سال` : "نامشخص"}
           </p>
 
           <p>
@@ -109,10 +113,10 @@ const CoachInfoCard = () => {
           <p>
             <span className="text-[#256250] font-semibold">شماره تماس:</span>{" "}
             <a
-              href={`tel:${coachData.phone}`}
+              href={`tel:${coachData.phoneNumber}`}
               className="text-[#256250] hover:underline font-semibold"
             >
-              {coachData.phone || "نامشخص"}
+              {coachData.phoneNumber || "نامشخص"}
             </a>
           </p>
 

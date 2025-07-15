@@ -88,12 +88,12 @@ function LayoutWrapper() {
     "/payment",
   ];
 
-  const showNavbar = !noNavbarRoutes.some(route =>
-    location.pathname.startsWith(route.split(':')[0]) // تطابق دینامیک برای مسیرهای پارامتری
+  const showNavbar = !noNavbarRoutes.some(
+    (route) => location.pathname.startsWith(route.split(":")[0]) // تطابق دینامیک برای مسیرهای پارامتری
   );
 
-  const showFooter = !noFooterRoutes.some(route =>
-    location.pathname.startsWith(route.split(':')[0]) // تطابق دینامیک برای مسیرهای پارامتری
+  const showFooter = !noFooterRoutes.some(
+    (route) => location.pathname.startsWith(route.split(":")[0]) // تطابق دینامیک برای مسیرهای پارامتری
   );
 
   return (
@@ -109,7 +109,8 @@ function LayoutWrapper() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/new-password" element={<NewPasswordPage />} />
         <Route path="/start-training" element={<StartTraining />} />
-        <Route path="/coach-profile" element={<CoachProfile />} />
+        {/* <Route path="/coach-profile/:id" element={<CoachProfile />} /> */}
+        <Route path="/coach-profile/:coachId" element={<CoachProfile />} />
         <Route path="/plan/1year" element={<OneYearPlan />} />
         <Route path="/plan/6months" element={<SixMonthPlan />} />
         <Route path="/plan/3months" element={<ThreeMonthPlan />} />
@@ -121,7 +122,15 @@ function LayoutWrapper() {
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/admin/add-nutrition" element={<NutritionProgramPage />} />
         <Route path="/admin/add-fitness" element={<FitnessProgramPage />} />
-        <Route path="/nutrition/:weekId/plan" element={<NutritionPlanDetail />} />
+        <Route
+          path="/admin/coach-schedule/:coachId"
+          element={<AdminCoachSchedule />}
+        />
+
+        <Route
+          path="/nutrition/:weekId/plan"
+          element={<NutritionPlanDetail />}
+        />
 
         <Route
           path="/admin"

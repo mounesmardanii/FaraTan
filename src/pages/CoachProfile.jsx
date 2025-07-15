@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom"; // اینو اضافه کن
 import { motion } from "framer-motion";
 import ClassTable from "../components/Coach/ClassTable";
 import CoachInfoCard from "../components/Coach/CoachInfoCard";
@@ -14,6 +15,8 @@ const fadeInUp = {
 };
 
 const CoachProfile = () => {
+  const { coachId } = useParams(); // دریافت آیدی از URL
+
   return (
     <div className="relative p-4 sm:p-6 md:p-8 max-w-[1400px] w-full mx-auto mt-8">
       <div className="flex flex-col-reverse justify-center items-center gap-4 sm:gap-6 md:gap-8 min-[800px]:items-start min-[800px]:flex-row-reverse">
@@ -23,7 +26,7 @@ const CoachProfile = () => {
           variants={fadeInUp}
           custom={1}
         >
-          <ClassTable />
+          <ClassTable coachId={coachId} />
         </motion.div>
 
         <motion.div
@@ -32,7 +35,7 @@ const CoachProfile = () => {
           variants={fadeInUp}
           custom={2}
         >
-          <CoachInfoCard />
+          <CoachInfoCard coachId={coachId} />
         </motion.div>
       </div>
       <ScrollToTopButton />
