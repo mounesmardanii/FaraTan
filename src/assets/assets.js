@@ -41,6 +41,13 @@ import woman4 from "./woman4.png";
 import repair from "./repair.png";
 import lock1 from "./lock1.png";
 import lock2 from "./lock2.png";
+import gym from "./gym.png";
+import private1 from "./private.png";
+import general from "./general.png";
+import membership from "./membership.png";
+
+export { private1, general, membership };
+
 
 export const assets = {
   modedark_white,
@@ -84,4 +91,8 @@ export const assets = {
   repair,
   lock1,
   lock2,
+  gym,
+  private1,
+  general,
+  membership
 };

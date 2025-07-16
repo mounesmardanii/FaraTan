@@ -246,7 +246,7 @@ function AdminCoaches() {
             animate="visible"
             variants={fadeIn}
           >
-            <div className="w-full overflow-x-auto">
+            <div className="max-w-10xl mx-auto px-4">
               <table className="min-w-[500px] text-[10px] md:text-xs text-[#055B5C] text-center font-semibold">
                 <thead>
                   <tr className="bg-[#EAF4EF] border-b border-[#ccc]">

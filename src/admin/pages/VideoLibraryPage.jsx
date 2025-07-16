@@ -184,13 +184,13 @@ function VideoLibraryPage() {
                 <div className="flex justify-between">
                   <button
                     onClick={() => handleSaveEdit(v.id)}
-                    className="bg-green-600 hover:bg-green-700 text-white text-sm px-3 py-1 rounded"
+                    className="bg-green-600 hover:bg-green-700 text-white text-sm px-3 py-1 rounded cursor-pointer"
                   >
                     ذخیره
                   </button>
                   <button
                     onClick={() => setEditingId(null)}
-                    className="bg-gray-400 hover:bg-gray-500 text-white text-sm px-3 py-1 rounded"
+                    className="bg-gray-400 hover:bg-gray-500 text-white text-sm px-3 py-1 rounded cursor-pointer"
                   >
                     لغو
                   </button>
@@ -213,19 +213,19 @@ function VideoLibraryPage() {
                 <div className="flex justify-between items-center mt-3 text-sm">
                   <button
                     onClick={() => handleChoose(v.id)}
-                    className="text-green-600 hover:underline"
+                    className="text-green-600 hover:underline cursor-pointer"
                   >
                     انتخاب
                   </button>
                   <button
                     onClick={() => handleEdit(v.id, v.name)}
-                    className="text-blue-600 hover:underline"
+                    className="text-blue-600 hover:underline cursor-pointer"
                   >
                     ویرایش
                   </button>
                   <button
                     onClick={() => handleDelete(v.id)}
-                    className="text-red-500 hover:underline"
+                    className="text-red-500 hover:underline cursor-pointer"
                   >
                     حذف
                   </button>
@@ -240,7 +240,7 @@ function VideoLibraryPage() {
         <div className="text-center mt-8">
           <button
             onClick={handleConfirmSelect}
-            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full shadow"
+            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full shadow cursor-pointer"
           >
             تایید انتخاب و بازگشت
           </button>
