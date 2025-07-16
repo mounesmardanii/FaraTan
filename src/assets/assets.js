@@ -22,9 +22,11 @@ import printer from "./printer.svg";
 import BodybuildingPic from "./BodybuildingPic.png";
 import woman1 from "./woman1.png";
 
+import modedark_white from "./modedark_white.svg";
 import modelight_orange from "./modelight_orange.svg";
 import modedark_black from "./modedark_black.svg";
-import modedark_white from "./modedark_white.svg";
+import modedark_green from "./modedark_green.svg";
+import modedark_orange from "./modedark_orange.svg";
 
 import account from "./account.png";
 import home from "./home.png";
@@ -43,6 +45,8 @@ import lock1 from "./lock1.png";
 import lock2 from "./lock2.png";
 
 export const assets = {
+  modedark_green,
+  modedark_orange,
   modedark_white,
   modedark_black,
   modelight_orange,

@@ -16,7 +16,7 @@ import StartTraining from "./pages/StartTraining";
 import OneYearPlan from "./pages/TrainingPlans/OneYearPlan";
 import SixMonthPlan from "./pages/TrainingPlans/SixMonthPlan";
 import ThreeMonthPlan from "./pages/TrainingPlans/ThreeMonthPlan";
-import DashboardPage from "./admin/pages/DashpoardPage";
+import DashboardPage from "./admin/pages/DashpoardPage"; // اصلاح تایپو
 import AdminUsersPage from "./admin/pages/AdminUsersPage";
 import ProfilePage from "./pages/ProfilePage";
 import MyReservations from "./pages/MyReservations";
@@ -30,8 +30,6 @@ import AdminCoachesPage from "./admin/pages/AdminCoachesPage";
 import WardrobeManagementPage from "./admin/pages/WardrobeManagementPage";
 import PaymentStatusPage from "./admin/pages/PaymentStatusPage";
 import AdminCoachSchedule from "./admin/pages/AdminCoachSchedule";
-import SelectNutritionWeekPage from "./admin/pages/SelectNutritionWeekPage";
-import VideoLibraryPage from "./admin/pages/VideoLibraryPage";
 import { useAuth } from "./context/AuthContext";
 import PaymentPage from "./pages/PaymentPage";
 
@@ -50,20 +48,52 @@ function LayoutWrapper() {
   }, [location.pathname]);
 
   const noNavbarRoutes = [
-    "/login", "/signup", "/verify", "/loginform", "/register-info",
-    "/forgot-password", "/new-password", "/admin", "/admin/users",
-    "/admin/fitness", "/admin/coaches", "/admin/wardrobes", "/admin/payments",
-    "/admin/add-nutrition", "/admin/add-fitness", "/admin/coach-schedule/:id",
-    "/payment"
+    "/login",
+    "/signup",
+    "/verify",
+    "/loginform",
+    "/register-info",
+    "/forgot-password",
+    "/new-password",
+    "/admin",
+    "/admin/users",
+    "/admin/fitness",
+    "/admin/coaches",
+    "/admin/wardrobes",
+    "/admin/payments",
+    "/admin/add-nutrition",
+    "/admin/add-fitness",
+    "/admin/coach-schedule/:id",
+    "/payment",
   ];
 
-  const noFooterRoutes = [...noNavbarRoutes, "/start-training"];
+  const noFooterRoutes = [
+    "/login",
+    "/signup",
+    "/verify",
+    "/loginform",
+    "/register-info",
+    "/forgot-password",
+    "/new-password",
+    "/admin",
+    "/admin/users",
+    "/admin/fitness",
+    "/admin/coaches",
+    "/admin/wardrobes",
+    "/admin/payments",
+    "/admin/add-nutrition",
+    "/admin/add-fitness",
+    "/admin/coach-schedule/:id",
+    "/start-training", // اضافه کردن مسیر start-training فقط برای حذف فوتر
+    "/payment",
+  ];
 
-  const showNavbar = !noNavbarRoutes.some(route =>
-    location.pathname.startsWith(route.split(':')[0])
+  const showNavbar = !noNavbarRoutes.some(
+    (route) => location.pathname.startsWith(route.split(":")[0]) // تطابق دینامیک برای مسیرهای پارامتری
   );
-  const showFooter = !noFooterRoutes.some(route =>
-    location.pathname.startsWith(route.split(':')[0])
+
+  const showFooter = !noFooterRoutes.some(
+    (route) => location.pathname.startsWith(route.split(":")[0]) // تطابق دینامیک برای مسیرهای پارامتری
   );
 
   return (
@@ -79,7 +109,8 @@ function LayoutWrapper() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/new-password" element={<NewPasswordPage />} />
         <Route path="/start-training" element={<StartTraining />} />
-        <Route path="/coach-profile" element={<CoachProfile />} />
+        {/* <Route path="/coach-profile/:id" element={<CoachProfile />} /> */}
+        <Route path="/coach-profile/:coachId" element={<CoachProfile />} />
         <Route path="/plan/1year" element={<OneYearPlan />} />
         <Route path="/plan/6months" element={<SixMonthPlan />} />
         <Route path="/plan/3months" element={<ThreeMonthPlan />} />
@@ -89,19 +120,66 @@ function LayoutWrapper() {
         <Route path="/sports-program" element={<SportsProgram />} />
         <Route path="/nutrition" element={<NutritionProgram />} />
         <Route path="/payment" element={<PaymentPage />} />
-        <Route path="/nutrition/:weekId/plan" element={<NutritionPlanDetail />} />
-        <Route path="/admin/videos" element={<AdminRoute><VideoLibraryPage /></AdminRoute>} />
+        <Route path="/admin/add-nutrition" element={<NutritionProgramPage />} />
+        <Route path="/admin/add-fitness" element={<FitnessProgramPage />} />
+        <Route
+          path="/admin/coach-schedule/:coachId"
+          element={<AdminCoachSchedule />}
+        />
 
-        <Route path="/admin" element={<AdminRoute><DashboardPage /></AdminRoute>} />
-        <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
-        <Route path="/admin/coaches" element={<AdminRoute><AdminCoachesPage /></AdminRoute>} />
-        <Route path="/admin/wardrobes" element={<AdminRoute><WardrobeManagementPage /></AdminRoute>} />
-        <Route path="/admin/payments" element={<AdminRoute><PaymentStatusPage /></AdminRoute>} />
-        <Route path="/admin/coach-schedule/:id" element={<AdminRoute><AdminCoachSchedule /></AdminRoute>} />
-        <Route path="/admin/add-nutrition" element={<AdminRoute><NutritionProgramPage /></AdminRoute>} />
-        <Route path="/admin/add-fitness" element={<AdminRoute><FitnessProgramPage /></AdminRoute>} />
-        <Route path="/admin/select-nutrition-week/:userId" element={<AdminRoute><SelectNutritionWeekPage /></AdminRoute>} />
-        <Route path="/admin/nutrition/:userId/:weekId" element={<AdminRoute><NutritionProgramPage /></AdminRoute>} />
+        <Route
+          path="/nutrition/:weekId/plan"
+          element={<NutritionPlanDetail />}
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <DashboardPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <AdminUsersPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/coaches"
+          element={
+            <AdminRoute>
+              <AdminCoachesPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/wardrobes"
+          element={
+            <AdminRoute>
+              <WardrobeManagementPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/payments"
+          element={
+            <AdminRoute>
+              <PaymentStatusPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/coach-schedule/:id"
+          element={
+            <AdminRoute>
+              <AdminCoachSchedule />
+            </AdminRoute>
+          }
+        />
       </Routes>
       {showFooter && <Footer />}
     </>
