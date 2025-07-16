@@ -52,6 +52,7 @@ const TrainingCard = ({
   onClick,
 }) => (
   <div
+    id="Card"
     onClick={onClick}
     className={`relative bg-[#D1E7D8] rounded-3xl p-4 md:p-6 w-full md:w-1/3 shadow-md text-xs md:text-sm leading-relaxed text-right cursor-pointer transition-all duration-300 transform hover:scale-105 hover:brightness-95 ${
       crown ? "border-2 border-[#ffa366]" : ""

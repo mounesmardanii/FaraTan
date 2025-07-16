@@ -40,7 +40,9 @@ function Navbar() {
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="bg-[#055B5C] text-white px-4 py-2 text-[14px] rounded-full md:px-6 md:py-2 md:text-[16px] flex items-center justify-center transition-all duration-300 hover:bg-[#044041] hover:scale-105 cursor-pointer"
                 >
-                  {user.name === "مریم" && user.role === "admin" ? "مدیر سایت" : user.name || "پروفایل"}
+                  {user.name === "مریم" && user.role === "admin"
+                    ? "مدیر سایت"
+                    : user.name || "پروفایل"}
                 </button>
 
                 {showDropdown && (
@@ -120,6 +122,19 @@ function Navbar() {
               درباره ما
             </a>
             <a
+              href="#Card"
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .getElementById("Card")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
+            >
+              خرید دوره
+            </a>
+
+            <a
               onClick={() => handleNavigate("/start-training")}
               className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
             >
@@ -134,7 +149,10 @@ function Navbar() {
           </nav>
 
           <div className="md:hidden flex items-center gap-4">
-            <button onClick={() => setMenuOpen(!menuOpen)} className="cursor-pointer">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="cursor-pointer"
+            >
               <img
                 src={assets.menu}
                 alt="menu icon"
@@ -184,6 +202,18 @@ function Navbar() {
                 className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
               >
                 درباره ما
+              </a>
+              <a
+                href="#Card"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .getElementById("Card")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="hover:text-[#FF6600] transition-colors duration-300 cursor-pointer"
+              >
+                خرید دوره
               </a>
               <a
                 onClick={() => handleNavigate("/start-training")}

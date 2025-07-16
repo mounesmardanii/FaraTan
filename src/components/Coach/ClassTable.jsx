@@ -1,52 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useReservations } from "../../context/ReservationContext";
 import { usePurchases } from "../../context/PurchaseContext";
-
-const initialClasses = [
-  {
-    id: 1,
-    day: "شنبه",
-    time: "15 - 17",
-    capacity: 1,
-    courseType: "خصوصی",
-  },
-  {
-    id: 2,
-    day: "پنجشنبه",
-    time: "11 - 13",
-    capacity: 5,
-    courseType: "عمومی",
-  },
-  {
-    id: 3,
-    day: "دوشنبه",
-    time: "8 - 10",
-    capacity: 10,
-    courseType: "VIP",
-  },
-  {
-    id: 4,
-    day: "دوشنبه",
-    time: "11 - 13",
-    capacity: 0,
-    courseType: "عمومی",
-  },
-  {
-    id: 5,
-    day: "سه‌شنبه",
-    time: "14 - 16",
-    capacity: 1,
-    courseType: "خصوصی",
-  },
-  {
-    id: 6,
-    day: "جمعه",
-    time: "10 - 12",
-    capacity: 2,
-    courseType: "VIP",
-  },
-];
 
 const rowVariants = {
   hidden: { opacity: 0, x: 50 },
@@ -61,72 +16,120 @@ const rowVariants = {
   }),
 };
 
-const ClassTable = () => {
-  const [classes, setClasses] = useState(initialClasses);
+const ClassTable = ({ coachId }) => {
+  const [classes, setClasses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { reservations, reserveClass } = useReservations();
   const { purchases } = usePurchases();
 
-  const handleReserve = (classItem) => {
-    const alreadyReserved = reservations.some((r) => r.id === classItem.id);
-    const hasPurchased = purchases.some(
-      (p) => p.duration === classItem.courseType
-    );
+  const fetchClasses = useCallback(() => {
+    try {
+      const key = `coachSchedule_${String(coachId)}`;
+      const data = JSON.parse(localStorage.getItem(key) || "[]");
+      setClasses(data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching classes:", err);
+      setError("خطا در دریافت اطلاعات کلاس‌ها");
+    } finally {
+      setLoading(false);
+    }
+  }, [coachId]);
 
-    if (classItem.capacity > 0 && !alreadyReserved && hasPurchased) {
-      reserveClass(classItem);
-      setClasses((prev) =>
-        prev.map((cls) =>
-          cls.id === classItem.id ? { ...cls, capacity: cls.capacity - 1 } : cls
-        )
+  useEffect(() => {
+    fetchClasses();
+    const interval = setInterval(fetchClasses, 3000);
+    return () => clearInterval(interval);
+  }, [fetchClasses]);
+
+  const handleReserve = async (classItem) => {
+    try {
+      const alreadyReserved = reservations.some((r) => r.id === classItem.id);
+      const hasPurchased = purchases.some(
+        (p) => p.duration === classItem.courseType
       );
-      alert(
-        `کلاس ${classItem.day} در ساعت ${classItem.time} با موفقیت رزرو شد.`
-      );
+
+      if (classItem.status > 0 && !alreadyReserved && hasPurchased) {
+        await reserveClass(classItem);
+
+        setClasses((prev) =>
+          prev.map((cls) =>
+            cls.id === classItem.id ? { ...cls, status: cls.status - 1 } : cls
+          )
+        );
+
+        alert(
+          `کلاس ${classItem.day} در ساعت ${classItem.time} با موفقیت رزرو شد.`
+        );
+      } else if (!hasPurchased) {
+        alert("برای رزرو این کلاس باید دوره مربوطه را خریداری کنید.");
+      } else if (alreadyReserved) {
+        alert("شما قبلاً این کلاس را رزرو کرده‌اید.");
+      } else {
+        alert("ظرفیت این کلاس تکمیل شده است.");
+      }
+    } catch (err) {
+      console.error("Error reserving class:", err);
+      alert("خطا در رزرو کلاس. لطفاً دوباره تلاش کنید.");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#FF6600]"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-[#FEEDDB] p-6 rounded-2xl shadow-lg max-w-[1100px] mx-auto my-8 text-center text-red-500">
+        {error}
+      </div>
+    );
+  }
+
+  if (classes.length === 0) {
+    return (
+      <div className="bg-[#FEEDDB] p-6 rounded-2xl shadow-lg max-w-[1100px] mx-auto my-8 text-center text-[#256250]">
+        .هیچ کلاسی برای این مربی وجود ندارد
+      </div>
+    );
+  }
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="bg-[#FEEDDB] p-4 sm:p-5 md:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] min-w-[300px] mx-auto mt-15 font-[Tahoma] text-right border border-[#D1E7D8]"
+      className="bg-[#FEEDDB] p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] mx-auto my-8 font-[Tahoma] text-right border border-[#D1E7D8]"
     >
-      <h3 className="text-[#256250] border-b-2 border-[#FF6600] pb-2 mb-4 text-base sm:text-lg md:text-xl font-bold text-center">
+      <h3 className="text-[#256250] border-b-2 border-[#FF6600] pb-3 mb-6 text-lg md:text-xl font-bold text-center">
         لیست کلاس‌های مربی
       </h3>
 
-      {/* دسکتاپ */}
+      {/* Desktop View */}
       <div className="hidden sm:block">
-        <table className="w-full table-fixed border-collapse rounded-xl overflow-hidden">
-          <thead className="text-[#FF6600] text-[14px] md:text-[16px]">
+        <table className="w-full table-auto">
+          <thead className="text-[#FF6600] text-[15px] md:text-[16px]">
             <tr>
-              <th className="p-2 text-center border-b border-[#B5D2C1]">
-                رزرو
-              </th>
-              <th className="p-2 text-center border-b border-[#B5D2C1]">
-                ظرفیت باقی‌مانده
-              </th>
-              <th className="p-2 text-center border-b border-[#B5D2C1]">
-                ساعت
-              </th>
-              <th className="p-2 text-center border-b border-[#B5D2C1]">روز</th>
-              <th className="p-2 text-center border-b border-[#B5D2C1]">
-                نوع کلاس
-              </th>
-              <th className="p-2 text-center border-b border-[#B5D2C1]">
-                نوع دوره
-              </th>
+              <th className="p-3 border-b text-center">رزرو</th>
+              <th className="p-3 border-b text-center">ظرفیت</th>
+              <th className="p-3 border-b text-center">ساعت</th>
+              <th className="p-3 border-b text-center">روز</th>
+              <th className="p-3 border-b text-center">نوع کلاس</th>
+              <th className="p-3 border-b text-center">نوع دوره</th>
             </tr>
           </thead>
-          <tbody className="text-[12px]">
+          <tbody>
             {[...classes].reverse().map((item, index) => {
               const isReserved = reservations.some((r) => r.id === item.id);
               const hasPurchased = purchases.some(
                 (p) => p.duration === item.courseType
               );
-              const disabled =
-                item.capacity === 0 || isReserved || !hasPurchased;
+              const disabled = item.status === 0 || isReserved || !hasPurchased;
 
               return (
                 <motion.tr
@@ -135,36 +138,46 @@ const ClassTable = () => {
                   initial="hidden"
                   animate="visible"
                   variants={rowVariants}
-                  className="bg-[#FFF8ED] border-b border-[#EBD9BD] hover:bg-[#FDF2E1] transition"
+                  className="bg-[#FFF8ED] hover:bg-[#FDF2E1] transition-colors"
                 >
-                  <td className="p-2 text-center">
+                  <td className="p-3 text-center">
                     <button
                       onClick={() => handleReserve(item)}
                       disabled={disabled}
-                      className={`px-2 py-1 rounded-xl text-sm w-full max-w-[90px] mx-auto transition ${
+                      className={`px-3 py-1 text-xs md:text-sm rounded-xl min-w-[90px] max-w-[120px] transition text-center ${
                         disabled
-                          ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                          : "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
+                          ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                          : "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] hover:shadow-md"
                       }`}
                     >
                       {isReserved
                         ? "رزرو شده"
                         : !hasPurchased
-                        ? "نیاز به خرید دوره"
+                        ? "خرید دوره لازم است"
                         : "رزرو"}
                     </button>
                   </td>
-                  <td className="p-2 text-center font-bold text-sm text-[#256250]">
-                    {item.capacity > 0
-                      ? `${item.capacity} :ظرفیت باقی‌مانده`
-                      : "تکمیل شده"}
+                  <td className="p-3 text-center">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                        item.status === 0
+                          ? "bg-red-100 text-red-600"
+                          : "bg-green-100 text-green-700"
+                      }`}
+                    >
+                      {item.status > 0
+                        ? `${item.status} ظرفیت باقی‌مانده`
+                        : "تکمیل شده"}
+                    </span>
                   </td>
-                  <td className="p-2 text-center">{item.time}</td>
-                  <td className="p-2 text-center">{item.day}</td>
-                  <td className="p-2 text-center text-[#256250] font-medium">
-                    بدنسازی
+                  <td className="p-3 text-center text-[#256250]">
+                    {item.time}
                   </td>
-                  <td className="p-2 text-center text-[#256250] font-medium">
+                  <td className="p-3 text-center text-[#256250]">{item.day}</td>
+                  <td className="p-3 text-center text-[#256250]">
+                    {item.classType}
+                  </td>
+                  <td className="p-3 text-center text-[#256250]">
                     {item.courseType}
                   </td>
                 </motion.tr>
@@ -174,14 +187,14 @@ const ClassTable = () => {
         </table>
       </div>
 
-      {/* موبایل */}
-      <div className="flex flex-col gap-4 sm:hidden">
+      {/* Mobile View */}
+      <div className="sm:hidden space-y-4">
         {[...classes].reverse().map((item, index) => {
           const isReserved = reservations.some((r) => r.id === item.id);
           const hasPurchased = purchases.some(
             (p) => p.duration === item.courseType
           );
-          const disabled = item.capacity === 0 || isReserved || !hasPurchased;
+          const disabled = item.status === 0 || isReserved || !hasPurchased;
 
           return (
             <motion.div
@@ -190,41 +203,56 @@ const ClassTable = () => {
               initial="hidden"
               animate="visible"
               variants={rowVariants}
-              className="bg-[#FFF8ED] border border-[#EBD9BD] rounded-xl p-4 shadow-sm w-full max-w-[350px] mx-auto"
+              className="bg-[#FFF8ED] border border-[#EBD9BD] rounded-xl p-4 shadow-sm"
             >
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-[#256250] font-bold">{item.day}</span>
-                <span className="text-sm text-gray-600">{item.time}</span>
+              <div className="flex justify-between items-center mb-3">
+                <h4 className="text-[#256250] font-bold text-base">
+                  {item.day}
+                </h4>
+                <span className="text-sm bg-[#D1E7D8] text-[#256250] px-3 py-1 rounded">
+                  {item.time}
+                </span>
               </div>
-              <div className="text-sm text-[#256250] mb-1">
-                نوع کلاس: بدنسازی
+
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">نوع کلاس</p>
+                  <p className="text-sm text-[#256250]">{item.classType}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">نوع دوره</p>
+                  <p className="text-sm text-[#256250]">{item.courseType}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">وضعیت</p>
+                  <span
+                    className={`text-xs px-3 py-1 rounded-full font-medium ${
+                      item.status === 0
+                        ? "bg-red-100 text-red-600"
+                        : "bg-green-100 text-green-700"
+                    }`}
+                  >
+                    {item.status > 0
+                      ? `${item.status} ظرفیت باقی‌مانده`
+                      : "تکمیل شده"}
+                  </span>
+                </div>
               </div>
-              <div className="text-sm text-[#256250] mb-2">
-                نوع دوره: {item.courseType}
-              </div>
-              <span
-                className={`text-white px-3 py-1 rounded-xl text-xs whitespace-nowrap inline-block mb-2 ${
-                  item.capacity === 0 ? "bg-[#FF6600]" : "bg-[#256250]"
-                }`}
-              >
-                {item.capacity > 0
-                  ? `${item.capacity} ظرفیت باقی‌مانده`
-                  : "تکمیل شده"}
-              </span>
+
               <button
                 onClick={() => handleReserve(item)}
                 disabled={disabled}
-                className={`block w-full px-2 py-1 rounded-xl text-sm transition ${
+                className={`w-full py-2 rounded-xl text-sm transition ${
                   disabled
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
+                    ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                    : "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] hover:shadow-md"
                 }`}
               >
                 {isReserved
                   ? "رزرو شده"
                   : !hasPurchased
                   ? "نیاز به خرید دوره"
-                  : "رزرو"}
+                  : "رزرو کلاس"}
               </button>
             </motion.div>
           );
