@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+
+// صفحات کاربر
 import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -22,9 +24,11 @@ import SportsProgram from "./pages/SportsProgram";
 import NutritionProgram from "./pages/NutritionProgram";
 import NutritionPlanDetail from "./pages/NutritionPlanDetail";
 import PaymentPage from "./pages/PaymentPage";
+
+// context
 import { useAuth } from "./context/AuthContext";
 
-// 👇 این رو اضافه کردیم
+// ✨ مسیرهای ادمین جدا شده
 import AdminRoutes from "./admin/routes/AdminRoutes";
 
 function AdminRoute({ children }) {
@@ -41,6 +45,7 @@ function LayoutWrapper() {
     document.documentElement.scrollTop = 0;
   }, [location.pathname]);
 
+  // مسیرهایی که نباید navbar داشته باشند
   const noNavbarRoutes = [
     "/login",
     "/signup",
@@ -50,30 +55,36 @@ function LayoutWrapper() {
     "/forgot-password",
     "/new-password",
     "/admin",
-    "/admin/users",
-    "/admin/fitness",
-    "/admin/coaches",
-    "/admin/wardrobes",
-    "/admin/payments",
-    "/admin/add-nutrition",
-    "/admin/add-fitness",
-    "/admin/coach-schedule",
     "/payment",
   ];
 
-  const noFooterRoutes = [...noNavbarRoutes, "/start-training"];
+  // مسیرهایی که نباید footer داشته باشند
+  const noFooterRoutes = [
+    "/login",
+    "/signup",
+    "/verify",
+    "/loginform",
+    "/register-info",
+    "/forgot-password",
+    "/new-password",
+    "/admin",
+    "/start-training",
+    "/payment",
+  ];
 
+  // تابع کمکی برای تطابق مسیرهای پارامتری
   const showNavbar = !noNavbarRoutes.some((route) =>
-    location.pathname.startsWith(route)
+    location.pathname.startsWith(route.split(":")[0])
   );
   const showFooter = !noFooterRoutes.some((route) =>
-    location.pathname.startsWith(route)
+    location.pathname.startsWith(route.split(":")[0])
   );
 
   return (
     <>
       {showNavbar && <Navbar />}
       <Routes>
+        {/* صفحات کاربری */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
@@ -83,7 +94,7 @@ function LayoutWrapper() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/new-password" element={<NewPasswordPage />} />
         <Route path="/start-training" element={<StartTraining />} />
-        <Route path="/coach-profile" element={<CoachProfile />} />
+        <Route path="/coach-profile/:coachId" element={<CoachProfile />} />
         <Route path="/plan/1year" element={<OneYearPlan />} />
         <Route path="/plan/6months" element={<SixMonthPlan />} />
         <Route path="/plan/3months" element={<ThreeMonthPlan />} />
@@ -95,7 +106,7 @@ function LayoutWrapper() {
         <Route path="/nutrition/:weekId/plan" element={<NutritionPlanDetail />} />
         <Route path="/payment" element={<PaymentPage />} />
 
-        {/* ✨ مسیرهای ادمین جدا شده */}
+        {/* مسیرهای ادمین */}
         <Route
           path="/admin/*"
           element={

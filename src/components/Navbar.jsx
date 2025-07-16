@@ -176,7 +176,7 @@ function Navbar() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="absolute top-full left-0 w-full flex justify-center md:hidden bg-white py-3 border-b-[3px] border-[#FF6600] rounded-b-full z-50"
           >
-            <nav className="flex flex-row gap-6 items-center text-[#055B5C] font-extrabold text-[16px]">
+            <nav className="flex flex-wrap justify-center gap-3 px-4 items-center text-[#055B5C] font-bold text-[13px] leading-5">
               <a
                 href="#contact"
                 onClick={(e) => {
