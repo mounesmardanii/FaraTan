@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
+import { motion, AnimatePresence } from "framer-motion"; // ✅ اضافه شد
 
 // توابع مدیریت داده‌ها
 const fetchRows = () => {
@@ -28,15 +29,16 @@ function FitnessProgramPage() {
     title: "",
     sets: "",
     time: "",
-    weight: "",
+    type: "",
     video: null,
+    videoId: null,
+    videoName: null,
   });
 
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // بارگذاری اولیه ردیف‌ها
     setRows(fetchRows());
 
     const selected = JSON.parse(localStorage.getItem("selectedVideo"));
@@ -47,18 +49,30 @@ function FitnessProgramPage() {
       if (editing !== null) {
         setRows((prev) =>
           prev.map((row) =>
-            row.id === editing ? { ...row, video: selected.file, videoId: selected.id, videoName: selected.name } : row
+            row.id === editing
+              ? {
+                  ...row,
+                  title: selected.name || row.title,
+                  video: selected.file,
+                  videoId: selected.id,
+                  videoName: selected.name,
+                  type: selected.type || "عمومی",
+                }
+              : row
           )
         );
-        saveRows(rows); // ذخیره ردیف‌ها پس از به‌روزرسانی
+        saveRows(rows);
         localStorage.removeItem("editingRowId");
       } else {
         setNewRow((prev) => ({
           ...prev,
           ...savedNewRow,
-          video: selected.file,
+          title: selected.name || prev.title,
+          video: selected.file || prev.video,
           videoId: selected.id,
           videoName: selected.name,
+          type: selected.type || "عمومی",
+          fileName: selected.fileName || "",
         }));
       }
 
@@ -68,12 +82,11 @@ function FitnessProgramPage() {
   }, []);
 
   useEffect(() => {
-    // ذخیره ردیف‌ها در localStorage هنگام تغییر
     saveRows(rows);
   }, [rows]);
 
   const handleAddRow = () => {
-    const isValid = newRow.title && newRow.sets && newRow.weight;
+    const isValid = newRow.title && newRow.sets && newRow.type;
     if (!isValid) {
       setError("تمام فیلدها الزامی است (بجز زمان و ویدیو).");
       return;
@@ -81,13 +94,21 @@ function FitnessProgramPage() {
 
     const newItem = { id: Date.now(), ...newRow };
     setRows([...rows, newItem]);
-    setNewRow({ title: "", sets: "", time: "", weight: "", video: null, videoId: null, videoName: null });
+    setNewRow({
+      title: "",
+      sets: "",
+      time: "",
+      type: "",
+      video: null,
+      videoId: null,
+      videoName: null,
+    });
     setError("");
     localStorage.removeItem("newRow");
   };
 
   const handleDelete = (id) => {
-    setRows(rows.filter((r) => r.id !== id));
+    setRows((prev) => prev.filter((r) => r.id !== id));
   };
 
   const handleEdit = (id) => {
@@ -133,14 +154,23 @@ function FitnessProgramPage() {
           <img src={assets.back} alt="بازگشت" className="w-8 h-8" />
         </button>
 
-        <h2 className="text-center text-[#FF6600] font-bold text-xl mb-6">
+        <motion.h2
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center text-[#FF6600] font-bold text-xl mb-6"
+        >
           برنامه ورزشی
-        </h2>
+        </motion.h2>
 
         {error && (
-          <div className="text-[#FF6347] bg-red-50 border border-[#FF6347] rounded px-4 py-2 text-sm mb-4 text-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-[#FF6347] bg-red-50 border border-[#FF6347] rounded px-4 py-2 text-sm mb-4 text-center"
+          >
             {error}
-          </div>
+          </motion.div>
         )}
 
         <div className="w-full max-h-[400px] overflow-y-auto rounded-lg scrollbar-thin scrollbar-thumb-[#D1E7D8] scrollbar-track-[#EFFAF2]">
@@ -150,93 +180,118 @@ function FitnessProgramPage() {
                 <th>نام ورزش/حرکت</th>
                 <th>ست</th>
                 <th>زمان</th>
-                <th>وزن</th>
+                <th>نوع ویدیو</th>
                 <th>ویدیوی آموزشی</th>
                 <th>عملیات</th>
               </tr>
             </thead>
             <tbody>
-              {rows.map((row) => (
-                <tr key={row.id} className="bg-[#EFFAF2] rounded h-10">
-                  {editingId === row.id ? (
-                    <>
-                      {["title", "sets", "time", "weight"].map((field) => (
-                        <td key={field}>
-                          <input
-                            type="text"
-                            name={field}
-                            value={row[field]}
-                            onChange={(e) => handleChange(e, row.id)}
-                            className="w-full border px-1 rounded text-xs h-8"
-                          />
+              <AnimatePresence>
+                {rows.map((row) => (
+                  <motion.tr
+                    key={row.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-[#EFFAF2] rounded h-10"
+                  >
+                    {editingId === row.id ? (
+                      <>
+                        {["title", "sets", "time", "type"].map((field) => (
+                          <td key={field}>
+                            <input
+                              type="text"
+                              name={field}
+                              value={row[field]}
+                              onChange={(e) => handleChange(e, row.id)}
+                              className="w-full border px-1 rounded text-xs h-8"
+                            />
+                          </td>
+                        ))}
+                        <td>
+                          <div className="flex flex-col items-center">
+                            {row.video ? (
+                              <>
+                                <video
+                                  src={row.video}
+                                  controls
+                                  className="w-32 h-20 mx-auto rounded mb-1"
+                                />
+                                <p className="text-xs text-gray-600 truncate max-w-[120px]">
+                                  {row.videoName || "بدون نام"}
+                                </p>
+                              </>
+                            ) : (
+                              <span className="text-gray-400 text-xs">
+                                ندارد
+                              </span>
+                            )}
+                            <button
+                              onClick={() => handleVideoSelect(row.id)}
+                              className="mt-1 text-xs text-[#055B5C] underline cursor-pointer hover:text-[#033f40]"
+                            >
+                              تغییر ویدیو
+                            </button>
+                          </div>
                         </td>
-                      ))}
-                      <td>
-                        <div className="flex flex-col items-center gap-1">
+                        <td>
+                          <motion.button
+                            whileTap={{ scale: 0.95 }}
+                            onClick={handleSaveEdit}
+                            className="bg-[#9FC6C3] hover:bg-[#7eb2ac] text-white text-xs px-2 py-1 rounded cursor-pointer"
+                          >
+                            ذخیره
+                          </motion.button>
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td>{row.title}</td>
+                        <td>{row.sets}</td>
+                        <td>{row.time || "-"}</td>
+                        <td>{row.type || "-"}</td>
+                        <td>
                           {row.video ? (
                             <video
                               src={row.video}
                               controls
-                              className="w-24 h-16 rounded"
+                              className="w-32 h-20 mx-auto rounded"
                             />
                           ) : (
                             <span className="text-gray-400 text-xs">ندارد</span>
                           )}
-                          <label
-                            onClick={() => handleVideoSelect(row.id)}
-                            className="text-xs text-[#055B5C] underline cursor-pointer hover:text-[#033f40]"
+                        </td>
+                        <td className="flex justify-center gap-1 py-1">
+                          <motion.button
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleEdit(row.id)}
+                            className="bg-[#FEEDDB] hover:bg-[#fcd8a4] text-[#055B5C] text-xs px-2 py-1 rounded cursor-pointer"
                           >
-                            انتخاب/تغییر ویدیو
-                          </label>
-                        </div>
-                      </td>
-                      <td>
-                        <button
-                          onClick={handleSaveEdit}
-                          className="bg-[#9FC6C3] hover:bg-[#7eb2ac] text-white text-xs px-2 py-1 rounded cursor-pointer"
-                        >
-                          ذخیره
-                        </button>
-                      </td>
-                    </>
-                  ) : (
-                    <>
-                      <td>{row.title}</td>
-                      <td>{row.sets}</td>
-                      <td>{row.time || "-"}</td>
-                      <td>{row.weight}</td>
-                      <td>
-                        {row.video ? (
-                          <video
-                            src={row.video}
-                            controls
-                            className="w-32 h-20 mx-auto rounded"
-                          />
-                        ) : (
-                          <span className="text-gray-400 text-xs">ندارد</span>
-                        )}
-                      </td>
-                      <td className="flex justify-center gap-1 py-1">
-                        <button
-                          onClick={() => handleEdit(row.id)}
-                          className="bg-[#FEEDDB] hover:bg-[#fcd8a4] text-[#055B5C] text-xs px-2 py-1 rounded cursor-pointer"
-                        >
-                          ویرایش
-                        </button>
-                        <button
-                          onClick={() => handleDelete(row.id)}
-                          className="bg-[#EFFAF2] hover:bg-red-100 text-[#FF6347] text-xs px-2 py-1 rounded cursor-pointer"
-                        >
-                          حذف
-                        </button>
-                      </td>
-                    </>
-                  )}
-                </tr>
-              ))}
+                            ویرایش
+                          </motion.button>
+                          <motion.button
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleDelete(row.id)}
+                            className="bg-[#EFFAF2] hover:bg-red-100 text-[#FF6347] text-xs px-2 py-1 rounded cursor-pointer"
+                          >
+                            حذف
+                          </motion.button>
+                        </td>
+                      </>
+                    )}
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
 
-              <tr className="bg-[#D1E7D8] rounded h-10">
-                {["title", "sets", "time", "weight"].map((field) => (
+              {/* سطر افزودن ردیف جدید */}
+              <motion.tr
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="bg-[#D1E7D8] rounded h-10"
+              >
+                {["title", "sets", "time", "type"].map((field) => (
                   <td key={field}>
                     <input
                       type="text"
@@ -253,11 +308,16 @@ function FitnessProgramPage() {
                 <td>
                   <div className="flex flex-col items-center gap-1">
                     {newRow.video && (
-                      <video
-                        src={newRow.video}
-                        controls
-                        className="w-24 h-16 rounded"
-                      />
+                      <>
+                        <video
+                          src={newRow.video}
+                          controls
+                          className="w-24 h-16 rounded"
+                        />
+                        <p className="text-xs text-gray-600 truncate max-w-[100px]">
+                          {newRow.videoName || "بدون نام"}
+                        </p>
+                      </>
                     )}
                     <label
                       onClick={handleNewVideoSelect}
@@ -268,26 +328,29 @@ function FitnessProgramPage() {
                   </div>
                 </td>
                 <td>
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
                     onClick={handleAddRow}
                     title="افزودن"
                     className="bg-[#055B5C] text-white w-8 h-8 rounded-full flex items-center justify-center text-lg hover:bg-[#033f40] cursor-pointer mx-auto"
                   >
                     +
-                  </button>
+                  </motion.button>
                 </td>
-              </tr>
+              </motion.tr>
             </tbody>
           </table>
         </div>
 
         <div className="text-center mt-8">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={handleSubmit}
             className="bg-[#FEEDDB] hover:bg-[#fcd8a4] text-[#055B5C] font-bold py-1 px-6 rounded-full border border-[#055B5C] cursor-pointer"
           >
             ثبت نهایی
-          </button>
+          </motion.button>
         </div>
       </main>
     </div>
