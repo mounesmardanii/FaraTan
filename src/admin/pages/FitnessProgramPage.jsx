@@ -1,21 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
+
+// توابع مدیریت داده‌ها
+const fetchRows = () => {
+  try {
+    return JSON.parse(localStorage.getItem("fitnessProgramRows")) || [];
+  } catch (error) {
+    console.error("خطا در بازیابی ردیف‌ها از localStorage:", error);
+    return [];
+  }
+};
+
+const saveRows = (rows) => {
+  try {
+    localStorage.setItem("fitnessProgramRows", JSON.stringify(rows));
+  } catch (error) {
+    console.error("خطا در ذخیره ردیف‌ها در localStorage:", error);
+  }
+};
 
 function FitnessProgramPage() {
   const navigate = useNavigate();
 
-  const [rows, setRows] = useState([
-    {
-      id: 1,
-      title: "هالتر",
-      sets: "2",
-      time: "_",
-      weight: "20kg",
-      video: null,
-    },
-  ]);
-
+  const [rows, setRows] = useState(fetchRows());
   const [newRow, setNewRow] = useState({
     title: "",
     sets: "",
@@ -27,29 +35,55 @@ function FitnessProgramPage() {
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState("");
 
-  const handleFileUpload = (e, id) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  useEffect(() => {
+    // بارگذاری اولیه ردیف‌ها
+    setRows(fetchRows());
 
-    if (id === null) {
-      setNewRow({ ...newRow, video: file });
-    } else {
-      setRows((prev) =>
-        prev.map((row) => (row.id === id ? { ...row, video: file } : row))
-      );
+    const selected = JSON.parse(localStorage.getItem("selectedVideo"));
+    const editing = JSON.parse(localStorage.getItem("editingRowId"));
+    const savedNewRow = JSON.parse(localStorage.getItem("newRow"));
+
+    if (selected) {
+      if (editing !== null) {
+        setRows((prev) =>
+          prev.map((row) =>
+            row.id === editing ? { ...row, video: selected.file, videoId: selected.id, videoName: selected.name } : row
+          )
+        );
+        saveRows(rows); // ذخیره ردیف‌ها پس از به‌روزرسانی
+        localStorage.removeItem("editingRowId");
+      } else {
+        setNewRow((prev) => ({
+          ...prev,
+          ...savedNewRow,
+          video: selected.file,
+          videoId: selected.id,
+          videoName: selected.name,
+        }));
+      }
+
+      localStorage.removeItem("selectedVideo");
+      localStorage.removeItem("newRow");
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // ذخیره ردیف‌ها در localStorage هنگام تغییر
+    saveRows(rows);
+  }, [rows]);
 
   const handleAddRow = () => {
     const isValid = newRow.title && newRow.sets && newRow.weight;
     if (!isValid) {
-     setError("تمام فیلدها الزامی است (بجز زمان و ویدیو).");
+      setError("تمام فیلدها الزامی است (بجز زمان و ویدیو).");
       return;
     }
+
     const newItem = { id: Date.now(), ...newRow };
     setRows([...rows, newItem]);
-    setNewRow({ title: "", sets: "", time: "", weight: "", video: null });
+    setNewRow({ title: "", sets: "", time: "", weight: "", video: null, videoId: null, videoName: null });
     setError("");
+    localStorage.removeItem("newRow");
   };
 
   const handleDelete = (id) => {
@@ -69,6 +103,16 @@ function FitnessProgramPage() {
     setRows((prev) =>
       prev.map((r) => (r.id === id ? { ...r, [name]: value } : r))
     );
+  };
+
+  const handleVideoSelect = (id) => {
+    localStorage.setItem("editingRowId", JSON.stringify(id));
+    navigate("/admin/videos");
+  };
+
+  const handleNewVideoSelect = () => {
+    localStorage.setItem("newRow", JSON.stringify(newRow));
+    navigate("/admin/videos");
   };
 
   const handleSubmit = () => {
@@ -129,21 +173,20 @@ function FitnessProgramPage() {
                       ))}
                       <td>
                         <div className="flex flex-col items-center gap-1">
-                          {row.video && (
+                          {row.video ? (
                             <video
-                              src={URL.createObjectURL(row.video)}
+                              src={row.video}
                               controls
                               className="w-24 h-16 rounded"
                             />
+                          ) : (
+                            <span className="text-gray-400 text-xs">ندارد</span>
                           )}
-                          <label className="text-xs text-[#055B5C] underline cursor-pointer hover:text-[#033f40]">
-                            تغییر ویدیو
-                            <input
-                              type="file"
-                              accept="video/*"
-                              onChange={(e) => handleFileUpload(e, row.id)}
-                              className="hidden"
-                            />
+                          <label
+                            onClick={() => handleVideoSelect(row.id)}
+                            className="text-xs text-[#055B5C] underline cursor-pointer hover:text-[#033f40]"
+                          >
+                            انتخاب/تغییر ویدیو
                           </label>
                         </div>
                       </td>
@@ -165,9 +208,9 @@ function FitnessProgramPage() {
                       <td>
                         {row.video ? (
                           <video
-                            src={URL.createObjectURL(row.video)}
+                            src={row.video}
                             controls
-                            className="w-32 h-20 mx-auto rounded cursor-pointer hover:scale-105 transition-transform"
+                            className="w-32 h-20 mx-auto rounded"
                           />
                         ) : (
                           <span className="text-gray-400 text-xs">ندارد</span>
@@ -211,19 +254,16 @@ function FitnessProgramPage() {
                   <div className="flex flex-col items-center gap-1">
                     {newRow.video && (
                       <video
-                        src={URL.createObjectURL(newRow.video)}
+                        src={newRow.video}
                         controls
                         className="w-24 h-16 rounded"
                       />
                     )}
-                    <label className="text-xs text-[#055B5C] underline cursor-pointer hover:text-[#033f40]">
-                      انتخاب ویدیو
-                      <input
-                        type="file"
-                        accept="video/*"
-                        onChange={(e) => handleFileUpload(e, null)}
-                        className="hidden"
-                      />
+                    <label
+                      onClick={handleNewVideoSelect}
+                      className="text-xs text-[#055B5C] underline cursor-pointer hover:text-[#033f40]"
+                    >
+                      انتخاب از لیست
                     </label>
                   </div>
                 </td>

@@ -29,7 +29,7 @@ function UserModal({ user, onClose }) {
 
         <div className="flex justify-end gap-2 mb-3">
           <button
-            onClick={() => navigate('/admin/add-nutrition')}
+            onClick={() => navigate(`/admin/select-nutrition-week/${user.id}`)}
             className="border border-green-700 text-green-700 px-2 py-1 rounded-full text-xs hover:bg-green-50 cursor-pointer"
           >
             افزودن برنامه غذایی

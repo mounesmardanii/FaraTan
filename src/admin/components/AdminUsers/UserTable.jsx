@@ -60,8 +60,8 @@ function UserTable({
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex gap-2 justify-center">
-                          <button onClick={handleSaveEdit} className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600">ذخیره</button>
-                          <button onClick={resetForm} className="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-400">لغو</button>
+                          <button onClick={handleSaveEdit} className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 cursor-pointer">ذخیره</button>
+                          <button onClick={resetForm} className="bg-gray-300 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-400 cursor-pointer">لغو</button>
                         </div>
                       </td>
                     </>
@@ -75,9 +75,9 @@ function UserTable({
                       <td className="py-3 px-4">{u.sportGoal}</td>
                       <td className="py-3 px-4">
                         <div className="flex gap-2 justify-center">
-                          <button onClick={() => handleEdit(u)} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg hover:bg-blue-200">ویرایش</button>
-                          <button onClick={() => handleDeleteUser(u.id)} className="bg-red-100 text-red-600 px-3 py-1 rounded-lg hover:bg-red-200">حذف</button>
-                          <button onClick={() => setSelectedUser(u)} className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg hover:bg-yellow-200">نمایش</button>
+                          <button onClick={() => handleEdit(u)} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-lg hover:bg-blue-200 cursor-pointer">ویرایش</button>
+                          <button onClick={() => handleDeleteUser(u.id)} className="bg-red-100 text-red-600 px-3 py-1 rounded-lg hover:bg-red-200 cursor-pointer">حذف</button>
+                          <button onClick={() => setSelectedUser(u)} className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg hover:bg-yellow-200 cursor-pointer">نمایش</button>
                         </div>
                       </td>
                     </>
@@ -109,8 +109,8 @@ function UserTable({
                   <input value={formData.sportGoal} onChange={(e) => setFormData({ ...formData, sportGoal: e.target.value })} className="px-3 py-1 border rounded-md text-xs" placeholder="هدف ورزش" />
                 </div>
                 <div className="flex justify-end gap-2 pt-2">
-                  <button onClick={handleSaveEdit} className="bg-green-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-green-600">ذخیره</button>
-                  <button onClick={resetForm} className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-lg hover:bg-gray-400">لغو</button>
+                  <button onClick={handleSaveEdit} className="bg-green-500 text-white text-xs px-3 py-1 rounded-lg hover:bg-green-600 cursor-pointer">ذخیره</button>
+                  <button onClick={resetForm} className="bg-gray-300 text-gray-700 text-xs px-3 py-1 rounded-lg hover:bg-gray-400 cursor-pointer">لغو</button>
                 </div>
               </>
             ) : (
@@ -122,9 +122,9 @@ function UserTable({
                   <div><strong>هدف ورزش:</strong> {u.sportGoal}</div>
                 </div>
                 <div className="flex justify-end flex-wrap gap-2 pt-2">
-                  <button onClick={() => handleEdit(u)} className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-lg hover:bg-blue-200">ویرایش</button>
-                  <button onClick={() => handleDeleteUser(u.id)} className="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-lg hover:bg-red-200">حذف</button>
-                  <button onClick={() => setSelectedUser(u)} className="bg-yellow-100 text-yellow-700 text-xs px-3 py-1 rounded-lg hover:bg-yellow-200">نمایش</button>
+                  <button onClick={() => handleEdit(u)} className="bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-lg hover:bg-blue-200 cursor-pointer">ویرایش</button>
+                  <button onClick={() => handleDeleteUser(u.id)} className="bg-red-100 text-red-600 text-xs px-3 py-1 rounded-lg hover:bg-red-200 cursor-pointer">حذف</button>
+                  <button onClick={() => setSelectedUser(u)} className="bg-yellow-100 text-yellow-700 text-xs px-3 py-1 rounded-lg hover:bg-yellow-200 cursor-pointer">نمایش</button>
                 </div>
               </>
             )}
