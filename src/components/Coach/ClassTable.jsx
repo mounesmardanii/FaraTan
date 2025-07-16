@@ -111,7 +111,7 @@ const ClassTable = ({ coachId }) => {
       </h3>
 
       {/* Desktop View */}
-      <div className="hidden sm:block overflow-x-auto">
+      <div className="hidden sm:block">
         <table className="w-full table-auto">
           <thead className="text-[#FF6600] text-[15px] md:text-[16px]">
             <tr>
