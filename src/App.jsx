@@ -24,6 +24,8 @@ import SportsProgram from "./pages/SportsProgram";
 import NutritionProgram from "./pages/NutritionProgram";
 import NutritionPlanDetail from "./pages/NutritionPlanDetail";
 import PaymentPage from "./pages/PaymentPage";
+import AdminCoachSchedule from "./admin/pages/AdminCoachSchedule";
+
 
 // context
 import { useAuth } from "./context/AuthContext";
@@ -105,6 +107,10 @@ function LayoutWrapper() {
         <Route path="/nutrition" element={<NutritionProgram />} />
         <Route path="/nutrition/:weekId/plan" element={<NutritionPlanDetail />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route
+          path="/admin/coach-schedule/:coachId"
+          element={<AdminCoachSchedule />}
+        />
 
         {/* مسیرهای ادمین */}
         <Route

@@ -25,7 +25,6 @@ function AdminRoutes() {
       <Route path="/coaches" element={<AdminCoachesPage />} />
       <Route path="/wardrobes" element={<WardrobeManagementPage />} />
       <Route path="/payments" element={<PaymentStatusPage />} />
-      <Route path="/coach-schedule/:id" element={<AdminCoachSchedule />} />
       <Route path="/add-nutrition" element={<NutritionProgramPage />} />
       <Route path="/add-fitness" element={<FitnessProgramPage />} />
       <Route path="/select-nutrition-week/:userId" element={<SelectNutritionWeekPage />} />
