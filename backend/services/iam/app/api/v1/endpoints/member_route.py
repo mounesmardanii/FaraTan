@@ -41,13 +41,13 @@ async def register(
 
 @member_router.post(
     "/verify-otp",
-    response_model=VerifyOTPResponseSchema,
+    response_model=TokenSchema,
     status_code=status.HTTP_200_OK
 )
 async def verify_otp(
     verify_member_schema: VerifyOTPSchema,
     member_service: Annotated[MemberMainService, Depends()],
-) -> VerifyOTPResponseSchema:
+) -> TokenSchema:
     logger.info(f"📨 Verifying OTP for: {verify_member_schema.phone_number}")
     return await member_service.verify_member(verify_member_schema)
 

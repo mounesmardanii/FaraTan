@@ -13,7 +13,7 @@ from app.services.auth_services.otp_service import OTPService
 from app.services.base_service import BaseService
 from app.services.member_service import MemberService
 from uuid import UUID
-
+from app.domain.schemas.token_schema import TokenSchema
 class MemberMainService(BaseService):
     def __init__(
         self,
@@ -45,7 +45,7 @@ class MemberMainService(BaseService):
 
     async def verify_member(
         self, verify_member_schema: VerifyOTPSchema
-    ) -> VerifyOTPResponseSchema:
+    ) -> TokenSchema:
         if not self.otp_service.verify_otp(
             verify_member_schema.phone_number, verify_member_schema.otp
         ):
@@ -61,9 +61,13 @@ class MemberMainService(BaseService):
         await self.member_service.update_verified_status(member.id, {"is_verified": True})
 
         logger.info(f"member with phone_number{verify_member_schema.phone_number} verified✅")
-        return VerifyOTPResponseSchema(
-            verified=True, message="member Verified Successfully"
-        )
+        
+        # return VerifyOTPResponseSchema(
+        #     verified=True, message="member Verified Successfully"
+        # )
+
+        token = self.auth_service.create_access_token(data={"sub": str(member.id), "role": "member"})
+        return {"access_token": token, "token_type": "bearer"} 
 
     async def resend_otp(
         self, resend_otp_schema: ResendOTPSchema
