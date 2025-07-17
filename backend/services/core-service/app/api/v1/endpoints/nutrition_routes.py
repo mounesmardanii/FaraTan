@@ -18,3 +18,13 @@ async def create_week(
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.create_week(data)
+
+
+
+@nutrition_router.get("/members/{member_id}/weeks", status_code=status.HTTP_200_OK, response_model=List[NutritionWeekResponseSchema])
+async def list_member_weeks(
+    member_id: UUID,
+    service: Annotated[NutritionMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+):
+    return await service.get_weeks_by_member(member_id)

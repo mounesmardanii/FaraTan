@@ -15,15 +15,7 @@ class NutritionService:
         week = NutritionWeek(member_id=data.member_id, title=data.title)
         return self.repo.create_week(week)
 
-    async def get_week(self, week_id: UUID) -> NutritionWeek:
-        week = self.repo.get_week_by_id(week_id)
-        if not week:
-            raise HTTPException(status_code=404, detail="Week not found")
-        return week
-
     async def get_weeks_by_member(self, member_id: UUID) -> List[NutritionWeek]:
         return self.repo.get_weeks_by_member(member_id)
 
-    async def delete_week(self, week_id: UUID) -> None:
-        self.repo.delete_week(week_id)
 

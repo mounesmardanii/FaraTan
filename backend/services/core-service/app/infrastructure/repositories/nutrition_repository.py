@@ -16,4 +16,5 @@ class NutritionRepository:
         self.db.refresh(week)
         return week
 
-
+    def get_weeks_by_member(self, member_id: UUID) -> List[NutritionWeek]:
+        return self.db.query(NutritionWeek).filter(NutritionWeek.member_id == member_id).order_by(NutritionWeek.created_at.desc()).all()
