@@ -3,7 +3,7 @@ from loguru import logger
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.core.postgres_db.database import get_db
-from app.domain.models.nutrition_model import NutritionWeek
+from app.domain.models.nutrition_model import NutritionWeek, NutritionDay
 from uuid import UUID
 
 class NutritionRepository:
@@ -27,3 +27,11 @@ class NutritionRepository:
         if week:
             self.db.delete(week)
             self.db.commit()
+    def create_day(self, day: NutritionDay) -> NutritionDay:
+            self.db.add(day)
+            self.db.commit()
+            self.db.refresh(day)
+            return day
+
+    def get_days_by_week_id(self, week_id: UUID) -> List[NutritionDay]:
+        return self.db.query(NutritionDay).filter(NutritionDay.week_id == week_id).all()
