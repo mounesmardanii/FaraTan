@@ -18,4 +18,6 @@ class NutritionService:
     async def get_weeks_by_member(self, member_id: UUID) -> List[NutritionWeek]:
         return self.repo.get_weeks_by_member(member_id)
 
+    async def delete_week(self, week_id: UUID) -> None:
+        self.repo.delete_week(week_id)
 

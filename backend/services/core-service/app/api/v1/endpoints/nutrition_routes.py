@@ -28,3 +28,14 @@ async def list_member_weeks(
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.get_weeks_by_member(member_id)
+
+
+
+@nutrition_router.delete("/weeks/{week_id}", status_code=status.HTTP_200_OK)
+async def delete_week(
+    week_id: UUID,
+    service: Annotated[NutritionMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+):
+    await service.delete_week(week_id)
+    return {"message": "Week deleted successfully"}

@@ -17,4 +17,5 @@ class NutritionMainService:
     async def get_weeks_by_member(self, member_id: UUID) -> List[NutritionWeekResponseSchema]:
         return await self.service.get_weeks_by_member(member_id)
 
-
+    async def delete_week(self, week_id: UUID) -> None:
+        return await self.service.delete_week(week_id)
