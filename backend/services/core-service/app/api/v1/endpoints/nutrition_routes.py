@@ -1,7 +1,13 @@
 from fastapi import Depends, status, APIRouter
 from typing import Annotated, List
 from loguru import logger
-from app.domain.schemas.nutrition_schema import CreateNutritionWeekSchema, NutritionWeekResponseSchema,CreateDayWithMealsSchema, DayWithMealsResponseSchema
+from app.domain.schemas.nutrition_schema import(
+CreateNutritionWeekSchema,
+NutritionWeekResponseSchema,
+CreateDayWithMealsSchema,
+DayWithMealsResponseSchema,
+UpdateWeekTitleSchema,
+)
 from app.domain.schemas.token_schema import TokenSchema
 from app.services.auth_services.auth_service import AuthService
 from uuid import UUID
@@ -39,6 +45,14 @@ async def delete_week(
     await service.delete_week(week_id)
     return {"message": "Week deleted successfully"}
 
+
+@nutrition_router.put("/weeks/{week_id}/title", status_code=status.HTTP_200_OK)
+async def update_week_title(
+    week_id: UUID,
+    request: UpdateWeekTitleSchema,
+    service: Annotated[NutritionMainService, Depends()]
+):
+    return await service.update_week_title(week_id, request)
 
 
 @nutrition_router.post("/nutrition/weeks/days-with-meals", response_model=DayWithMealsResponseSchema, status_code=status.HTTP_201_CREATED)

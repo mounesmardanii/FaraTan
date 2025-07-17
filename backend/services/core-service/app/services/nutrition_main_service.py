@@ -1,4 +1,11 @@
-from app.domain.schemas.nutrition_schema import CreateNutritionWeekSchema, NutritionWeekResponseSchema, CreateDayWithMealsSchema, DayWithMealsResponseSchema, NutritionMealResponseSchema
+from app.domain.schemas.nutrition_schema import(
+CreateNutritionWeekSchema,
+NutritionWeekResponseSchema,
+CreateDayWithMealsSchema,
+DayWithMealsResponseSchema,
+NutritionMealResponseSchema,
+UpdateWeekTitleSchema
+)
 from typing import Annotated, List
 from loguru import logger
 from fastapi import Depends
@@ -48,3 +55,7 @@ class NutritionMainService:
             grouped[key].meals.extend(day.meals)
 
         return list(grouped.values())
+
+
+    async def update_week_title(self, week_id: UUID, data: UpdateWeekTitleSchema):
+        return self.service.update_week_title(week_id, data.title)

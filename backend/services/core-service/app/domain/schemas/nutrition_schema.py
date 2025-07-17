@@ -27,6 +27,10 @@ class CreateDayWithMealsSchema(BaseModel):
     meals: List[MealInputSchema]
 
 
+class UpdateWeekTitleSchema(BaseModel):
+    title: str
+
+
 class NutritionMealResponseSchema(BaseModel):
     id: UUID
     meal_type: str

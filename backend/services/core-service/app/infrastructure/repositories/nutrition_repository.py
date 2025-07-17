@@ -67,3 +67,8 @@ class NutritionRepository:
             .options(selectinload(NutritionDay.meals))
             .all()
         )
+    
+
+    def update_week_title(self, week_id: UUID, new_title: str):
+        self.db.query(NutritionWeek).filter_by(id=week_id).update({"title": new_title})
+        self.db.commit()
