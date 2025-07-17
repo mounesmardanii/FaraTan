@@ -1,11 +1,11 @@
 from fastapi import Depends, status, APIRouter
 from typing import Annotated, List
 from loguru import logger
-from app.domain.schemas.nutrition_schema import CreateNutritionWeekSchema, NutritionWeekResponseSchema, NutritionDayResponseSchema, CreateNutritionDaySchema
+from app.domain.schemas.nutrition_schema import CreateNutritionWeekSchema, NutritionWeekResponseSchema,CreateDayWithMealsSchema, DayWithMealsResponseSchema
 from app.domain.schemas.token_schema import TokenSchema
 from app.services.auth_services.auth_service import AuthService
 from uuid import UUID
-from app.services.auth_services.auth_service import get_current_admin
+from app.services.auth_services.auth_service import get_current_admin, get_current_member
 from app.services.nutrition_main_service import NutritionMainService
 from app.domain.schemas.token_schema import TokenSchema, TokenDataSchema
 nutrition_router = APIRouter()
@@ -25,7 +25,7 @@ async def create_week(
 async def list_member_weeks(
     member_id: UUID,
     service: Annotated[NutritionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+    current_member: Annotated[TokenDataSchema, Depends(get_current_member)]
 ):
     return await service.get_weeks_by_member(member_id)
 
@@ -42,19 +42,10 @@ async def delete_week(
 
 
 
-@nutrition_router.post("/days", response_model=NutritionDayResponseSchema, status_code=status.HTTP_201_CREATED)
-async def create_day(
-    data: CreateNutritionDaySchema,
-    nutrition_service: Annotated[NutritionMainService, Depends()],
+@nutrition_router.post("/nutrition/weeks/days-with-meals", response_model=DayWithMealsResponseSchema, status_code=status.HTTP_201_CREATED)
+async def create_day_with_meals(
+    data: CreateDayWithMealsSchema,
+    service: Annotated[NutritionMainService, Depends()],
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
-    return await nutrition_service.create_day(data)
-
-
-@nutrition_router.get("/weeks/{week_id}/days", response_model=List[NutritionDayResponseSchema])
-async def get_days_by_week(
-    week_id: UUID,
-    nutrition_service: Annotated[NutritionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
-):
-    return await nutrition_service.get_days_by_week(week_id)
+    return await service.create_day_with_meals(data)

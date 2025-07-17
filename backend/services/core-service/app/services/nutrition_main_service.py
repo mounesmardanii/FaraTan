@@ -1,4 +1,4 @@
-from app.domain.schemas.nutrition_schema import CreateNutritionWeekSchema, NutritionWeekResponseSchema, NutritionDayResponseSchema, CreateNutritionDaySchema
+from app.domain.schemas.nutrition_schema import CreateNutritionWeekSchema, NutritionWeekResponseSchema, CreateDayWithMealsSchema, DayWithMealsResponseSchema, NutritionMealResponseSchema
 from typing import Annotated, List
 from loguru import logger
 from fastapi import Depends
@@ -19,10 +19,12 @@ class NutritionMainService:
     async def delete_week(self, week_id: UUID) -> None:
         return await self.service.delete_week(week_id)
     
-    async def create_day(self, data: CreateNutritionDaySchema) -> NutritionDayResponseSchema:
-        day = await self.service.create_day(data)
-        return NutritionDayResponseSchema.from_orm(day)
-
-    async def get_days_by_week(self, week_id: UUID) -> List[NutritionDayResponseSchema]:
-        days = await self.service.get_days_by_week(week_id)
-        return [NutritionDayResponseSchema.from_orm(d) for d in days]
+    async def create_day_with_meals(self, data: CreateDayWithMealsSchema) -> DayWithMealsResponseSchema:
+        day = await self.service.create_day_with_meals(data)
+        meals = self.service.get_meals_by_day(day.id)
+        return DayWithMealsResponseSchema(
+            id=day.id,
+            week_id=day.week_id,
+            day_of_week=day.day_of_week,
+            meals=[NutritionMealResponseSchema.from_orm(m) for m in meals]
+        )

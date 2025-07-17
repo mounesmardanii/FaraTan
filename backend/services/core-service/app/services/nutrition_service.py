@@ -1,9 +1,9 @@
-from app.domain.models.nutrition_model import NutritionWeek,NutritionDay
+from app.domain.models.nutrition_model import NutritionWeek,NutritionDay, NutritionMeal
 from app.infrastructure.repositories.nutrition_repository import NutritionRepository
 from typing import Annotated, List
 from loguru import logger
 from fastapi import Depends
-from app.domain.schemas.nutrition_schema import CreateNutritionWeekSchema, CreateNutritionDaySchema
+from app.domain.schemas.nutrition_schema import CreateNutritionWeekSchema, CreateDayWithMealsSchema
 from uuid import UUID
 
 
@@ -21,10 +21,8 @@ class NutritionService:
     async def delete_week(self, week_id: UUID) -> None:
         self.repo.delete_week(week_id)
 
-
-    async def create_day(self, data: CreateNutritionDaySchema) -> NutritionDay:
-        day = NutritionDay(week_id=data.week_id, day_of_week=data.day_of_week)
-        return self.repo.create_day(day)
-
-    async def get_days_by_week(self, week_id: UUID) -> List[NutritionDay]:
-        return self.repo.get_days_by_week_id(week_id)
+    async def create_day_with_meals(self, data: CreateDayWithMealsSchema) -> NutritionDay:
+        return self.repo.create_day_with_meals(data.week_id, data.day_of_week, data.meals)
+    
+    def get_meals_by_day(self, day_id: UUID) -> List[NutritionMeal]:
+        return self.repo.get_meals_by_day(day_id)
