@@ -52,3 +52,5 @@ class NutritionMeal(Base):
     meal_type = Column(String(50), nullable=False)  
     meal_description = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    
+    day = relationship("NutritionDay", back_populates="meals")
