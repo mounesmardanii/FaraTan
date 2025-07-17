@@ -24,5 +24,12 @@ class NutritionService:
     async def create_day_with_meals(self, data: CreateDayWithMealsSchema) -> NutritionDay:
         return self.repo.create_day_with_meals(data.week_id, data.day_of_week, data.meals)
     
-    def get_meals_by_day(self, day_id: UUID) -> List[NutritionMeal]:
+    async def get_meals_by_day(self, day_id: UUID) -> List[NutritionMeal]:
         return self.repo.get_meals_by_day(day_id)
+    
+    async def get_days_with_meals(self, week_id: UUID) -> List[NutritionDay]:
+        return self.repo.get_days_with_meals(week_id)
+    
+
+    async def get_days_by_week_id(self, week_id: UUID) -> List[NutritionDay]:
+        return self.repo.get_days_by_week_id(week_id)

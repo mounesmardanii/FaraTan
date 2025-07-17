@@ -4,6 +4,7 @@ from loguru import logger
 from fastapi import Depends
 from uuid import UUID
 from app.services.nutrition_service import NutritionService
+from collections import defaultdict
 
 
 class NutritionMainService:
@@ -21,10 +22,29 @@ class NutritionMainService:
     
     async def create_day_with_meals(self, data: CreateDayWithMealsSchema) -> DayWithMealsResponseSchema:
         day = await self.service.create_day_with_meals(data)
-        meals = self.service.get_meals_by_day(day.id)
+        meals = await self.service.get_meals_by_day(day.id)
         return DayWithMealsResponseSchema(
             id=day.id,
             week_id=day.week_id,
             day_of_week=day.day_of_week,
             meals=[NutritionMealResponseSchema.from_orm(m) for m in meals]
         )
+    
+    async def get_days_with_meals(self, week_id: UUID) -> List[DayWithMealsResponseSchema]:
+        days = await self.service.get_days_by_week_id(week_id)
+
+        grouped = {}
+
+        for day in days:
+            key = day.day_of_week
+            if key not in grouped:
+                grouped[key] = DayWithMealsResponseSchema(
+                    id=day.id,
+                    week_id=day.week_id,
+                    day_of_week=day.day_of_week,
+                    created_at=day.created_at,
+                    meals=[]
+                )
+            grouped[key].meals.extend(day.meals)
+
+        return list(grouped.values())

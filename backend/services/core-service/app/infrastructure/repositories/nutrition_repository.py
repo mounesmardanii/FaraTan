@@ -6,6 +6,7 @@ from app.core.postgres_db.database import get_db
 from app.domain.schemas.nutrition_schema import MealInputSchema
 from app.domain.models.nutrition_model import NutritionWeek, NutritionDay, NutritionMeal
 from uuid import UUID
+from sqlalchemy.orm import selectinload
 
 class NutritionRepository:
     def __init__(self, db: Annotated[Session, Depends(get_db)]):
@@ -54,5 +55,15 @@ class NutritionRepository:
         self.db.commit()
         self.db.refresh(new_day)
         return new_day
+    
     def get_meals_by_day(self, day_id: UUID) -> List[NutritionMeal]:
         return self.db.query(NutritionMeal).filter(NutritionMeal.day_id == day_id).all()
+    
+
+    def get_days_with_meals(self, week_id: UUID) -> List[NutritionDay]:
+        return (
+            self.db.query(NutritionDay)
+            .filter(NutritionDay.week_id == week_id)
+            .options(selectinload(NutritionDay.meals))
+            .all()
+        )

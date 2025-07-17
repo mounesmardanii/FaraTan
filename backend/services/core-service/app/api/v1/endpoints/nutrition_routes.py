@@ -21,13 +21,12 @@ async def create_week(
 
 
 
-@nutrition_router.get("/members/{member_id}/weeks", status_code=status.HTTP_200_OK, response_model=List[NutritionWeekResponseSchema])
+@nutrition_router.get("/my-weeks", status_code=status.HTTP_200_OK, response_model=List[NutritionWeekResponseSchema])
 async def list_member_weeks(
-    member_id: UUID,
     service: Annotated[NutritionMainService, Depends()],
     current_member: Annotated[TokenDataSchema, Depends(get_current_member)]
 ):
-    return await service.get_weeks_by_member(member_id)
+    return await service.get_weeks_by_member(current_member.id)
 
 
 
@@ -49,3 +48,16 @@ async def create_day_with_meals(
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.create_day_with_meals(data)
+
+
+@nutrition_router.get(
+    "/weeks/{week_id}/days-with-meals",
+    response_model=List[DayWithMealsResponseSchema],
+    status_code=status.HTTP_200_OK
+)
+async def get_days_with_meals_by_week(
+    week_id: UUID,
+    service: Annotated[NutritionMainService, Depends()],
+    current_member: Annotated[TokenDataSchema, Depends(get_current_member)]
+):
+    return await service.get_days_with_meals(week_id)
