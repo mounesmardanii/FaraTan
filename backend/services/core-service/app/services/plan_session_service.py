@@ -20,3 +20,6 @@ class PlanSessionService:
         )
         return self.repo.create(session)
 
+    async def get_all_sessions(self) -> List[PlanSession]:
+        return self.repo.get_all_sessions()
+

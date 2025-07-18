@@ -13,3 +13,8 @@ class PlanSessionMainService:
         session = await self.service.create(data)
         return PlanSessionResponseSchema.from_orm(session)
 
+
+    async def get_all_sessions(self) -> List[PlanSessionResponseSchema]:
+        sessions = await self.service.get_all_sessions()
+        return [PlanSessionResponseSchema.from_orm(p) for p in sessions]
+

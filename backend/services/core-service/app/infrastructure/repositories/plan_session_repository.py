@@ -16,3 +16,8 @@ class PlanSessionRepository:
       self.db.refresh(session)
       return session
 
+
+    def get_all_sessions(self) -> List[PlanSession]:
+        return self.db.query(PlanSession).all()
+
+
