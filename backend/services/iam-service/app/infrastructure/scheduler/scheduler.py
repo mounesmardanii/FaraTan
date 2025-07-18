@@ -13,6 +13,9 @@ class SchedulerService:
         logger.info("⏰ Starting background job scheduler...")
         self.scheduler.add_job(self.flag_and_archive_expired_measurements, 'interval', hours=24)
         self.scheduler.add_job(self.update_member_ages, 'interval', hours=24)
+        self.scheduler.add_job(self.update_trainer_ages, 'interval', hours=24)
+        self.scheduler.add_job(self.update_trainer_experience, 'interval', hours=24)
+
         self.scheduler.start()
 
     def flag_and_archive_expired_measurements(self):
@@ -68,3 +71,28 @@ class SchedulerService:
               )
 
       logger.info("✅ Age update job complete.")    
+
+
+    def update_trainer_experience(self):
+        logger.info("🔄 Running age update job...")
+
+        trainers = self.trainer_repository.get_all_trainers()
+
+        today = date.today()
+
+        for trainer in trainers:
+            if not trainer.years_of_experience:
+                continue
+
+            new_years_of_experience = today.year - trainer.years_of_experience.year - (
+                (today.month, today.day) < (trainer.years_of_experience.month, trainer.years_of_experience.day)
+            )
+
+            if trainer.years_of_experience != new_years_of_experience:
+                logger.info(f"🔧 Updating years_of_experience for trainer {trainer.id} from {trainer.years_of_experience} → {new_years_of_experience}")
+                self.trainer_repository.update_trainer_by_id(
+                    trainer_id=trainer.id,
+                    update_fields={"years_of_experience": new_years_of_experience}
+                )
+
+        logger.info("✅ years_of_experience update job complete.")     
