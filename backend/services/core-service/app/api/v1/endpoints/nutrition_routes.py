@@ -4,9 +4,10 @@ from loguru import logger
 from app.domain.schemas.nutrition_schema import(
 CreateNutritionWeekSchema,
 NutritionWeekResponseSchema,
-CreateDayWithMealsSchema,
-DayWithMealsResponseSchema,
 UpdateWeekTitleSchema,
+CreateNutritionDaySchema,
+UpdateNutritionDaySchema,
+NutritionDayResponseSchema,
 )
 from app.domain.schemas.token_schema import TokenSchema
 from app.services.auth_services.auth_service import AuthService
@@ -50,28 +51,32 @@ async def delete_week(
 async def update_week_title(
     week_id: UUID,
     request: UpdateWeekTitleSchema,
-    service: Annotated[NutritionMainService, Depends()]
+    service: Annotated[NutritionMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.update_week_title(week_id, request)
 
 
-@nutrition_router.post("/nutrition/weeks/days-with-meals", response_model=DayWithMealsResponseSchema, status_code=status.HTTP_201_CREATED)
-async def create_day_with_meals(
-    data: CreateDayWithMealsSchema,
-    service: Annotated[NutritionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
-):
-    return await service.create_day_with_meals(data)
-
-
-@nutrition_router.get(
-    "/weeks/{week_id}/days-with-meals",
-    response_model=List[DayWithMealsResponseSchema],
-    status_code=status.HTTP_200_OK
+@nutrition_router.post(
+    "/days",
+    status_code=status.HTTP_201_CREATED,
+    response_model=NutritionDayResponseSchema
 )
-async def get_days_with_meals_by_week(
-    week_id: UUID,
-    service: Annotated[NutritionMainService, Depends()],
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)]
+async def create_nutrition_day(
+    data: CreateNutritionDaySchema,
+    service: Annotated[NutritionMainService, Depends()]
 ):
-    return await service.get_days_with_meals(week_id)
+    return await service.create_day(data)
+
+
+@nutrition_router.put(
+    "/days/{day_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=NutritionDayResponseSchema
+)
+async def update_nutrition_day(
+    day_id: UUID,
+    data: UpdateNutritionDaySchema,
+    service: Annotated[NutritionMainService, Depends()]
+):
+    return await service.update_day(day_id, data)

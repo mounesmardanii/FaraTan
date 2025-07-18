@@ -3,10 +3,12 @@ from loguru import logger
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.core.postgres_db.database import get_db
-from app.domain.schemas.nutrition_schema import MealInputSchema
-from app.domain.models.nutrition_model import NutritionWeek, NutritionDay, NutritionMeal
+from app.domain.schemas.nutrition_schema import MealInputSchema, CreateNutritionDaySchema,UpdateNutritionDaySchema
+from app.domain.models.nutrition_model import NutritionWeek, NutritionDay
 from uuid import UUID
 from sqlalchemy.orm import selectinload
+from fastapi import HTTPException
+
 
 class NutritionRepository:
     def __init__(self, db: Annotated[Session, Depends(get_db)]):
@@ -38,37 +40,25 @@ class NutritionRepository:
     def get_days_by_week_id(self, week_id: UUID) -> List[NutritionDay]:
         return self.db.query(NutritionDay).filter(NutritionDay.week_id == week_id).all()
     
+    def get_day_by_id(self, day_id: UUID) -> Optional[NutritionDay]:
+        return self.db.query(NutritionDay).filter(NutritionDay.id == day_id).first()
 
-
-    def create_day_with_meals(self, week_id: UUID, day_of_week: str, meals: List[MealInputSchema]) -> NutritionDay:
-        new_day = NutritionDay(week_id=week_id, day_of_week=day_of_week)
-        self.db.add(new_day)
-        self.db.flush()   
-
-        for meal in meals:
-            self.db.add(NutritionMeal(
-                day_id=new_day.id,
-                meal_type=meal.meal_type,
-                meal_description=meal.meal_description
-            ))
-
+    def create_day(self, data: CreateNutritionDaySchema) -> NutritionDay:
+        day = NutritionDay(**data.model_dump())
+        self.db.add(day)
         self.db.commit()
-        self.db.refresh(new_day)
-        return new_day
-    
-    def get_meals_by_day(self, day_id: UUID) -> List[NutritionMeal]:
-        return self.db.query(NutritionMeal).filter(NutritionMeal.day_id == day_id).all()
-    
+        self.db.refresh(day)
+        return day
 
-    def get_days_with_meals(self, week_id: UUID) -> List[NutritionDay]:
-        return (
-            self.db.query(NutritionDay)
-            .filter(NutritionDay.week_id == week_id)
-            .options(selectinload(NutritionDay.meals))
-            .all()
-        )
-    
+    def get_day(self, day_id: UUID) -> Optional[NutritionDay]:
+        return self.db.query(NutritionDay).filter_by(id=day_id).first()
 
-    def update_week_title(self, week_id: UUID, new_title: str):
-        self.db.query(NutritionWeek).filter_by(id=week_id).update({"title": new_title})
+    def update_day(self, day_id: UUID, data: UpdateNutritionDaySchema) -> Optional[NutritionDay]:
+        day = self.get_day(day_id)
+        if not day:
+            return None
+        for key, value in data.model_dump(exclude_unset=True).items():
+            setattr(day, key, value)
         self.db.commit()
+        self.db.refresh(day)
+        return day

@@ -1,17 +1,16 @@
 from app.domain.schemas.nutrition_schema import(
 CreateNutritionWeekSchema,
 NutritionWeekResponseSchema,
-CreateDayWithMealsSchema,
-DayWithMealsResponseSchema,
-NutritionMealResponseSchema,
-UpdateWeekTitleSchema
+CreateNutritionDaySchema,
+UpdateNutritionDaySchema,
+NutritionDayResponseSchema,
+UpdateWeekTitleSchema,
 )
 from typing import Annotated, List
 from loguru import logger
 from fastapi import Depends
 from uuid import UUID
 from app.services.nutrition_service import NutritionService
-from collections import defaultdict
 
 
 class NutritionMainService:
@@ -26,36 +25,18 @@ class NutritionMainService:
 
     async def delete_week(self, week_id: UUID) -> None:
         return await self.service.delete_week(week_id)
-    
-    async def create_day_with_meals(self, data: CreateDayWithMealsSchema) -> DayWithMealsResponseSchema:
-        day = await self.service.create_day_with_meals(data)
-        meals = await self.service.get_meals_by_day(day.id)
-        return DayWithMealsResponseSchema(
-            id=day.id,
-            week_id=day.week_id,
-            day_of_week=day.day_of_week,
-            meals=[NutritionMealResponseSchema.from_orm(m) for m in meals]
-        )
-    
-    async def get_days_with_meals(self, week_id: UUID) -> List[DayWithMealsResponseSchema]:
-        days = await self.service.get_days_by_week_id(week_id)
-
-        grouped = {}
-
-        for day in days:
-            key = day.day_of_week
-            if key not in grouped:
-                grouped[key] = DayWithMealsResponseSchema(
-                    id=day.id,
-                    week_id=day.week_id,
-                    day_of_week=day.day_of_week,
-                    created_at=day.created_at,
-                    meals=[]
-                )
-            grouped[key].meals.extend(day.meals)
-
-        return list(grouped.values())
-
 
     async def update_week_title(self, week_id: UUID, data: UpdateWeekTitleSchema):
-        return self.service.update_week_title(week_id, data.title)
+        return await self.service.update_week_title(week_id, data.title)
+    
+    async def create_day(self, data: CreateNutritionDaySchema) -> NutritionDayResponseSchema:
+        day = await self.service.create_day(data)
+        return NutritionDayResponseSchema.from_orm(day)
+
+    async def get_day(self, day_id: UUID) -> NutritionDayResponseSchema:
+        day = await self.service.get_day(day_id)
+        return NutritionDayResponseSchema.from_orm(day)
+
+    async def update_day(self, day_id: UUID, data: UpdateNutritionDaySchema) -> NutritionDayResponseSchema:
+        day = await self.service.update_day(day_id, data)
+        return NutritionDayResponseSchema.from_orm(day)
