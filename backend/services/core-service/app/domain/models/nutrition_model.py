@@ -1,9 +1,10 @@
 from sqlalchemy import Column, String, Text, TIMESTAMP, func, Boolean, Date, Integer, ForeignKey, Float, DateTime
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
 from sqlalchemy.orm import relationship
 from datetime import datetime
+
 Base = declarative_base()
 
 
@@ -32,25 +33,21 @@ class NutritionWeek(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    days = relationship("NutritionDay", back_populates="week")
 
 class NutritionDay(Base):
     __tablename__ = "nutrition_days"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    week_id = Column(UUID(as_uuid=True), ForeignKey("nutrition_weeks.id", ondelete="CASCADE"))
-    day_of_week = Column(String(10), nullable=False)  
+    week_id = Column(UUID(as_uuid=True), ForeignKey("nutrition_weeks.id", ondelete="CASCADE"), nullable=False)
+    day_of_week = Column(String(10), nullable=False)
+
+    breakfast = Column(Text, nullable=True)
+    snack = Column(ARRAY(Text), nullable=True)
+    lunch = Column(Text, nullable=True)
+    dinner = Column(Text, nullable=True)
+
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    meals = relationship("NutritionMeal", back_populates="day", cascade="all, delete-orphan")
-
-
-class NutritionMeal(Base):
-    __tablename__ = "nutrition_meals"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    day_id = Column(UUID(as_uuid=True), ForeignKey("nutrition_days.id", ondelete="CASCADE"))
-    meal_type = Column(String(50), nullable=False)  
-    meal_description = Column(Text, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    day = relationship("NutritionDay", back_populates="meals")
+    week = relationship("NutritionWeek", back_populates="days")
