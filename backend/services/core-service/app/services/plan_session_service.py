@@ -20,8 +20,8 @@ class PlanSessionService:
         )
         return self.repo.create(session)
 
-    async def get_all_sessions(self) -> List[PlanSession]:
-        return self.repo.get_all_sessions()
+    async def get_sessions_by_plan_id(self, plan_id:UUID) -> List[PlanSession]:
+        return self.repo.get_sessions_by_plan_id(plan_id)
 
     async def get_by_id(self, session_id: UUID) -> Optional[PlanSession]:
         return self.repo.get_by_id(session_id)

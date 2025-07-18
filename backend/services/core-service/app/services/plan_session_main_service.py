@@ -14,8 +14,8 @@ class PlanSessionMainService:
         return PlanSessionResponseSchema.from_orm(session)
 
 
-    async def get_all_sessions(self) -> List[PlanSessionResponseSchema]:
-        sessions = await self.service.get_all_sessions()
+    async def get_sessions_by_plan_id(self, plan_id:UUID) -> List[PlanSessionResponseSchema]:
+        sessions = await self.service.get_sessions_by_plan_id(plan_id)
         return [PlanSessionResponseSchema.from_orm(p) for p in sessions]
 
     async def get_session_by_id(self, session_id: UUID) -> Optional[PlanSessionResponseSchema]:

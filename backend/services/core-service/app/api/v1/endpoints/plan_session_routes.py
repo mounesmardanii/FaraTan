@@ -15,9 +15,9 @@ current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.create_session(data)
 
-@plan_session_router.get("/get-all-sessions", response_model=List[PlanSessionResponseSchema])
-async def get_all_sessions(service: Annotated[PlanSessionMainService, Depends()]):
-    return await service.get_all_sessions()
+@plan_session_router.get("/get-sessions/{plan_id}", response_model=List[PlanSessionResponseSchema])
+async def get_all_sessions(plan_id: UUID, service: Annotated[PlanSessionMainService, Depends()]):
+    return await service.get_sessions_by_plan_id(plan_id)
 
 @plan_session_router.get("/get-session/{session_id}", response_model=PlanSessionResponseSchema)
 async def get_session_by_id(session_id: UUID, service: Annotated[PlanSessionMainService, Depends()]):

@@ -17,8 +17,8 @@ class PlanSessionRepository:
       return session
 
 
-    def get_all_sessions(self) -> List[PlanSession]:
-        return self.db.query(PlanSession).all()
+    def get_sessions_by_plan_id(self, plan_id: UUID) -> List[PlanSession]:
+        return self.db.query(PlanSession).filter(PlanSession.plan_id == plan_id).all()
 
     def get_by_id(self, session_id: UUID) -> Optional[PlanSession]:
         return self.db.query(PlanSession).filter_by(id=session_id).first()
