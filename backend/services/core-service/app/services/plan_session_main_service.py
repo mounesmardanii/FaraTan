@@ -18,3 +18,6 @@ class PlanSessionMainService:
         sessions = await self.service.get_all_sessions()
         return [PlanSessionResponseSchema.from_orm(p) for p in sessions]
 
+    async def get_session_by_id(self, session_id: UUID) -> Optional[PlanSessionResponseSchema]:
+        session = await self.service.get_by_id(session_id)
+        return PlanSessionResponseSchema.from_orm(session)
