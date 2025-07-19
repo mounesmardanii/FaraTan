@@ -22,3 +22,6 @@ class PlanPurchaseService:
     
     async def update_status(self, purchase_id: UUID, new_status: str) -> Optional[PlanPurchase]:
         return self.repo.update_status(purchase_id, new_status)
+    
+    async def get_purchases_by_member_id(self, member_id: UUID) -> List[PlanPurchase]:
+        return self.repo.get_purchases_by_member_id(member_id)

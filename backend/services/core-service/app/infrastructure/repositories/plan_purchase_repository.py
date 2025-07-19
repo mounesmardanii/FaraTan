@@ -1,4 +1,4 @@
-from typing import Annotated, Optional
+from typing import Annotated, Optional, List
 from uuid import UUID
 from app.core.postgres_db.database import get_db
 from fastapi import Depends
@@ -29,3 +29,6 @@ class PlanPurchaseRepository:
             self.db.commit()
             self.db.refresh(purchase)
         return purchase
+
+    def get_purchases_by_member_id(self, member_id: UUID) -> List[PlanPurchase]:
+        return self.db.query(PlanPurchase).filter_by(member_id=member_id).all()
