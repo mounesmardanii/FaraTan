@@ -22,3 +22,16 @@ class PlanSessionRepository:
 
     def get_by_id(self, session_id: UUID) -> Optional[PlanSession]:
         return self.db.query(PlanSession).filter_by(id=session_id).first()
+    
+    def update(self, session_id: UUID, fields: dict) -> PlanSession:
+        self.db.query(PlanSession).filter(PlanSession.id == session_id).update(fields)
+        self.db.commit()
+        return self.get_by_id(session_id)
+
+    def delete(self, session: PlanSession) -> bool:
+        self.db.delete(session)
+        self.db.commit()
+        return True
+    
+    def get_sessions_by_trainer_id(self, trainer_id: UUID) -> List[PlanSession]:
+        return self.db.query(PlanSession).filter_by(trainer_id=trainer_id).all()

@@ -39,3 +39,13 @@ class PlanSessionService:
         new_capacity = session.capacity - 1
         return self.repo.update(session_id, {"capacity": new_capacity})
     
+
+    async def delete_session(self, session_id: UUID) -> bool:
+        session = await self.get_by_id(session_id)
+        if not session:
+            return False
+        return self.repo.delete(session)
+    
+
+    async def get_sessions_by_trainer_id(self, trainer_id: UUID) -> List[PlanSession]:
+        return self.repo.get_sessions_by_trainer_id(trainer_id)

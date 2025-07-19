@@ -22,7 +22,7 @@ class PlanSessionMainService:
         session = await self.service.get_by_id(session_id)
         return PlanSessionResponseSchema.from_orm(session)
     
-    async def update_session(self, session_id: UUID, update_data: PlanSessionUpdateSchema) -> PlanSessionResponseSchema:
+    async def update_session(self, session_id: UUID, update_fields: PlanSessionUpdateSchema) -> PlanSessionResponseSchema:
         session = await self.service.get_by_id(session_id)
         if not session:
             raise HTTPException(status_code=404, detail="Session not found")
@@ -30,7 +30,14 @@ class PlanSessionMainService:
         if "price" in update_fields and update_fields["price"] < 0:
             raise HTTPException(status_code=400, detail="Price cannot be negative")
 
-        update_fields = update_data.model_dump(exclude_unset=True)
+        update_fields = update_fields.model_dump(exclude_unset=True)
 
-        updated = self.service.update_session(session_id, update_fields)
+        updated = await self.service.update_session(session_id, update_fields)
         return PlanSessionResponseSchema.from_orm(updated)
+    
+    async def delete_session(self, session_id: UUID) -> bool:
+        return await self.service.delete_session(session_id)
+    
+    async def get_sessions_by_trainer_id(self, trainer_id: UUID) -> List[PlanSessionResponseSchema]:
+        sessions = await self.service.get_sessions_by_trainer_id(trainer_id)
+        return [PlanSessionResponseSchema.from_orm(session) for session in sessions]
