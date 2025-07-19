@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status
 from typing import List, Annotated
 from uuid import UUID
 from app.services.plan_session_main_service import PlanSessionMainService
-from app.domain.schemas.plan_session_schema import PlanSessionCreateSchema, PlanSessionResponseSchema
+from app.domain.schemas.plan_session_schema import PlanSessionCreateSchema, PlanSessionResponseSchema, PlanSessionUpdateSchema
 from app.services.auth_services.auth_service import get_current_admin 
 from app.domain.schemas.token_schema import TokenDataSchema
 
@@ -22,3 +22,13 @@ async def get_all_sessions(plan_id: UUID, service: Annotated[PlanSessionMainServ
 @plan_session_router.get("/get-session/{session_id}", response_model=PlanSessionResponseSchema)
 async def get_session_by_id(session_id: UUID, service: Annotated[PlanSessionMainService, Depends()]):
     return await service.get_session_by_id(session_id)
+
+
+@plan_session_router.put("/{session_id}", response_model=PlanSessionResponseSchema)
+async def update_plan_session(
+    session_id: UUID,
+    data: PlanSessionUpdateSchema,
+    service: Annotated[PlanSessionMainService, Depends()],
+):
+    updated = await service.update_session(session_id, data)
+    return updated
