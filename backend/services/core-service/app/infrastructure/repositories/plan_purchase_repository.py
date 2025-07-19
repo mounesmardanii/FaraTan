@@ -32,3 +32,6 @@ class PlanPurchaseRepository:
 
     def get_purchases_by_member_id(self, member_id: UUID) -> List[PlanPurchase]:
         return self.db.query(PlanPurchase).filter_by(member_id=member_id).all()
+    
+    def get_purchase_by_session_id(self, session_id: UUID) -> List[PlanPurchase]:
+        return self.db.query(PlanPurchase).filter_by(session_id=session_id).all()
