@@ -8,13 +8,15 @@ UpdateWeekTitleSchema,
 CreateNutritionDaySchema,
 UpdateNutritionDaySchema,
 NutritionDayResponseSchema,
+NutritionWeekPlanResponseSchema
 )
 from app.domain.schemas.token_schema import TokenSchema
 from app.services.auth_services.auth_service import AuthService
 from uuid import UUID
 from app.services.auth_services.auth_service import get_current_admin, get_current_member
 from app.services.nutrition_main_service import NutritionMainService
-from app.domain.schemas.token_schema import TokenSchema, TokenDataSchema
+from app.domain.schemas.token_schema import TokenDataSchema
+
 nutrition_router = APIRouter()
 
 
@@ -37,15 +39,13 @@ async def list_member_weeks(
 
 
 
-@nutrition_router.delete("/weeks/{week_id}", status_code=status.HTTP_200_OK)
+@nutrition_router.delete("/weeks/{week_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_week(
     week_id: UUID,
     service: Annotated[NutritionMainService, Depends()],
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
-    await service.delete_week(week_id)
-    return {"message": "Week deleted successfully"}
-
+    return await service.delete_week(week_id)
 
 @nutrition_router.put("/weeks/{week_id}/title", status_code=status.HTTP_200_OK)
 async def update_week_title(
@@ -64,7 +64,8 @@ async def update_week_title(
 )
 async def create_nutrition_day(
     data: CreateNutritionDaySchema,
-    service: Annotated[NutritionMainService, Depends()]
+    service: Annotated[NutritionMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.create_day(data)
 
@@ -77,6 +78,19 @@ async def create_nutrition_day(
 async def update_nutrition_day(
     day_id: UUID,
     data: UpdateNutritionDaySchema,
-    service: Annotated[NutritionMainService, Depends()]
+    service: Annotated[NutritionMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.update_day(day_id, data)
+
+
+@nutrition_router.get(
+    "/nutrition-plan/by-week/{week_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=NutritionWeekPlanResponseSchema
+)
+async def  get_nutrition_plan_by_week_id(
+    week_id: UUID,
+    service: Annotated[NutritionMainService, Depends()],
+):
+    return await service.get_week_plan(week_id)
