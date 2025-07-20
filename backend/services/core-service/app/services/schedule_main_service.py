@@ -22,4 +22,7 @@ class GymScheduleMainService:
             raise HTTPException(status_code=404, detail="Schedule not found")
         return GymScheduleResponseSchema.from_orm(schedule)
 
-    
+    async def get_schedules_by_trainer(self, trainer_id: UUID) -> List[GymScheduleResponseSchema]:
+        schedules = self.service.get_by_trainer(trainer_id)
+        return [GymScheduleResponseSchema.from_orm(s) for s in schedules]
+

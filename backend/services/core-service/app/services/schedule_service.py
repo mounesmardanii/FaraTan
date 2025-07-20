@@ -23,4 +23,7 @@ class GymScheduleService:
     def get_by_id(self, schedule_id: UUID) -> Optional[GymSchedule]:
         return self.repo.get_by_id(schedule_id)
 
-  
+    def get_by_trainer(self, trainer_id: UUID) -> List[GymSchedule]:
+        return self.repo.get_by_trainer(trainer_id)
+
+
