@@ -28,3 +28,7 @@ class GymScheduleRepository:
         return schedules
 
 
+    def update(self, schedule_id: UUID, update_fields: dict) -> GymSchedule:
+        self.db.query(GymSchedule).filter(GymSchedule.id == schedule_id).update(update_fields)
+        self.db.commit()
+        return self.get_by_id(schedule_id)

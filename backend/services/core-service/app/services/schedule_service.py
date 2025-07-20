@@ -10,7 +10,7 @@ class GymScheduleService:
     def __init__(self, repo: Annotated[GymScheduleRepository, Depends()]):
         self.repo = repo
 
-    def create(self, data: GymScheduleCreateSchema) -> GymSchedule:
+    async def create(self, data: GymScheduleCreateSchema) -> GymSchedule:
         schedule = GymSchedule(
           session_id=data.session_id , 
           sport_id=data.sport_id , 
@@ -20,10 +20,11 @@ class GymScheduleService:
         )
         return self.repo.create(schedule)
 
-    def get_by_id(self, schedule_id: UUID) -> Optional[GymSchedule]:
+    async def get_by_id(self, schedule_id: UUID) -> Optional[GymSchedule]:
         return self.repo.get_by_id(schedule_id)
 
-    def get_by_trainer(self, trainer_id: UUID) -> List[GymSchedule]:
+    async def get_by_trainer(self, trainer_id: UUID) -> List[GymSchedule]:
         return self.repo.get_by_trainer(trainer_id)
 
-
+    async def update(self, schedule_id: UUID, update_fields: dict) -> Optional[GymSchedule]:
+        return self.repo.update(schedule_id, update_fields)

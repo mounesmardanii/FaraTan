@@ -35,3 +35,11 @@ async def get_schedules_by_trainer(
 ):
     return await service.get_schedules_by_trainer(trainer_id)
 
+@gym_schedule_router.put("/{schedule_id}", response_model=GymScheduleResponseSchema)
+async def update_schedule(
+    schedule_id: UUID,
+    data: GymScheduleUpdateSchema,
+    service: Annotated[GymScheduleMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+):
+    return await service.update_schedule(schedule_id, data)
