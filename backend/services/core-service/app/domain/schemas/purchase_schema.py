@@ -8,6 +8,7 @@ class PlanPurchaseResponseSchema(BaseModel):
     session_id: UUID
     amount: float
     status: str
+    payment_method:str
     paid_at: datetime
 
     class Config:

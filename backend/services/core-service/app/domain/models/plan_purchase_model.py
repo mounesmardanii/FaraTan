@@ -35,6 +35,7 @@ class PlanPurchase(Base):
     amount = Column(DECIMAL(10,2), nullable=False)
     status = Column(String(20), default="pending")  
     paid_at = Column(DateTime, nullable=True)
+    payment_method = Column(String, default="online", nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     session = relationship("PlanSession", backref="purchases")
