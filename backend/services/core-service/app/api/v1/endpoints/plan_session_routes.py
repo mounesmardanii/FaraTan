@@ -53,3 +53,13 @@ async def get_sessions_by_trainer_id(
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
     return await service.get_sessions_by_trainer_id(trainer_id)
+
+
+@plan_session_router.put("/deactivate/{session_id}", status_code=200)
+async def deactivate_session(
+    session_id: UUID,
+    service: Annotated[PlanSessionMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+):
+    await service.deactivate_session(session_id)
+    return {"detail": "Session deactivated"}

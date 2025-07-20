@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, TIMESTAMP, func, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, String, Date, TIMESTAMP, func, Integer, DateTime, ForeignKey, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 from datetime import datetime
@@ -38,4 +38,5 @@ class PlanSession(Base):
     capacity = Column(Integer, nullable=False)
     session_count = Column(Integer, nullable=False)
     price = Column(Integer, nullable=False)
+    is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)

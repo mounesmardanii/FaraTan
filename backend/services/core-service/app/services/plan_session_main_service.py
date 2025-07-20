@@ -24,12 +24,14 @@ class PlanSessionMainService:
 
     async def get_session_by_id(self, session_id: UUID) -> Optional[PlanSessionResponseSchema]:
         session = await self.service.get_by_id(session_id)
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
         return PlanSessionResponseSchema.from_orm(session)
     
     async def update_session(self, session_id: UUID, update_fields: PlanSessionUpdateSchema) -> PlanSessionResponseSchema:
         session = await self.service.get_by_id(session_id)
-        if not session:
-            raise HTTPException(status_code=404, detail="Session not found")
+        if session is None or session.is_active is False:
+            raise HTTPException(status_code=404, detail="Session not found or inactive")
 
         if "price" in update_fields and update_fields["price"] < 0:
             raise HTTPException(status_code=400, detail="Price cannot be negative")
@@ -48,3 +50,13 @@ class PlanSessionMainService:
     async def get_sessions_by_trainer_id(self, trainer_id: UUID) -> List[PlanSessionResponseSchema]:
         sessions = await self.service.get_sessions_by_trainer_id(trainer_id)
         return [PlanSessionResponseSchema.from_orm(session) for session in sessions]
+
+
+    async def deactivate_session(self, session_id: UUID):
+        session = await self.service.get_by_id(session_id)
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
+        if not session.is_active:
+            raise HTTPException(status_code=400, detail="Session is already deactive")
+
+        return await self.service.update_session(session_id, {"is_active": False})
