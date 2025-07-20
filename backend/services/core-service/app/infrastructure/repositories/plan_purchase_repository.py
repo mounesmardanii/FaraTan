@@ -3,8 +3,10 @@ from uuid import UUID
 from app.core.postgres_db.database import get_db
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from app.domain.models.plan_purchase_model import PlanPurchase
+from app.domain.models.plan_purchase_model import PlanPurchase, PlanSession, Plan
 from datetime import datetime
+from sqlalchemy import func
+
 
 class PlanPurchaseRepository:
     def __init__(self, db: Annotated[Session, Depends(get_db)]):
@@ -38,3 +40,19 @@ class PlanPurchaseRepository:
     
     def get_all_purchases(self) -> List[PlanPurchase]:
         return self.db.query(PlanPurchase).all()
+    
+
+
+    def get_purchase_counts_by_plan(self) -> List[dict]:
+        results = (
+        self.db.query(
+            Plan.name.label("plan_name"),
+            func.count(PlanPurchase.id).label("purchase_count")
+        )
+        .outerjoin(PlanSession, PlanSession.plan_id == Plan.id)
+        .outerjoin(PlanPurchase, PlanPurchase.session_id == PlanSession.id)
+        .group_by(Plan.id, Plan.name)
+        .all()
+        )
+
+        return [{"plan_name": r.plan_name, "purchase_count": r.purchase_count} for r in results]

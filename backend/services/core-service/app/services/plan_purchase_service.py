@@ -31,3 +31,7 @@ class PlanPurchaseService:
     
     async def get_all_purchases(self):
         return self.repo.get_all_purchases()
+    
+    async def get_plan_purchase_counts(self):
+        return self.repo.get_purchase_counts_by_plan()
+

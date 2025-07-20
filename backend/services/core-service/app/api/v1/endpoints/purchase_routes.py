@@ -6,7 +6,7 @@ from app.services.auth_services.auth_service import get_current_member, get_curr
 from app.domain.schemas.token_schema import TokenDataSchema
 from app.domain.schemas.purchase_schema import PlanPurchaseResponseSchema
 
-purchase_router = APIRouter(prefix="/purchases", tags=["Purchases"])
+purchase_router = APIRouter()
 
 @purchase_router.get("/my", response_model=List[PlanPurchaseResponseSchema], status_code=status.HTTP_200_OK)
 async def get_my_purchases(
@@ -22,3 +22,10 @@ async def get_all_purchases(
     service: Annotated[PlanPurchaseMainService, Depends()],
 ):
     return await service.get_all_purchases()
+
+@purchase_router.get("/stats/plan-purchases")
+async def get_plan_purchase_statistics(
+    service: Annotated[PlanPurchaseMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+):
+    return await service.get_purchase_stats()
