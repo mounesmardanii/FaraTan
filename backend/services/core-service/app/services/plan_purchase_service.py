@@ -25,8 +25,9 @@ class PlanPurchaseService:
     
     async def get_purchases_by_member_id(self, member_id: UUID) -> List[PlanPurchase]:
         return self.repo.get_purchases_by_member_id(member_id)
-    
 
     async def get_purchase_by_session_id(self, session_id: UUID):
         return self.repo.get_purchase_by_session_id(session_id)
     
+    async def get_all_purchases(self):
+        return self.repo.get_all_purchases()
