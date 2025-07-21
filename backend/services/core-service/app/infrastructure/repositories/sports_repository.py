@@ -13,3 +13,13 @@ class SportsRepository:
 
     def get_all_sports(self) -> List[GymSports]:
         return self.db.query(GymSports).all()
+    
+
+  #   def create_sport(self, sport: GymSports) -> GymSports:
+  #     self.db.add(sport)
+  #     self.db.commit()
+  #     self.db.refresh(sport)
+  #     return sport
+
+  # def get_sport_by_id(self, sport_id: UUID) -> Optional[GymSports]:
+  #     return self.db.query(GymSports).filter_by(id=sport_id).first()
