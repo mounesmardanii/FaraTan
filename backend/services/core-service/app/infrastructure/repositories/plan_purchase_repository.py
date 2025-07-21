@@ -56,3 +56,22 @@ class PlanPurchaseRepository:
         )
 
         return [{"plan_name": r.plan_name, "purchase_count": r.purchase_count} for r in results]
+    
+
+    def get_purchases_by_member(self, member_id: UUID):
+        results = (
+            self.db.query(Plan.id)
+            .select_from(PlanPurchase)
+            .join(PlanSession, PlanSession.id == PlanPurchase.session_id)
+            .join(Plan, Plan.id == PlanSession.plan_id)
+            .filter(
+                PlanPurchase.member_id == member_id,
+                PlanPurchase.status == "Paid",
+                PlanSession.is_active == True
+            )
+            .distinct()
+            .all()
+        )
+        return [r[0] for r in results]
+
+
