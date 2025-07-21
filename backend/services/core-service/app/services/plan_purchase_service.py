@@ -35,3 +35,5 @@ class PlanPurchaseService:
     async def get_plan_purchase_counts(self):
         return self.repo.get_purchase_counts_by_plan()
 
+    async def get_purchases_by_member(self, member_id: UUID) -> List[PlanPurchase]:
+        return self.repo.get_purchases_by_member(member_id)

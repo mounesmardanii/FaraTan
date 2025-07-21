@@ -1,12 +1,10 @@
 from typing import Annotated, Optional, List
-from loguru import logger
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.core.postgres_db.database import get_db
-from app.domain.schemas.nutrition_schema import MealInputSchema, CreateNutritionDaySchema,UpdateNutritionDaySchema
+from app.domain.schemas.nutrition_schema import UpdateNutritionDaySchema
 from app.domain.models.nutrition_model import NutritionWeek, NutritionDay
 from uuid import UUID
-from sqlalchemy.orm import selectinload
 from fastapi import HTTPException
 
 
@@ -43,8 +41,12 @@ class NutritionRepository:
     def get_day_by_id(self, day_id: UUID) -> Optional[NutritionDay]:
         return self.db.query(NutritionDay).filter(NutritionDay.id == day_id).first()
 
-    def create_day(self, data: CreateNutritionDaySchema) -> NutritionDay:
-        day = NutritionDay(**data.model_dump())
+    def update_week_title(self, week_id: UUID, new_title: str):
+        self.db.query(NutritionWeek).filter_by(id=week_id).update({"title": new_title})
+        self.db.commit()
+
+
+    def create_day(self, day: NutritionDay) -> NutritionDay:
         self.db.add(day)
         self.db.commit()
         self.db.refresh(day)
@@ -53,12 +55,18 @@ class NutritionRepository:
     def get_day(self, day_id: UUID) -> Optional[NutritionDay]:
         return self.db.query(NutritionDay).filter_by(id=day_id).first()
 
-    def update_day(self, day_id: UUID, data: UpdateNutritionDaySchema) -> Optional[NutritionDay]:
+    def update_day(self, day_id: UUID, data: UpdateNutritionDaySchema) -> NutritionDay:
         day = self.get_day(day_id)
         if not day:
-            return None
-        for key, value in data.model_dump(exclude_unset=True).items():
-            setattr(day, key, value)
+            raise HTTPException(status_code=404, detail="Day not found")
+
+        for field, value in data.dict(exclude_unset=True).items():
+            setattr(day, field, value)
+
         self.db.commit()
         self.db.refresh(day)
-        return day
+        return day    
+
+
+    def get_days_by_week_id(self, week_id: UUID) -> List[NutritionDay]:
+        return self.db.query(NutritionDay).filter_by(week_id=week_id).order_by(NutritionDay.created_at).all()

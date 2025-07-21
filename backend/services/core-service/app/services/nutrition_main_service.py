@@ -5,6 +5,8 @@ CreateNutritionDaySchema,
 UpdateNutritionDaySchema,
 NutritionDayResponseSchema,
 UpdateWeekTitleSchema,
+NutritionWeekPlanResponseSchema,
+NutritionDayPlanResponseSchema
 )
 from typing import Annotated, List
 from loguru import logger
@@ -34,9 +36,16 @@ class NutritionMainService:
         return NutritionDayResponseSchema.from_orm(day)
 
     async def get_day(self, day_id: UUID) -> NutritionDayResponseSchema:
-        day = await self.service.get_day(day_id)
+        day = await self.service.get_day_by_id(day_id)
         return NutritionDayResponseSchema.from_orm(day)
 
     async def update_day(self, day_id: UUID, data: UpdateNutritionDaySchema) -> NutritionDayResponseSchema:
         day = await self.service.update_day(day_id, data)
         return NutritionDayResponseSchema.from_orm(day)
+
+    async def get_week_plan(self, week_id: UUID) -> NutritionWeekPlanResponseSchema:
+        days = await self.service.get_week_plan(week_id)
+        return NutritionWeekPlanResponseSchema(
+            week_id=week_id,
+            days=[NutritionDayPlanResponseSchema.from_orm(day) for day in days]
+        )

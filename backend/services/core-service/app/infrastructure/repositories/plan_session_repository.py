@@ -17,11 +17,19 @@ class PlanSessionRepository:
       return session
 
 
-    def get_sessions_by_plan_id(self, plan_id: UUID) -> List[PlanSession]:
-        return self.db.query(PlanSession).filter(PlanSession.plan_id == plan_id).all()
+    def get_sessions_by_plan_id(self, plan_id: UUID, active_only: bool = False) -> List[PlanSession]:
+        query = self.db.query(PlanSession).filter(PlanSession.plan_id == plan_id)
+        if active_only:
+            query = query.filter(PlanSession.is_active == True)
+        return query.all()
 
-    def get_by_id(self, session_id: UUID) -> Optional[PlanSession]:
-        return self.db.query(PlanSession).filter_by(id=session_id).first()
+
+    def get_by_id(self, session_id: UUID, active_only: bool = False) -> Optional[PlanSession]:
+        query = self.db.query(PlanSession).filter_by(id=session_id)
+        if active_only:
+            query = query.filter(PlanSession.is_active == True)
+        return query.first()
+
     
     def update(self, session_id: UUID, fields: dict) -> PlanSession:
         self.db.query(PlanSession).filter(PlanSession.id == session_id).update(fields)
@@ -33,5 +41,9 @@ class PlanSessionRepository:
         self.db.commit()
         return True
     
-    def get_sessions_by_trainer_id(self, trainer_id: UUID) -> List[PlanSession]:
-        return self.db.query(PlanSession).filter_by(trainer_id=trainer_id).all()
+    def get_sessions_by_trainer_id(self, trainer_id: UUID, active_only: bool = True) -> List[PlanSession]:
+        query = self.db.query(PlanSession).filter(PlanSession.trainer_id == trainer_id)
+        if active_only:
+            query = query.filter(PlanSession.is_active == True)
+        return query.all()
+

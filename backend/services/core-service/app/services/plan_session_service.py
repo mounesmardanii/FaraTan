@@ -44,6 +44,7 @@ class PlanSessionService:
         session = await self.get_by_id(session_id)
         if not session:
             return False
+        
         return self.repo.delete(session)
     
 

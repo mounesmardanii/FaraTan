@@ -13,6 +13,14 @@ class PlanSessionCreateSchema(BaseModel):
 class PlanSessionResponseSchema(PlanSessionCreateSchema):
     id: UUID
     created_at: datetime
+    is_active:bool
 
     class Config:
         from_attributes = True
+
+class PlanSessionUpdateSchema(BaseModel):
+    plan_id: Optional[UUID] = None
+    trainer_id: Optional[UUID]= None
+    capacity: Optional[int]= None
+    session_count: Optional[int]= None
+    price: Optional[int]= None

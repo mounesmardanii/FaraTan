@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, status
 from typing import List, Annotated
 from uuid import UUID
 from app.services.purchase_main_service import PlanPurchaseMainService
+from app.domain.schemas.plan_schema import PlanResponseSchema
 from app.services.auth_services.auth_service import get_current_member, get_current_admin
 from app.domain.schemas.token_schema import TokenDataSchema
 from app.domain.schemas.purchase_schema import PlanPurchaseResponseSchema
@@ -29,3 +30,11 @@ async def get_plan_purchase_statistics(
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
     return await service.get_purchase_stats()
+
+
+@purchase_router.get("/my-purchased-plans")
+async def get_my_purchased_plans(
+    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    main_service: Annotated[PlanPurchaseMainService, Depends()]
+):
+    return await main_service.get_my_purchased_plans(current_member.id)

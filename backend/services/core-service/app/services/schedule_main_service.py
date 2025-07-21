@@ -3,9 +3,6 @@ from typing import List, Optional, Annotated
 from uuid import UUID
 from app.services.schedule_service import GymScheduleService
 from app.domain.schemas.schedule_schema import GymScheduleCreateSchema, GymScheduleResponseSchema, GymScheduleUpdateSchema
-from app.services.schedule_service import GymScheduleService
-
-
 
 
 class GymScheduleMainService:

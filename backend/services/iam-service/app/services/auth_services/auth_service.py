@@ -82,7 +82,6 @@ class AuthService(BaseService):
                 headers={"WWW-Authenticate": "Bearer"},
             )
         access_token = self.create_access_token(data={"sub": str(existing_admin.admin_id), "role": "admin"})
-        print("Token:", access_token)
         logger.info(f"admin with phone_number {admin.phone_number} authenticated successfully")
         return TokenSchema(access_token=access_token, token_type="bearer")
 
