@@ -25,3 +25,13 @@ async def get_my_reservations(
     service: Annotated[ReservationMainService, Depends()],
 ):
     return await service.get_my_reservations(current_member.id)
+
+
+@reservation_router.post("/cancel/{reservation_id}")
+async def cancel_reservation(
+    reservation_id: UUID,
+    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    service: Annotated[ReservationMainService, Depends()],
+):
+    await service.cancel_reservation(reservation_id, current_member.id)
+    return {"detail": "Reserve canceled successfully"}

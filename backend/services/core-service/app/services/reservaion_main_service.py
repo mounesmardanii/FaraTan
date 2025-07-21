@@ -5,14 +5,14 @@ from app.services.reservation_service import ReservationService
 from app.services.plan_session_service import PlanSessionService
 from app.services.plan_purchase_service import PlanPurchaseService
 from typing import List, Annotated
-from datetime import date 
+from datetime import datetime 
 from app.services.schedule_service import GymScheduleService
 
 class ReservationMainService:
     def __init__(
         self,
         reservation_service: Annotated[ReservationService, Depends()],
-        session_service:  Annotated[PlanSessionService, Depends()],
+        session_service: Annotated[PlanSessionService, Depends()],
         purchase_service: Annotated[PlanPurchaseService, Depends()],
         schedule_service: Annotated[GymScheduleService, Depends()],
 
@@ -61,3 +61,17 @@ class ReservationMainService:
     async def get_my_reservations(self, member_id: UUID) -> List[ReservationResponseSchema]:
         reservations = await self.reservation_service.get_by_member_id(member_id)
         return [ReservationResponseSchema.from_orm(r) for r in reservations]
+    
+    async def cancel_reservation(self, reservation_id: UUID, member_id: UUID) -> None:
+        reservation = await self.reservation_service.get_by_id_and_member(reservation_id, member_id)
+        if not reservation:
+            raise HTTPException(status_code=404, detail="Reservation not found.")
+
+        schedule = await self.schedule_service.get_by_id(reservation.session_schedule_id)
+        if not schedule:
+            raise HTTPException(status_code=404, detail="Session schedule not found.")
+
+        if schedule.weekday < datetime.utcnow().date():
+            raise HTTPException(status_code=400, detail="This session has already passed and cannot be cancelled.")
+
+        await self.reservation_service.cancel(reservation)

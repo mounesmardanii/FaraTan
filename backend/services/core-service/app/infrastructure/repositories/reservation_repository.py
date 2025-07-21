@@ -48,3 +48,15 @@ class ReservationRepository:
         session = self.db.query(PlanSession).filter_by(id=session_id).first()
 
         return current_count < session.session_count
+
+
+    def get_by_id_and_member(self, reservation_id: UUID, member_id: UUID) -> Reservation | None:
+        return (
+            self.db.query(Reservation)
+            .filter_by(id=reservation_id, member_id=member_id)
+            .first()
+        )
+
+    def cancel_reservation(self, reservation: Reservation) -> None:
+        reservation.status = "Canceled"
+        self.db.commit()

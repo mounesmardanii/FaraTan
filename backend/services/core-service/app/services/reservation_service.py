@@ -27,3 +27,11 @@ class ReservationService:
 
     async def can_reserve_more_sessions(self, member_id: UUID, session_schedule_id: UUID) -> bool:
         return self.repo.can_reserve_more_sessions(member_id, session_schedule_id)
+
+
+    async def get_by_id_and_member(self, reservation_id: UUID, member_id: UUID) -> Reservation | None:
+        return self.repo.get_by_id_and_member(reservation_id, member_id)
+
+
+    async def cancel(self, reservation: Reservation) -> None:
+        self.repo.cancel_reservation(reservation)
