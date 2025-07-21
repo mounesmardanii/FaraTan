@@ -30,4 +30,4 @@ class PlanPurchaseMainService:
         return await self.service.get_plan_purchase_counts()
     
     async def get_my_purchased_plans(self, member_id: UUID):
-        return await self.service.get_purchases_by_member(member_id)
+        return await self.service.get_purchased_plans_by_member(member_id)
