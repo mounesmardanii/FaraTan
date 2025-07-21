@@ -12,11 +12,11 @@ reservation_router = APIRouter()
 
 @reservation_router.post("/create-reservation", response_model=ReservationResponseSchema)
 async def create_reservation(
-    session_id:UUID,
+    session_schedule_id:UUID,
     current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
     service: Annotated[ReservationMainService, Depends()],
 ):
-    return await service.reserve_session(current_member.id, session_id)
+    return await service.reserve_session(current_member.id, session_schedule_id)
 
 
 @reservation_router.get("/my-reservations", response_model=List[ReservationResponseSchema])

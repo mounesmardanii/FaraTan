@@ -7,6 +7,7 @@ class ReservationResponseSchema(BaseModel):
     id: UUID
     session_id: UUID
     member_id: UUID
+    session_schedule_id:UUID
     reserved_at: datetime
     status: str
 

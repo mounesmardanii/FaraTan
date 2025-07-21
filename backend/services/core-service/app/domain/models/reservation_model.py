@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, TIMESTAMP, func, Integer, DateTime, ForeignKey, Boolean, Text
+from sqlalchemy import Column, String, Date, TIMESTAMP, func, Integer, DateTime, ForeignKey, Boolean, Text, Time
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 from datetime import datetime
@@ -55,6 +55,16 @@ class Member(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
 
+class GymSchedule(Base):
+    __tablename__ = "session_schedules"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False)
+    session_id = Column(UUID(as_uuid=True), nullable=False)
+    sport_id = Column(UUID(as_uuid=True), ForeignKey("gym_sports.id", ondelete="CASCADE"), nullable=False)
+    weekday = Column(Date, nullable=False)
+    start_time = Column(Time, nullable=False)
+    end_time = Column(Time, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 class Reservation(Base):
     __tablename__ = "reservations"
@@ -62,5 +72,6 @@ class Reservation(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     member_id = Column(UUID(as_uuid=True), ForeignKey("members.id", ondelete="CASCADE"), nullable=False)
     session_id = Column(UUID(as_uuid=True), ForeignKey("plan_sessions.id", ondelete="CASCADE"), nullable=False)
+    session_schedule_id = Column(UUID(as_uuid=True), ForeignKey("session_schedules.id", ondelete="CASCADE"), nullable=False)  # 🔥 اضافه‌شده
     reserved_at = Column(DateTime, default=datetime.utcnow)
     status = Column(String(50), default="Reserved")
