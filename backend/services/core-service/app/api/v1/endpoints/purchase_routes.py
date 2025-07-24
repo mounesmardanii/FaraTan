@@ -4,7 +4,7 @@ from uuid import UUID
 from app.services.purchase_main_service import PlanPurchaseMainService
 from app.services.auth_services.auth_service import get_current_member, get_current_admin
 from app.domain.schemas.token_schema import TokenDataSchema
-from app.domain.schemas.purchase_schema import PlanPurchaseResponseSchema, ManualPurchaseCreateSchema
+from app.domain.schemas.purchase_schema import PlanPurchaseResponseSchema, ManualPurchaseCreateSchema,ManualPurchaseUpdateSchema
 
 purchase_router = APIRouter()
 
@@ -48,3 +48,11 @@ async def create_manual_purchase(
     return await service.create_manual_purchase(data)
 
 
+@purchase_router.put("/manual/{purchase_id}")
+async def update_manual_purchase(
+    purchase_id: UUID,
+    data: ManualPurchaseUpdateSchema,
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+    service: Annotated[PlanPurchaseMainService, Depends()],
+):
+    return await service.update_manual_purchase(purchase_id, data)

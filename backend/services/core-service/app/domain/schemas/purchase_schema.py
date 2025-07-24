@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from uuid import UUID
 from datetime import datetime
+from typing import Optional
 
 class PlanPurchaseResponseSchema(BaseModel):
     id: UUID
@@ -21,5 +22,7 @@ class ManualPurchaseCreateSchema(BaseModel):
     payment_method: str
 
 
-
-    
+class ManualPurchaseUpdateSchema(BaseModel):
+    session_id: Optional[UUID] = None
+    payment_method: Optional[str] =None
+    member_id: Optional[UUID] = None 

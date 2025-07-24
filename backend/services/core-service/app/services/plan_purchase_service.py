@@ -48,3 +48,7 @@ class PlanPurchaseService:
             payment_method=data.payment_method,
             paid_at=datetime.utcnow()
         )
+    
+    
+    async def mark_as_canceled(self, purchase: PlanPurchase):
+        return self.repo.mark_as_canceled(purchase)
