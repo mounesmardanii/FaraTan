@@ -4,6 +4,8 @@ from app.domain.models.plan_model import Plan
 from typing import List, Optional, Annotated
 from uuid import UUID
 from fastapi import Depends
+from app.domain.schemas.purchase_schema import ManualPurchaseCreateSchema
+from datetime import datetime
 
 class PlanPurchaseService:
     def __init__(self, repo: Annotated[PlanPurchaseRepository, Depends()]):
@@ -37,3 +39,12 @@ class PlanPurchaseService:
 
     async def get_purchased_plans_by_member(self, member_id: UUID) -> List[PlanPurchase]:
         return self.repo.get_purchased_plans_by_member(member_id)
+    
+    async def create_manual_purchase(self, data: ManualPurchaseCreateSchema):
+        return self.repo.create_manual_purchase(
+            member_id=data.member_id,
+            session_id=data.session_id,
+            amount=data.amount,
+            payment_method=data.payment_method,
+            paid_at=datetime.utcnow()
+        )

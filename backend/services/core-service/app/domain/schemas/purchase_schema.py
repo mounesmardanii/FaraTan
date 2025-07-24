@@ -13,3 +13,13 @@ class PlanPurchaseResponseSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ManualPurchaseCreateSchema(BaseModel):
+    member_id: UUID
+    session_id: UUID
+    amount: float
+    payment_method: str
+
+
+
+    

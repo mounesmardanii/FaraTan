@@ -2,8 +2,7 @@ from uuid import UUID
 from typing import List, Annotated
 from fastapi import Depends
 from app.services.plan_purchase_service import PlanPurchaseService
-from app.domain.schemas.purchase_schema import PlanPurchaseResponseSchema
-from app.domain.schemas.plan_schema import PlanResponseSchema
+from app.domain.schemas.purchase_schema import PlanPurchaseResponseSchema, ManualPurchaseCreateSchema
 from app.services.plan_service import PlanService
 from app.services.plan_session_service import PlanSessionService
 
@@ -31,3 +30,7 @@ class PlanPurchaseMainService:
     
     async def get_my_purchased_plans(self, member_id: UUID):
         return await self.service.get_purchased_plans_by_member(member_id)
+
+
+    async def create_manual_purchase(self, data: ManualPurchaseCreateSchema):
+        return await self.service.create_manual_purchase(data)
