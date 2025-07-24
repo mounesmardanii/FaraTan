@@ -56,3 +56,14 @@ async def update_manual_purchase(
     service: Annotated[PlanPurchaseMainService, Depends()],
 ):
     return await service.update_manual_purchase(purchase_id, data)
+
+
+@purchase_router.delete("/manual/{purchase_id}")
+async def cancel_manual_purchase(
+    purchase_id: UUID,
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+    service: Annotated[PlanPurchaseMainService, Depends()],
+):
+    await service.cancel_manual_purchase(purchase_id)
+
+    return {"detail": "Payment canceled successfully"}

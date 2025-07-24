@@ -76,3 +76,12 @@ class PlanPurchaseMainService:
         )
 
         return await self.service.create_manual_purchase(schema)
+    
+    async def cancel_manual_purchase(self, purchase_id: UUID):
+        purchase = await self.service.get_purchase_by_id(purchase_id)
+        if not purchase or purchase.payment_method == "online":
+            raise HTTPException(status_code=403, detail="Only manual payments can be canceled.")
+        if purchase.status == 'Canceled':
+            raise HTTPException(status_code=403, detail="Session already canceled.")
+
+        return self.service.mark_as_canceled(purchase)
