@@ -24,3 +24,6 @@ class StatMainService:
 
     async def get_revenue_this_month(self):
         return await self.purchase_service.get_revenue_this_month()    
+    
+    async def get_active_members_count(self):
+        return await self.purchase_service.get_active_members_count()    

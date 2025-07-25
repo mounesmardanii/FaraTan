@@ -57,4 +57,7 @@ class PlanPurchaseService:
     async def get_revenue_this_month(self):
         start_of_month, end_of_month = get_start_and_end_of_month()
         
-        return self.repo.get_revenue_this_month(start_of_month, end_of_month)        
+        return self.repo.get_revenue_this_month(start_of_month, end_of_month)
+            
+    async def get_active_members_count(self):
+        return self.repo.get_active_members_count()

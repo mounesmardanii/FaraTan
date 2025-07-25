@@ -105,3 +105,9 @@ class PlanPurchaseRepository:
         ).scalar() 
     
         return total_revenue if total_revenue is not None else 0.0
+   
+    
+    def get_active_members_count(self):
+        active_members_count = self.db.query(func.count(func.distinct(PlanPurchase.member_id))).scalar()
+
+        return active_members_count if active_members_count is not None else 0
