@@ -42,19 +42,15 @@ const ClassTableWithCoach = ({
       ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
       : "bg-gray-300 text-[#888] cursor-not-allowed";
 
-  // بررسی اینکه آیا ورودی جستجو عدد است یا رشته
   const isNumeric = (str) => !isNaN(str) && str.trim() !== "";
 
-  // فیلتر کردن کلاس‌ها بر اساس جستجو
   const filteredClasses = classList.filter((item) =>
     item.sessionOptions?.some((option) => {
-      // اگر ورودی عدد است، بر اساس تعداد جلسات فیلتر کنیم
       if (isNumeric(searchTerm)) {
         const searchNumber = Number(searchTerm);
-        return option.sessions === searchNumber; // فیلتر بر اساس تعداد جلسات
+        return option.sessions === searchNumber; 
       } else {
-        // اگر ورودی رشته است، بر اساس نام مربی فیلتر کنیم
-        return item.coach?.toLowerCase().includes(searchTerm.toLowerCase()); // فیلتر بر اساس نام مربی
+        return item.coach?.toLowerCase().includes(searchTerm.toLowerCase()); 
       }
     })
   );
@@ -72,7 +68,6 @@ const ClassTableWithCoach = ({
             دوره‌های {category} - {classType}
           </h3>
 
-          {/* سرچ باکس */}
           <div className="relative w-full sm:w-96">
             <input
               type="text"
@@ -85,7 +80,6 @@ const ClassTableWithCoach = ({
 
         </div>
 
-        {/* جدول دسکتاپ */}
         <div className="hidden sm:block overflow-hidden">
           <table className="w-full border-collapse">
             <thead className="text-[#FF6600] text-sm md:text-base">
@@ -132,7 +126,6 @@ const ClassTableWithCoach = ({
           </table>
         </div>
 
-        {/* کارت‌های موبایل */}
         <div className="sm:hidden flex flex-col gap-4 mt-4">
           {filteredClasses.map((item, index) =>
             item.sessionOptions?.map((option, idx) => (
@@ -170,7 +163,6 @@ const ClassTableWithCoach = ({
         </div>
       </motion.div>
 
-      {/* مودال پیش‌نمایش خرید */}
       <PurchasePreviewModal
         isOpen={previewOpen}
         onClose={() => setPreviewOpen(false)}

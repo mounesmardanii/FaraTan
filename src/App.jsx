@@ -46,7 +46,6 @@ function LayoutWrapper() {
     document.documentElement.scrollTop = 0;
   }, [location.pathname]);
 
-  // مسیرهایی که نباید navbar داشته باشند
   const noNavbarRoutes = [
     "/login",
     "/signup",
@@ -59,7 +58,6 @@ function LayoutWrapper() {
     "/payment",
   ];
 
-  // مسیرهایی که نباید footer داشته باشند
   const noFooterRoutes = [
     "/login",
     "/signup",
