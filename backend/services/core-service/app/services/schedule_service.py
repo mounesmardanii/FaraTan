@@ -52,3 +52,13 @@ class GymScheduleService:
             })
         
         return weekly_schedule
+    
+    async def reduce_capacity(self, schedule_id: UUID) -> GymSchedule:
+        schedule = self.repo.get_by_id(schedule_id)
+        if not schedule:
+            raise HTTPException(status_code=404, detail="schedule not found")
+        if schedule.capacity < 1:
+            raise HTTPException(status_code=400, detail="Capacity is already zero")
+
+        new_capacity = schedule.capacity - 1
+        return self.repo.update(schedule_id, {"capacity": new_capacity})

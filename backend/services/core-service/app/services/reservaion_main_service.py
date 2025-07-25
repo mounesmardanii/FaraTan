@@ -29,7 +29,7 @@ class ReservationMainService:
         if not session or not session.is_active:
             raise HTTPException(status_code=404, detail="Session not found or inactive")
 
-        if session.capacity <= 0:
+        if session.capacity <= 0 or schedule.capacity <= 0:
             raise HTTPException(status_code=403, detail="No capacity")
 
         purchased_plans = await self.purchase_service.get_purchased_plans_by_member(member_id)
@@ -45,16 +45,14 @@ class ReservationMainService:
             raise HTTPException(status_code=403, detail="Unauthorized to reserve this session")
 
         target_date = schedule.weekday
-        print(target_date) 
         if await self.reservation_service.already_reserved(member_id, session_schedule_id):
             raise HTTPException(status_code=400, detail="Already reserved")
         can = await self.reservation_service.can_reserve_more_sessions(member_id, session.id)
         if not can:
             raise HTTPException(status_code=400, detail="You reached to the max session_count.")
 
-        await self.session_service.reduce_capacity(session.id)
-
         created = await self.reservation_service.create(member_id, session.id, session_schedule_id)
+        await self.schedule_service.reduce_capacity(schedule.id)
         return ReservationResponseSchema.from_orm(created)
 
 
