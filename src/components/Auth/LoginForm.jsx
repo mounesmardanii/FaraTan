@@ -153,21 +153,24 @@ function LoginForm() {
 
             {/* قد */}
             <div className="flex items-center justify-between gap-4">
-              <label htmlFor="height" className="w-1/3 text-right text-white font-semibold">قد</label>
+              <label htmlFor="height" className="w-1/3 text-right text-white font-semibold">قد (متر)</label>
               <input
                 id="height"
                 type="number"
                 name="height"
-                placeholder="سانتی‌متر"
+                placeholder="به متر وارد کنید"
                 value={formik.values.height}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                step="0.01"  // فقط مقادیر اعشاری (متر) پذیرفته می‌شود
+                min="0"  // جلوگیری از وارد کردن اعداد منفی
                 className="w-2/3 rounded p-2 text-black text-right bg-gray-200"
               />
             </div>
             {formik.touched.height && formik.errors.height && (
               <div className="text-red-300 text-xs text-right">{formik.errors.height}</div>
             )}
+
 
             {/* شرایط پزشکی */}
             <div className="flex items-center justify-between gap-4">

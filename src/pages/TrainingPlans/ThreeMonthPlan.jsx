@@ -18,10 +18,10 @@ const ThreeMonthPlan = () => {
             coach: "یگانه عالمی",
             capacity: 3,
             sessionOptions: [
-              { sessions: 8, price: "۱,۳۰۰,۰۰۰ تومان" },
-              { sessions: 12, price: "۱,۷۰۰,۰۰۰ تومان" },
-              { sessions: 16, price: "۲,۰۵۰,۰۰۰ تومان" },
-              { sessions: 20, price: "۲,۳۰۰,۰۰۰ تومان" },
+              { sessions: 8, price: "۱,۳۰۰,۰۰۰ ریال" },
+              { sessions: 12, price: "۱,۷۰۰,۰۰۰ ریال" },
+              { sessions: 16, price: "۲,۰۵۰,۰۰۰ ریال" },
+              { sessions: 20, price: "۲,۳۰۰,۰۰۰ ریال" },
             ],
           },
           {

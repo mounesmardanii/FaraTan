@@ -19,7 +19,7 @@ const rowVariants = {
 };
 
 const MyPurchases = () => {
-  const { purchases, clearPurchases } = usePurchases();
+  const { purchases } = usePurchases();
   const navigate = useNavigate();
 
   return (
@@ -30,18 +30,7 @@ const MyPurchases = () => {
       className="flex flex-col items-center px-4 sm:px-6 py-6 max-w-[1000px] mx-auto overflow-hidden"
     >
       <div className="w-full flex justify-between items-center mb-4 overflow-hidden">
-        {purchases.length > 0 ? (
-          <motion.button
-            whileHover={{ scale: 1 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={clearPurchases}
-            className="bg-red-100 text-red-700 border border-red-300 rounded-md px-3 py-1 text-sm font-semibold hover:bg-red-200 hover:shadow-sm transition cursor-pointer"
-          >
-            پاک‌سازی لیست خریدها
-          </motion.button>
-        ) : (
-          <div />
-        )}
+        <div /> {/* دکمه پاکسازی حذف شده است */}
         <motion.img
           whileHover={{ scale: 1.15 }}
           whileTap={{ scale: 0.9 }}
@@ -86,7 +75,6 @@ const MyPurchases = () => {
                   <th className="p-2 sm:p-3 md:p-4">تعداد جلسات</th>
                   <th className="p-2 sm:p-3 md:p-4">نوع دوره</th>
                   <th className="p-2 sm:p-3 md:p-4">مربی</th>
-                  <th className="p-2 sm:p-3 md:p-4">نام خریدار</th>
                 </tr>
               </thead>
               <tbody>
@@ -114,9 +102,6 @@ const MyPurchases = () => {
                     <td className="p-2 sm:p-3 md:p-4 text-[#256250]">
                       {item.coach || "---"}
                     </td>
-                    <td className="p-2 sm:p-3 md:p-4 text-[#256250] font-medium">
-                      {item.buyerName || "---"}
-                    </td>
                   </motion.tr>
                 ))}
               </tbody>
@@ -129,3 +114,4 @@ const MyPurchases = () => {
 };
 
 export default MyPurchases;
+      

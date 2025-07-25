@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { assets } from "../../assets/assets";
-import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useNavigate, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { useAuth } from "../../context/AuthContext";
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { assets } from '../../assets/assets';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,30 +16,30 @@ function Login() {
 
   const formik = useFormik({
     initialValues: {
-      phone: "",
-      password: "",
+      phone: '',
+      password: '',
       remember: false,
     },
     validationSchema: Yup.object({
-      phone: Yup.string().required("شماره تلفن الزامی است"),
-      password: Yup.string().required("رمز عبور الزامی است"),
+      phone: Yup.string().required('شماره تلفن الزامی است'),
+      password: Yup.string().required('رمز عبور الزامی است'),
     }),
     onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
         setSubmitting(true);
 
         const isMaryamAdmin =
-          values.phone === "09116868921" && values.password === "mounes0713";
+          values.phone === '09116868921' && values.password === 'mounes0713';
 
         if (isMaryamAdmin) {
           login({
-            name: "مریم",
-            email: "maryam@example.com",
+            name: 'مریم',
+            email: 'maryam@example.com',
             phone: values.phone,
-            role: "admin",
+            role: 'admin',
           });
         } else {
-          const users = JSON.parse(localStorage.getItem("usersList")) || [];
+          const users = JSON.parse(localStorage.getItem('usersList')) || [];
 
           const matchedUser = users.find(
             (u) => u.phone === values.phone && u.password === values.password
@@ -49,17 +49,17 @@ function Login() {
             login({
               name: matchedUser.name,
               phone: matchedUser.phone,
-              role: "user",
+              role: 'user',
             });
           } else {
-            setErrors({ submit: "شماره یا رمز عبور اشتباه است" });
+            setErrors({ submit: 'شماره یا رمز عبور اشتباه است' });
             return;
           }
         }
 
-        navigate("/");
+        navigate('/');
       } catch (error) {
-        setErrors({ submit: "خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید" });
+        setErrors({ submit: 'خطایی در ورود رخ داد. لطفاً دوباره تلاش کنید' });
       } finally {
         setSubmitting(false);
       }
@@ -77,18 +77,18 @@ function Login() {
       <motion.img
         src={assets.back}
         alt="بازگشت"
-        onClick={() => navigate("/")}
+        onClick={() => navigate('/')}
         whileHover={{ scale: 1.15 }}
-        transition={{ type: "spring", stiffness: 300 }}
+        transition={{ type: 'spring', stiffness: 300 }}
         className="absolute top-4 right-4 w-8 h-8 cursor-pointer z-50"
-        style={{ filter: "drop-shadow(0 0 2px rgba(0,0,0,0.3))" }}
+        style={{ filter: 'drop-shadow(0 0 2px rgba(0,0,0,0.3))' }}
       />
 
       <div className="flex flex-col md:flex-row w-full max-w-6xl z-10">
         <motion.div
           initial={{ opacity: 0, x: -100 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
           className="md:w-1/2 flex items-center justify-center p-4 md:p-10 bg-transparent"
         >
           <img
@@ -101,7 +101,7 @@ function Login() {
         <motion.div
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
           className="md:w-1/2 bg-[#055B5C] text-white px-4 md:px-10 py-6 md:py-12 relative rounded-3xl shadow-2xl mx-0 md:mx-4 md:mt-13 flex flex-col justify-center"
         >
           <div className="text-center mb-6 md:mb-8">
@@ -137,7 +137,7 @@ function Login() {
             <div className="flex flex-col gap-1">
               <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   placeholder="رمز عبور خود را وارد کنید"
                   className="w-full py-2 px-3 rounded bg-[#d9d9d9] border border-gray-300 text-black text-right pr-10"
@@ -182,9 +182,9 @@ function Login() {
               disabled={formik.isSubmitting}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 200 }}
+              transition={{ type: 'spring', stiffness: 200 }}
               className={`bg-[#FF6600] hover:brightness-90 transition-all py-2 px-3 rounded-xl text-white font-bold text-sm md:text-lg mt-4 ${
-                formik.isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                formik.isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
               }`}
             >
               ورود

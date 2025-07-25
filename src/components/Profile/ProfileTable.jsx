@@ -45,6 +45,15 @@ const ProfileTable = () => {
 
   const chartRef = useRef(null);
 
+  // محاسبه BMI
+  const calculateBMI = (weight, height) => {
+    if (height && weight) {
+      const heightInMeters = height / 100; // تبدیل قد از سانتی‌متر به متر
+      return (weight / (heightInMeters * heightInMeters)).toFixed(2);
+    }
+    return null;
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -170,6 +179,7 @@ const ProfileTable = () => {
     { key: "arm", label: "دور بازو" },
     { key: "chest", label: "دور سینه" },
     { key: "hip", label: "دور باسن" },
+    { key: "bmi", label: "BMI" }, // افزودن فیلد BMI به جدول
   ];
 
   return (
@@ -245,7 +255,11 @@ const ProfileTable = () => {
                 className="flex flex-col items-center text-center bg-white/10 p-2 rounded"
               >
                 <span>{label}</span>
-                {editMode ? (
+                {key === "bmi" ? ( // بررسی اینکه آیا فیلد BMI است
+                  <span className="mt-1 text-[15px]">
+                    {calculateBMI(formData.weight, formData.height)}
+                  </span>
+                ) : editMode ? (
                   <input
                     type="number"
                     name={key}
@@ -276,7 +290,9 @@ const ProfileTable = () => {
               <tr className="text-[15px]">
                 {fields.map(({ key }) => (
                   <td key={key} className="py-2">
-                    {editMode ? (
+                    {key === "bmi" ? ( // نمایش BMI به صورت محاسبه‌شده
+                      <span>{calculateBMI(formData.weight, formData.height)}</span>
+                    ) : editMode ? (
                       <input
                         type="number"
                         name={key}

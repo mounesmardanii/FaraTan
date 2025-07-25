@@ -17,10 +17,10 @@ const SixMonthPlan = () => {
             coach: "هستی بخشی",
             capacity: 5,
             sessionOptions: [
-              { sessions: 8, price: "۱,۶۰۰,۰۰۰ تومان" },
-              { sessions: 12, price: "۲,۱۰۰,۰۰۰ تومان" },
-              { sessions: 16, price: "۲,۵۵۰,۰۰۰ تومان" },
-              { sessions: 20, price: "۲,۹۰۰,۰۰۰ تومان" },
+              { sessions: 8, price: "۱,۶۰۰,۰۰۰ ریال" },
+              { sessions: 12, price: "۲,۱۰۰,۰۰۰ ریال" },
+              { sessions: 16, price: "۲,۵۵۰,۰۰۰ ریال" },
+              { sessions: 20, price: "۲,۹۰۰,۰۰۰ ریال" },
             ],
           },
           {

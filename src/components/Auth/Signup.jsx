@@ -32,7 +32,9 @@ function Signup() {
         console.log('ورودی‌های ثبت‌نام:', values);
 
         // ذخیره در localStorage
-        localStorage.setItem('signupBasic', JSON.stringify(values));
+        const users = JSON.parse(localStorage.getItem('usersList')) || [];
+        users.push(values); // اضافه کردن کاربر جدید به لیست
+        localStorage.setItem('usersList', JSON.stringify(users)); // ذخیره مجدد
 
         // رفتن به مرحله بعد
         navigate('/verify');
@@ -92,7 +94,6 @@ function Signup() {
           </div>
 
           <form onSubmit={formik.handleSubmit} className="flex flex-col space-y-4 md:space-y-5 text-xs md:text-sm">
-
             <input
               type="text"
               name="name"
