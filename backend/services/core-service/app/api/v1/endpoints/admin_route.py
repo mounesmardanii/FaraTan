@@ -22,3 +22,9 @@ async def get_weekly_schedule(
     service: Annotated[StatMainService, Depends()]
 ):
     return await service.get_weekly_schedule()
+
+@admin_router.get("/revenue-this-month", response_model=float)
+async def get_revenue_this_month(
+    service: Annotated[StatMainService, Depends()]
+):
+    return await service.get_revenue_this_month()

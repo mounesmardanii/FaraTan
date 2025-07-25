@@ -75,3 +75,33 @@ class PlanPurchaseRepository:
         return [r[0] for r in results]
 
 
+    def create_manual_purchase(self, member_id, session_id, amount, payment_method, paid_at):
+            purchase = PlanPurchase(
+                member_id=member_id,
+                session_id=session_id,
+                amount=amount,
+                payment_method=payment_method,
+                paid_at=paid_at,
+                status="Paid"
+            )
+            self.db.add(purchase)
+            self.db.commit()
+            self.db.refresh(purchase)
+            return purchase
+    
+
+    def mark_as_canceled(self, purchase: PlanPurchase):
+        purchase.status = "Canceled"
+        self.db.commit()
+        self.db.refresh(purchase)
+        return purchase
+    
+
+    def get_revenue_this_month(self, start_of_month, end_of_month):
+        total_revenue = self.db.query(func.sum(PlanPurchase.amount)).filter(
+            PlanPurchase.status == "Paid", 
+            PlanPurchase.paid_at >= start_of_month,
+            PlanPurchase.paid_at <= end_of_month
+        ).scalar() 
+    
+        return total_revenue if total_revenue is not None else 0.0

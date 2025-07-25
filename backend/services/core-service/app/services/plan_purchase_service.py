@@ -1,11 +1,11 @@
 from app.infrastructure.repositories.plan_purchase_repository import PlanPurchaseRepository
 from app.domain.models.plan_purchase_model import PlanPurchase
-from app.domain.models.plan_model import Plan
 from typing import List, Optional, Annotated
 from uuid import UUID
 from fastapi import Depends
 from app.domain.schemas.purchase_schema import ManualPurchaseCreateSchema
 from datetime import datetime
+from app.utils.date_helper import get_start_and_end_of_month
 
 class PlanPurchaseService:
     def __init__(self, repo: Annotated[PlanPurchaseRepository, Depends()]):
@@ -52,3 +52,9 @@ class PlanPurchaseService:
     
     async def mark_as_canceled(self, purchase: PlanPurchase):
         return self.repo.mark_as_canceled(purchase)
+    
+
+    async def get_revenue_this_month(self):
+        start_of_month, end_of_month = get_start_and_end_of_month()
+        
+        return self.repo.get_revenue_this_month(start_of_month, end_of_month)        
