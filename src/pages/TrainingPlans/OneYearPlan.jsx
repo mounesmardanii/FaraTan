@@ -28,10 +28,10 @@ const OneYearPlan = () => {
             coach: "نازنین عزتی",
             capacity: 0,
             sessionOptions: [
-              { sessions: 8, price: "۱,۴۰۰,۰۰۰ تومان" },
-              { sessions: 12, price: "۱,۸۰۰,۰۰۰ تومان" },
-              { sessions: 16, price: "۲,۲۵۰,۰۰۰ تومان" },
-              { sessions: 20, price: "۲,۵۰۰,۰۰۰ تومان" },
+              { sessions: 8, price: "۱,۴۰۰,۰۰۰ ریال" },
+              { sessions: 12, price: "۱,۸۰۰,۰۰۰ ریال" },
+              { sessions: 16, price: "۲,۲۵۰,۰۰۰ ریال" },
+              { sessions: 20, price: "۲,۵۰۰,۰۰۰ ریال" },
             ],
           },
           // کلاس‌های بیشتر...

@@ -28,10 +28,10 @@ const SixMonthPlan = () => {
             coach: "پردیس محمدی",
             capacity: 6,
             sessionOptions: [
-              { sessions: 8, price: "۱,۵۰۰,۰۰۰ تومان" },
-              { sessions: 12, price: "۲,۰۰۰,۰۰۰ تومان" },
-              { sessions: 16, price: "۲,۴۰۰,۰۰۰ تومان" },
-              { sessions: 20, price: "۲,۷۰۰,۰۰۰ تومان" },
+              { sessions: 8, price: "۱,۵۰۰,۰۰۰ ریال" },
+              { sessions: 12, price: "۲,۰۰۰,۰۰۰ ریال" },
+              { sessions: 16, price: "۲,۴۰۰,۰۰۰ ریال" },
+              { sessions: 20, price: "۲,۷۰۰,۰۰۰ ریال" },
             ],
           },
           {
@@ -39,10 +39,10 @@ const SixMonthPlan = () => {
             coach: "نازنین عزتی",
             capacity: 0,
             sessionOptions: [
-              { sessions: 8, price: "۱,۴۰۰,۰۰۰ تومان" },
-              { sessions: 12, price: "۱,۸۰۰,۰۰۰ تومان" },
-              { sessions: 16, price: "۲,۲۵۰,۰۰۰ تومان" },
-              { sessions: 20, price: "۲,۵۰۰,۰۰۰ تومان" },
+              { sessions: 8, price: "۱,۴۰۰,۰۰۰ ریال" },
+              { sessions: 12, price: "۱,۸۰۰,۰۰۰ ریال" },
+              { sessions: 16, price: "۲,۲۵۰,۰۰۰ ریال" },
+              { sessions: 20, price: "۲,۵۰۰,۰۰۰ ریال" },
             ],
           },
           {
@@ -50,10 +50,10 @@ const SixMonthPlan = () => {
             coach: "نیکی امیری",
             capacity: 4,
             sessionOptions: [
-              { sessions: 8, price: "۱,۵۰۰,۰۰۰ تومان" },
-              { sessions: 12, price: "۱,۹۰۰,۰۰۰ تومان" },
-              { sessions: 16, price: "۲,۳۰۰,۰۰۰ تومان" },
-              { sessions: 20, price: "۲,۶۰۰,۰۰۰ تومان" },
+              { sessions: 8, price: "۱,۵۰۰,۰۰۰ ریال" },
+              { sessions: 12, price: "۱,۹۰۰,۰۰۰ ریال" },
+              { sessions: 16, price: "۲,۳۰۰,۰۰۰ ریال" },
+              { sessions: 20, price: "۲,۶۰۰,۰۰۰ ریال" },
             ],
           },
         ]}

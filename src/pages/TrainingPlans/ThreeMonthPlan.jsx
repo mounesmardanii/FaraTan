@@ -29,10 +29,10 @@ const ThreeMonthPlan = () => {
             coach: "آتنا حسینی",
             capacity: 0,
             sessionOptions: [
-              { sessions: 8, price: "۱,۴۰۰,۰۰۰ تومان" },
-              { sessions: 12, price: "۱,۸۰۰,۰۰۰ تومان" },
-              { sessions: 16, price: "۲,۲۵۰,۰۰۰ تومان" },
-              { sessions: 20, price: "۲,۵۰۰,۰۰۰ تومان" },
+              { sessions: 8, price: "۱,۴۰۰,۰۰۰ ریال" },
+              { sessions: 12, price: "۱,۸۰۰,۰۰۰ ریال" },
+              { sessions: 16, price: "۲,۲۵۰,۰۰۰ ریال" },
+              { sessions: 20, price: "۲,۵۰۰,۰۰۰ ریال" },
             ],
           },
           {
@@ -40,10 +40,10 @@ const ThreeMonthPlan = () => {
             coach: "مریم عیدی",
             capacity: 5,
             sessionOptions: [
-              { sessions: 8, price: "۱,۶۰۰,۰۰۰ تومان" },
-              { sessions: 12, price: "۲,۰۰۰,۰۰۰ تومان" },
-              { sessions: 16, price: "۲,۴۰۰,۰۰۰ تومان" },
-              { sessions: 20, price: "۲,۷۰۰,۰۰۰ تومان" },
+              { sessions: 8, price: "۱,۶۰۰,۰۰۰ ریال" },
+              { sessions: 12, price: "۲,۰۰۰,۰۰۰ ریال" },
+              { sessions: 16, price: "۲,۴۰۰,۰۰۰ ریال" },
+              { sessions: 20, price: "۲,۷۰۰,۰۰۰ ریال" },
             ],
           },
         ]}

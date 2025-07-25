@@ -18,6 +18,7 @@ const ClassTableWithCoach = ({
 }) => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleBuyClick = (item) => {
     if (item.capacity > 0) {
@@ -41,6 +42,23 @@ const ClassTableWithCoach = ({
       ? "bg-[#D1E7D8] text-[#256250] hover:bg-[#BFDCCC] cursor-pointer"
       : "bg-gray-300 text-[#888] cursor-not-allowed";
 
+  // بررسی اینکه آیا ورودی جستجو عدد است یا رشته
+  const isNumeric = (str) => !isNaN(str) && str.trim() !== "";
+
+  // فیلتر کردن کلاس‌ها بر اساس جستجو
+  const filteredClasses = classList.filter((item) =>
+    item.sessionOptions?.some((option) => {
+      // اگر ورودی عدد است، بر اساس تعداد جلسات فیلتر کنیم
+      if (isNumeric(searchTerm)) {
+        const searchNumber = Number(searchTerm);
+        return option.sessions === searchNumber; // فیلتر بر اساس تعداد جلسات
+      } else {
+        // اگر ورودی رشته است، بر اساس نام مربی فیلتر کنیم
+        return item.coach?.toLowerCase().includes(searchTerm.toLowerCase()); // فیلتر بر اساس نام مربی
+      }
+    })
+  );
+
   return (
     <>
       <motion.div
@@ -49,9 +67,23 @@ const ClassTableWithCoach = ({
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="overflow-hidden bg-[#FEEDDB] p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-[1100px] mx-auto mt-4 font-[Tahoma] text-right border border-[#D1E7D8]"
       >
-        <h3 className="text-[#256250] border-b-2 border-[#FF6600] pb-2 mb-4 text-xl font-bold text-center">
-          دوره‌های {category} - {classType}
-        </h3>
+        <div className="flex flex-col items-center mb-6">
+          <h3 className="text-[#256250] border-b-2 border-[#FF6600] pb-2 mb-4 text-xl font-bold">
+            دوره‌های {category} - {classType}
+          </h3>
+
+          {/* سرچ باکس */}
+          <div className="relative w-full sm:w-96">
+            <input
+              type="text"
+              placeholder="جستجو بر اساس مربی"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-3 py-2 rounded-3xl border-2 border-[#FF6600] focus:outline-none focus:ring-[#FF6600] text-sm placeholder:text-gray-500 transition duration-300 ease-in-out text-right"
+            />
+          </div>
+
+        </div>
 
         {/* جدول دسکتاپ */}
         <div className="hidden sm:block overflow-hidden">
@@ -67,7 +99,7 @@ const ClassTableWithCoach = ({
               </tr>
             </thead>
             <tbody className="text-sm md:text-base text-center">
-              {classList.map((item, index) =>
+              {filteredClasses.map((item, index) =>
                 item.sessionOptions?.map((option, idx) => (
                   <motion.tr
                     key={`${item.id}-${option.sessions}`}
@@ -102,7 +134,7 @@ const ClassTableWithCoach = ({
 
         {/* کارت‌های موبایل */}
         <div className="sm:hidden flex flex-col gap-4 mt-4">
-          {classList.map((item, index) =>
+          {filteredClasses.map((item, index) =>
             item.sessionOptions?.map((option, idx) => (
               <motion.div
                 key={`${item.id}-${option.sessions}-mobile`}
