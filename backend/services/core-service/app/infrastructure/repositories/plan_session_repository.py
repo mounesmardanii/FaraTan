@@ -4,6 +4,7 @@ from uuid import UUID
 from app.domain.models.plan_session_model import PlanSession
 from app.core.postgres_db.database import get_db
 from fastapi import Depends
+from sqlalchemy import func
 
 
 class PlanSessionRepository:
@@ -47,3 +48,9 @@ class PlanSessionRepository:
             query = query.filter(PlanSession.is_active == True)
         return query.all()
 
+    def get_active_trainers_count(self):
+        active_trainers_count = self.db.query(func.count(func.distinct(PlanSession.trainer_id))).filter(
+            PlanSession.is_active == True
+        ).scalar()
+
+        return active_trainers_count if active_trainers_count is not None else 0

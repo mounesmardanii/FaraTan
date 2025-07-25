@@ -30,9 +30,17 @@ async def get_revenue_this_month(
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.get_revenue_this_month()
+
 @admin_router.get("/active-members-count", response_model=int)
 async def get_active_members_count(
     service: Annotated[StatMainService, Depends()],
     current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.get_active_members_count()
+
+@admin_router.get("/active-trainers-count", response_model=int)
+async def get_active_trainers_count(
+    service: Annotated[StatMainService, Depends()],
+    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+):
+    return await service.get_active_trainers_count()

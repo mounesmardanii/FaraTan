@@ -50,3 +50,6 @@ class PlanSessionService:
 
     async def get_sessions_by_trainer_id(self, trainer_id: UUID) -> List[PlanSession]:
         return self.repo.get_sessions_by_trainer_id(trainer_id)
+    
+    async def get_active_trainers_count(self):
+        return self.repo.get_active_trainers_count()
