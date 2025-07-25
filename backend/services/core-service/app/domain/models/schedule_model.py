@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, TIMESTAMP, func, Integer, DateTime, ForeignKey, Boolean, Time
+from sqlalchemy import Column, String, Date, TIMESTAMP, func, Integer, DateTime, ForeignKey, Boolean, Time, Date
 from sqlalchemy.dialects.postgresql import UUID
 from uuid import uuid4
 from datetime import datetime
@@ -42,7 +42,6 @@ class PlanSession(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
-
 class GymSports(Base):
     __tablename__ = "gym_sports"
 
@@ -57,7 +56,8 @@ class GymSchedule(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, unique=True, nullable=False)
     session_id = Column(UUID(as_uuid=True), nullable=False)
     sport_id = Column(UUID(as_uuid=True), ForeignKey("gym_sports.id", ondelete="CASCADE"), nullable=False)
-    weekday = Column(String, nullable=False)
+    weekday = Column(Date, nullable=False)
     start_time = Column(Time, nullable=False)
+    capacity = Column(Integer, nullable=False)
     end_time = Column(Time, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)

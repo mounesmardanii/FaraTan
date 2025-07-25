@@ -7,11 +7,13 @@ class GymScheduleCreateSchema(BaseModel):
     session_id: UUID
     sport_id: UUID
     weekday: date
+    capacity: int
     start_time: time
     end_time: time
 
 class GymScheduleUpdateSchema(BaseModel):
     weekday: Optional[str] = None
+    capacity: Optional[int] = None
     start_time: Optional[time] = None
     end_time: Optional[time] = None
 
@@ -20,6 +22,7 @@ class GymScheduleResponseSchema(BaseModel):
     session_id: UUID
     sport_id: UUID
     weekday: date
+    capacity: int
     start_time: time
     end_time: time
     created_at: datetime

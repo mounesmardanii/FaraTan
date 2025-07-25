@@ -12,11 +12,12 @@ class GymScheduleService:
 
     async def create(self, data: GymScheduleCreateSchema) -> GymSchedule:
         schedule = GymSchedule(
-          session_id=data.session_id , 
-          sport_id=data.sport_id , 
-          weekday=data.weekday , 
-          start_time=data.start_time , 
-          end_time=data.end_time 
+          session_id=data.session_id, 
+          sport_id=data.sport_id, 
+          weekday=data.weekday, 
+          capacity=data.capacity,
+          start_time=data.start_time, 
+          end_time=data.end_time,
         )
         return self.repo.create(schedule)
 
@@ -44,9 +45,10 @@ class GymScheduleService:
                 'session_id': schedule.session_id,
                 'sport_id': schedule.sport_id,
                 'weekday': schedule.weekday,
+                'capacity': schedule.capacity,
                 'start_time': schedule.start_time,
                 'end_time': schedule.end_time,
-                'created_at': schedule.created_at  # اضافه کردن created_at
+                'created_at': schedule.created_at  
             })
         
         return weekly_schedule
