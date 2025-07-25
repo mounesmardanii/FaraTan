@@ -10,10 +10,9 @@ UpdateNutritionDaySchema,
 NutritionDayResponseSchema,
 NutritionWeekPlanResponseSchema
 )
-from app.domain.schemas.token_schema import TokenSchema
-from app.services.auth_services.auth_service import AuthService
 from uuid import UUID
-from app.services.auth_services.auth_service import get_current_admin, get_current_member
+from app.services.auth_services.admin_auth_service import get_current_admin
+from app.services.auth_services.member_auth_service import get_current_member
 from app.services.nutrition_main_service import NutritionMainService
 from app.domain.schemas.token_schema import TokenDataSchema
 

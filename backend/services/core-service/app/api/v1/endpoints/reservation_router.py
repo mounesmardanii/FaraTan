@@ -4,7 +4,7 @@ from uuid import UUID
 
 from app.services.reservaion_main_service import ReservationMainService
 from app.domain.schemas.reservation_schema import ReservationResponseSchema
-from app.services.auth_services.auth_service import get_current_member
+from app.services.auth_services.member_auth_service import get_current_member
 from app.domain.schemas.token_schema import TokenDataSchema
 
 reservation_router = APIRouter()

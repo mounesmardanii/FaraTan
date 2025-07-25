@@ -3,7 +3,7 @@ from typing import Annotated, List
 from loguru import logger
 
 from app.domain.schemas.token_schema import TokenDataSchema
-from app.services.auth_services.auth_service import get_current_admin
+from app.services.auth_services.admin_auth_service import get_current_admin
 from app.services.stats_main_Service import StatMainService
 from app.domain.schemas.stats_schema import MemberGrowthStatSchema
 from app.domain.schemas.schedule_schema import GymScheduleResponseSchema

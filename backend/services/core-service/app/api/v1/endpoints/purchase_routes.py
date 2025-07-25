@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, status
 from typing import List, Annotated
 from uuid import UUID
 from app.services.purchase_main_service import PlanPurchaseMainService
-from app.services.auth_services.auth_service import get_current_member, get_current_admin
+from app.services.auth_services.member_auth_service import get_current_member
+from app.services.auth_services.admin_auth_service import get_current_admin
 from app.domain.schemas.token_schema import TokenDataSchema
 from app.domain.schemas.purchase_schema import PlanPurchaseResponseSchema, ManualPurchaseCreateSchema,ManualPurchaseUpdateSchema
 

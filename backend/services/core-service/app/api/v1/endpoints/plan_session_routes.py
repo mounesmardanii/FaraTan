@@ -3,7 +3,7 @@ from typing import List, Annotated
 from uuid import UUID
 from app.services.plan_session_main_service import PlanSessionMainService
 from app.domain.schemas.plan_session_schema import PlanSessionCreateSchema, PlanSessionResponseSchema, PlanSessionUpdateSchema
-from app.services.auth_services.auth_service import get_current_admin 
+from app.services.auth_services.admin_auth_service import get_current_admin 
 from app.domain.schemas.token_schema import TokenDataSchema
 
 plan_session_router = APIRouter()

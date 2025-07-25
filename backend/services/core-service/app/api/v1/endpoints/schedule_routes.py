@@ -8,7 +8,7 @@ from app.domain.schemas.schedule_schema import (
     GymScheduleUpdateSchema,
     GymScheduleResponseSchema,
 )
-from app.services.auth_services.auth_service import get_current_admin
+from app.services.auth_services.admin_auth_service import get_current_admin
 from app.domain.schemas.token_schema import TokenDataSchema
 
 gym_schedule_router = APIRouter()
