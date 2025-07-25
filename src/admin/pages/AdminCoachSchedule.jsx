@@ -13,7 +13,7 @@ function AdminCoachSchedule() {
 
   const [newRow, setNewRow] = useState({
     courseType: "عمومی",
-    classType: "",
+    classType: "بدنسازی",
     day: "",
     startTime: "10:00",
     endTime: "11:00",
@@ -65,13 +65,14 @@ function AdminCoachSchedule() {
     setRows([...rows, newItem]);
     setNewRow({
       courseType: "عمومی",
-      classType: "",
+      classType: "بدنسازی", // ✅ مقدار پیش‌فرض معتبر
       day: "",
       startTime: "10:00",
       endTime: "11:00",
       status: "",
       coachId: String(coachId),
     });
+
     setError("");
   };
 
@@ -118,10 +119,10 @@ function AdminCoachSchedule() {
   };
 
   return (
-    <div className="max-h-screen bg-white font-sans flex flex-col relative p-4">
+    <div className="min-h-screen bg-white font-sans flex flex-col relative p-4 md:p-15">
       <main
         dir="rtl"
-        className="flex-1 border border-[#055B5C] rounded-t-[30px] md:rounded-tl-[70px] bg-white text-right p-4 relative min-h-screen"
+        className="flex-1 border-l-2 border-r-2 border-t-2 border-[#055B5C] rounded-t-[30px] md:rounded-tl-[70px] bg-white text-right p-4 relative min-h-screen"
       >
         <button
           onClick={handleSubmit}
@@ -145,7 +146,7 @@ function AdminCoachSchedule() {
         )}
 
         {/* Desktop Table */}
-        <div className="overflow-x-auto hidden sm:block max-h-[400px] rounded-lg scrollbar-thin scrollbar-thumb-[#D1E7D8] scrollbar-track-[#EFFAF2]">
+        <div className="overflow-x-auto hidden sm:block rounded-lg">
           <table className="min-w-full text-sm font-bold text-[#055B5C] text-center border-separate border-spacing-y-2">
             <thead>
               <tr className="bg-[#055B5C] text-white">
@@ -177,12 +178,14 @@ function AdminCoachSchedule() {
                         </select>
                       </td>
                       <td>
-                        <input
+                        <select
                           name="classType"
                           value={row.classType}
                           onChange={(e) => handleChange(e, row.id)}
                           className="w-full border rounded h-8"
-                        />
+                        >
+                          <option value="بدنسازی">بدنسازی</option>
+                        </select>
                       </td>
                       <td>
                         <input
@@ -279,13 +282,14 @@ function AdminCoachSchedule() {
                   </select>
                 </td>
                 <td>
-                  <input
+                  <select
                     name="classType"
                     value={newRow.classType}
                     onChange={handleNewRowChange}
-                    placeholder="نوع کلاس"
                     className="w-full border rounded h-8"
-                  />
+                  >
+                    <option value="بدنسازی">بدنسازی</option>
+                  </select>
                 </td>
                 <td>
                   <input
@@ -344,7 +348,7 @@ function AdminCoachSchedule() {
           </table>
         </div>
 
-        <div className="sm:hidden mt-6 flex flex-col gap-4">
+        <div className="sm:hidden mt-6 w-full flex flex-col gap-4">
           {rows.map((row) => (
             <div
               key={row.id}
@@ -364,12 +368,15 @@ function AdminCoachSchedule() {
                       </option>
                     ))}
                   </select>
-                  <input
+                  <select
                     name="classType"
                     value={row.classType}
                     onChange={(e) => handleChange(e, row.id)}
                     className="border rounded p-2 text-sm"
-                  />
+                  >
+                    <option value="بدنسازی">بدنسازی</option>
+                  </select>
+
                   <input
                     name="day"
                     value={row.day}
@@ -474,13 +481,15 @@ function AdminCoachSchedule() {
                   </option>
                 ))}
               </select>
-              <input
+              <select
                 name="classType"
                 value={newRow.classType}
                 onChange={handleNewRowChange}
-                placeholder="نوع کلاس"
                 className="border rounded p-2 text-sm"
-              />
+              >
+                <option value="بدنسازی">بدنسازی</option>
+              </select>
+
               <input
                 name="day"
                 value={newRow.day}

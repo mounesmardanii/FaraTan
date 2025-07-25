@@ -141,7 +141,7 @@ function FitnessProgramPage() {
   };
 
   return (
-    <div className="max-h-screen bg-white font-sans flex flex-col relative p-4 md:p-15">
+    <div className="min-h-screen bg-white font-sans flex flex-col relative p-4 md:p-15">
       <main
         dir="rtl"
         className="flex-1 border-r-2 border-l-2 border-t-2 border-b-0 border-[#055B5C] rounded-t-[30px] md:rounded-tl-[70px] bg-white text-right p-4 md:p-6 relative min-h-screen"
@@ -173,7 +173,7 @@ function FitnessProgramPage() {
           </motion.div>
         )}
 
-        <div className="w-full max-h-[400px] overflow-y-auto rounded-lg scrollbar-thin scrollbar-thumb-[#D1E7D8] scrollbar-track-[#EFFAF2]">
+        <div className="w-full overflow-x-auto rounded-lg">
           <table className="min-w-full text-sm font-bold text-[#055B5C] text-center border-separate border-spacing-y-2">
             <thead>
               <tr className="bg-[#055B5C] text-white">

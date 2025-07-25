@@ -74,7 +74,7 @@ function NutritionProgramPage() {
   };
 
   return (
-    <div className="max-h-screen bg-white font-sans flex flex-col relative p-4 md:p-15">
+    <div className="min-h-screen bg-white font-sans flex flex-col relative p-4 md:p-15">
       <main
         dir="rtl"
         className="flex-1 border-r-2 border-l-2 border-t-2 border-b-0
@@ -100,7 +100,7 @@ function NutritionProgramPage() {
           </div>
         )}
 
-        <div className="w-full max-h-[400px] overflow-y-auto rounded-lg scrollbar-thin scrollbar-thumb-[#D1E7D8] scrollbar-track-[#EFFAF2]">
+        <div className="w-full rounded-lg">
           <table className="min-w-full text-sm font-bold text-[#055B5C] text-center border-separate border-spacing-y-2">
             <thead>
               <tr className="bg-[#055B5C] text-white">
@@ -118,7 +118,14 @@ function NutritionProgramPage() {
                 <tr key={row.id} className="bg-[#EFFAF2] rounded h-10">
                   {editingId === row.id ? (
                     <>
-                      {["day", "breakfast", "snack1", "lunch", "snack2", "dinner"].map((field) => (
+                      {[
+                        "day",
+                        "breakfast",
+                        "snack1",
+                        "lunch",
+                        "snack2",
+                        "dinner",
+                      ].map((field) => (
                         <td key={field}>
                           <input
                             type="text"
@@ -166,7 +173,14 @@ function NutritionProgramPage() {
               ))}
 
               <tr className="bg-[#D1E7D8] rounded h-10">
-                {["day", "breakfast", "snack1", "lunch", "snack2", "dinner"].map((field) => (
+                {[
+                  "day",
+                  "breakfast",
+                  "snack1",
+                  "lunch",
+                  "snack2",
+                  "dinner",
+                ].map((field) => (
                   <td key={field}>
                     <input
                       type="text"
