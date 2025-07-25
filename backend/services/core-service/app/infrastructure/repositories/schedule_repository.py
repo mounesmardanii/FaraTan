@@ -18,7 +18,10 @@ class GymScheduleRepository:
 
     def get_by_id(self, schedule_id: UUID) -> Optional[GymSchedule]:
         return self.db.query(GymSchedule).filter_by(id=schedule_id).first()
-
+    
+    def get_by_session_id(self, session_id: UUID) -> Optional[GymSchedule]:
+        return self.db.query(GymSchedule).filter_by(session_id=session_id).first()
+    
     def get_by_trainer(self, trainer_id: UUID) -> List[GymSchedule]:
         schedules = []
         sessions = self.db.query(PlanSession).filter_by(trainer_id=trainer_id).all()
@@ -32,3 +35,9 @@ class GymScheduleRepository:
         self.db.query(GymSchedule).filter(GymSchedule.id == schedule_id).update(update_fields)
         self.db.commit()
         return self.get_by_id(schedule_id)
+    def get_schedules_for_week(self, start_of_week, end_of_week):
+        # فیلتر سشن‌ها بر اساس تاریخ (شروع و پایان هفته)
+        return self.db.query(GymSchedule).filter(
+            GymSchedule.weekday >= start_of_week,
+            GymSchedule.weekday <= end_of_week
+        ).all()

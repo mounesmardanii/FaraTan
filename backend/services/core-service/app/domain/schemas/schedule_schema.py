@@ -1,12 +1,12 @@
 from pydantic import BaseModel
 from uuid import UUID
-from datetime import datetime, time
-from typing import Optional
+from datetime import datetime, time, date
+from typing import Optional, List
 
 class GymScheduleCreateSchema(BaseModel):
     session_id: UUID
     sport_id: UUID
-    weekday: str
+    weekday: date
     start_time: time
     end_time: time
 
@@ -19,10 +19,18 @@ class GymScheduleResponseSchema(BaseModel):
     id: UUID
     session_id: UUID
     sport_id: UUID
-    weekday: str
+    weekday: date
     start_time: time
     end_time: time
     created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class WeekdayScheduleResponseSchema(BaseModel):
+    weekday: str
+    schedules: List[GymScheduleResponseSchema]
 
     class Config:
         from_attributes = True
