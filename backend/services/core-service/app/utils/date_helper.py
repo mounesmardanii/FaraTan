@@ -24,3 +24,14 @@ def get_start_and_end_of_month():
         end_of_month = start_of_month.replace(month=today.month + 1) - timedelta(seconds=1)
 
     return start_of_month, end_of_month
+
+
+def to_jalali_month_str(dt):
+    if not dt:
+        return ""
+    jalali = jdatetime.datetime.fromgregorian(datetime=dt)
+    months = [
+        "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
+        "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
+    ]
+    return f"{months[jalali.month - 1]} {jalali.year}"

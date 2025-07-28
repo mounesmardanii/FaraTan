@@ -32,6 +32,5 @@ class StatMainService:
     async def get_active_members_count(self):
         return await self.purchase_service.get_active_members_count()    
     
-
     async def get_active_trainers_count(self):
         return await self.session_service.get_active_trainers_count()    

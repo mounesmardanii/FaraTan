@@ -1,16 +1,18 @@
-from typing import Annotated
+from typing import Annotated, List, Dict
 from loguru import logger
 from fastapi import Depends, HTTPException, status
 from app.services.base_service import BaseService
 from app.services.member_service import MemberService
 from uuid import UUID
-from app.domain.schemas.token_schema import TokenSchema
+
 class MemberMainService(BaseService):
     def __init__(
         self,
-        member_service: Annotated[MemberService, Depends()],
+        service: Annotated[MemberService, Depends()],
     ) -> None:
         super().__init__()
 
-        self.member_service = member_service
+        self.service = service
 
+    async def get_weight_trend(self, member_id: UUID) -> List[Dict]:
+        return await self.service.get_monthly_weight_trend(member_id)
