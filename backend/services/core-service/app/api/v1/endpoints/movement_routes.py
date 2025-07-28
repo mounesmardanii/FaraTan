@@ -1,0 +1,33 @@
+
+from fastapi import Depends, status, APIRouter
+from typing import Annotated, List
+from loguru import logger
+from app.domain.schemas.movements_schema import MovementResponseSchema, CreateMovementSchema
+from uuid import UUID
+from app.services.auth_services.admin_auth_service import get_current_admin
+from app.domain.schemas.token_schema import AdminTokenDataSchema
+from app.services.movement_main_service import MovementMainService
+movement_router = APIRouter()
+
+@movement_router.post("/movements", status_code=status.HTTP_201_CREATED, response_model=MovementResponseSchema)
+async def create_movement(
+    data: CreateMovementSchema,
+    service: Annotated[MovementMainService, Depends()],
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
+):
+    return await service.create_movement(data)
+
+@movement_router.get("/movements/{movement_id}", status_code=status.HTTP_200_OK, response_model=MovementResponseSchema)
+async def get_movement_by_id(
+    movement_id: str,
+    service: Annotated[MovementMainService, Depends()],
+):
+    return await service.get_movement_by_id(movement_id)
+
+@movement_router.get("/movements", status_code=status.HTTP_200_OK, response_model=List[MovementResponseSchema])
+async def get_all_movements(
+    service: Annotated[MovementMainService, Depends()],
+      current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
+):
+    
+    return await service.get_all_movements()
