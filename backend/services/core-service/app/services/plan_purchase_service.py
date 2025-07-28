@@ -41,12 +41,19 @@ class PlanPurchaseService:
         return self.repo.get_purchased_plans_by_member(member_id)
     
     async def create_manual_purchase(self, data: ManualPurchaseCreateSchema):
+        if data.payment_method == "manual":
+            status = "Pending"
+            paid_at = None  
+        else:    
+            status = "paid"
+            paid_at = datetime.utcnow()   
         return self.repo.create_manual_purchase(
             member_id=data.member_id,
             session_id=data.session_id,
             amount=data.amount,
             payment_method=data.payment_method,
-            paid_at=datetime.utcnow()
+            paid_at= paid_at,
+            status=status
         )
     
     
@@ -62,3 +69,4 @@ class PlanPurchaseService:
     async def get_active_members_count(self):
         start_of_month, end_of_month = get_start_and_end_of_month()
         return self.repo.get_active_members_count(start_of_month, end_of_month)
+    

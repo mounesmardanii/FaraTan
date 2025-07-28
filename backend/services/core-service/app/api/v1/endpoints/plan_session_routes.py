@@ -4,7 +4,7 @@ from uuid import UUID
 from app.services.plan_session_main_service import PlanSessionMainService
 from app.domain.schemas.plan_session_schema import PlanSessionCreateSchema, PlanSessionResponseSchema, PlanSessionUpdateSchema
 from app.services.auth_services.admin_auth_service import get_current_admin 
-from app.domain.schemas.token_schema import TokenDataSchema
+from app.domain.schemas.token_schema import AdminTokenDataSchema
 
 plan_session_router = APIRouter()
 
@@ -12,7 +12,7 @@ plan_session_router = APIRouter()
 async def create_plan_session(
     data: PlanSessionCreateSchema,
     service: Annotated[PlanSessionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)],
 ):
     return await service.create_session(data)
 
@@ -35,7 +35,7 @@ async def update_plan_session(
     session_id: UUID,
     data: PlanSessionUpdateSchema,
     service: Annotated[PlanSessionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)],
 ):
     return await service.update_session(session_id, data)
 
@@ -43,14 +43,14 @@ async def update_plan_session(
 async def delete_plan_session(
     session_id: UUID,
     service: Annotated[PlanSessionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)],
 ):
     await service.delete_session(session_id)
 @plan_session_router.get("/get-sessions-by-trainer/{trainer_id}", response_model=List[PlanSessionResponseSchema], status_code=status.HTTP_200_OK)
 async def get_sessions_by_trainer_id(
     trainer_id: UUID,
     service: Annotated[PlanSessionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)],
 ):
     return await service.get_sessions_by_trainer_id(trainer_id)
 
@@ -59,7 +59,7 @@ async def get_sessions_by_trainer_id(
 async def deactivate_session(
     session_id: UUID,
     service: Annotated[PlanSessionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     await service.deactivate_session(session_id)
     return {"detail": "Session deactivated"}

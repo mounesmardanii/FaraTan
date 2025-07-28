@@ -22,6 +22,11 @@ class ReservationRepository:
     def get_by_member_id(self, member_id: UUID) -> List[Reservation]:
         return self.db.query(Reservation).filter_by(member_id=member_id).all()
     
+
+    def get_by_id(self, id: UUID) -> Reservation:
+        return self.db.query(Reservation).filter_by(id=id).first()
+    
+
     def already_reserved(self, member_id: UUID, session_schedule_id: UUID) -> bool:
         return (
             self.db.query(Reservation)
@@ -44,10 +49,12 @@ class ReservationRepository:
             )
             .count()
         )
-        logger.info("Session count", current_count)
         session = self.db.query(PlanSession).filter_by(id=session_id).first()
-
-        return current_count < session.session_count
+        
+        if current_count < session.session_count:
+            return True
+        else:
+            return False
 
 
     def get_by_id_and_member(self, reservation_id: UUID, member_id: UUID) -> Reservation | None:
@@ -60,3 +67,5 @@ class ReservationRepository:
     def cancel_reservation(self, reservation: Reservation) -> None:
         reservation.status = "Canceled"
         self.db.commit()
+
+

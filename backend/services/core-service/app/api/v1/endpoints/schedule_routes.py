@@ -9,14 +9,14 @@ from app.domain.schemas.schedule_schema import (
     GymScheduleResponseSchema,
 )
 from app.services.auth_services.admin_auth_service import get_current_admin
-from app.domain.schemas.token_schema import TokenDataSchema
+from app.domain.schemas.token_schema import AdminTokenDataSchema
 
 gym_schedule_router = APIRouter()
 
 @gym_schedule_router.post("/create-schedule", response_model=GymScheduleResponseSchema, status_code=status.HTTP_201_CREATED)
 async def create_gym_schedule(
     data: GymScheduleCreateSchema,
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)],
     service: Annotated[GymScheduleMainService, Depends()]
 ):
     return await service.create_schedule(data)
@@ -40,6 +40,6 @@ async def update_schedule(
     schedule_id: UUID,
     data: GymScheduleUpdateSchema,
     service: Annotated[GymScheduleMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)],
 ):
     return await service.update_schedule(schedule_id, data)

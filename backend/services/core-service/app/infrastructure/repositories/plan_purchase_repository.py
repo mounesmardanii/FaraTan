@@ -75,14 +75,14 @@ class PlanPurchaseRepository:
         return [r[0] for r in results]
 
 
-    def create_manual_purchase(self, member_id, session_id, amount, payment_method, paid_at):
+    def create_manual_purchase(self, member_id, session_id, amount, payment_method, paid_at, status):
             purchase = PlanPurchase(
                 member_id=member_id,
                 session_id=session_id,
                 amount=amount,
                 payment_method=payment_method,
                 paid_at=paid_at,
-                status="Paid"
+                status=status
             )
             self.db.add(purchase)
             self.db.commit()
@@ -109,8 +109,10 @@ class PlanPurchaseRepository:
     
     def get_active_members_count(self, start_of_month, end_of_month):
         active_members_count = self.db.query(func.count(func.distinct(PlanPurchase.member_id))).filter(
-                    PlanPurchase.status == "paid", 
+                    PlanPurchase.status == "Paid", 
                     PlanPurchase.paid_at >= start_of_month,
                     PlanPurchase.paid_at <= end_of_month
                 ).scalar()
         return active_members_count if active_members_count is not None else 0
+    
+    

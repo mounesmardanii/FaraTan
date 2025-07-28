@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordBearer
 from typing import Annotated
 from loguru import logger
 from app.infrastructure.clients.iam_client import IAMClient
-from app.domain.schemas.token_schema import TokenDataSchema
+from app.domain.schemas.token_schema import MemberTokenDataSchema
 from app.core.configs.config import get_settings
 
 config = get_settings()
@@ -14,7 +14,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"http://127.0.0.1:8000/api/v1/aut
 async def get_current_member(
         token: Annotated[str, Depends(oauth2_scheme)],
         client: Annotated[IAMClient, Depends()],
-) -> TokenDataSchema:
+) -> MemberTokenDataSchema:
     if not token:
         logger.error("No token provided")
         raise HTTPException(

@@ -3,6 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta, date
 from app.infrastructure.repositories.member_repository import MemberRepository
 from app.infrastructure.repositories.trainer_repository import TrainerRepository
+
 class SchedulerService:
     def __init__(self, member_repository: MemberRepository, trainer_repository: TrainerRepository):
         self.scheduler = BackgroundScheduler()

@@ -35,7 +35,6 @@ class PaymentMainService:
 
     async def confirm_payment(self, purchase_id: UUID, authority: str, status: str) -> bool:
         purchase = await self.purchase_service.get_purchase_by_id(purchase_id)
-        print(f"AAAAAAAAAA{purchase.amount}")
         if status != "OK":
             await self.purchase_service.update_status(purchase_id, "Canceled")
             return "Canceled"

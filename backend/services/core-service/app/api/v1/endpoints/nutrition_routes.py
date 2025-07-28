@@ -14,7 +14,7 @@ from uuid import UUID
 from app.services.auth_services.admin_auth_service import get_current_admin
 from app.services.auth_services.member_auth_service import get_current_member
 from app.services.nutrition_main_service import NutritionMainService
-from app.domain.schemas.token_schema import TokenDataSchema
+from app.domain.schemas.token_schema import AdminTokenDataSchema, MemberTokenDataSchema
 
 nutrition_router = APIRouter()
 
@@ -23,7 +23,7 @@ nutrition_router = APIRouter()
 async def create_week(
     data: CreateNutritionWeekSchema,
     service: Annotated[NutritionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.create_week(data)
 
@@ -32,7 +32,7 @@ async def create_week(
 @nutrition_router.get("/my-weeks", status_code=status.HTTP_200_OK, response_model=List[NutritionWeekResponseSchema])
 async def list_member_weeks(
     service: Annotated[NutritionMainService, Depends()],
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)]
+    current_member: Annotated[MemberTokenDataSchema, Depends(get_current_member)]
 ):
     return await service.get_weeks_by_member(current_member.id)
 
@@ -42,7 +42,7 @@ async def list_member_weeks(
 async def delete_week(
     week_id: UUID,
     service: Annotated[NutritionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.delete_week(week_id)
 
@@ -51,7 +51,7 @@ async def update_week_title(
     week_id: UUID,
     request: UpdateWeekTitleSchema,
     service: Annotated[NutritionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.update_week_title(week_id, request)
 
@@ -64,7 +64,7 @@ async def update_week_title(
 async def create_nutrition_day(
     data: CreateNutritionDaySchema,
     service: Annotated[NutritionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.create_day(data)
 
@@ -78,7 +78,7 @@ async def update_nutrition_day(
     day_id: UUID,
     data: UpdateNutritionDaySchema,
     service: Annotated[NutritionMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)]
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.update_day(day_id, data)
 
@@ -88,7 +88,7 @@ async def update_nutrition_day(
     status_code=status.HTTP_200_OK,
     response_model=NutritionWeekPlanResponseSchema
 )
-async def  get_nutrition_plan_by_week_id(
+async def get_nutrition_plan_by_week_id(
     week_id: UUID,
     service: Annotated[NutritionMainService, Depends()],
 ):

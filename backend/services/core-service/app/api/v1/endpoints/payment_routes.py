@@ -3,7 +3,7 @@ from app.services.payment_main_service import PaymentMainService
 from fastapi import APIRouter, Depends, Query
 from uuid import UUID
 from app.services.auth_services.member_auth_service import get_current_member
-from app.domain.schemas.token_schema import TokenDataSchema
+from app.domain.schemas.token_schema import MemberTokenDataSchema
 from loguru import logger
 
 payment_router = APIRouter()
@@ -11,7 +11,7 @@ payment_router = APIRouter()
 @payment_router.post("/payment-request")
 async def request_payment(
     session_id: UUID,
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    current_member: Annotated[MemberTokenDataSchema, Depends(get_current_member)],
     payment_main_service: Annotated[PaymentMainService, Depends()] ,
 ):
     logger.info(f"member {current_member.id} is starting to pay...")
