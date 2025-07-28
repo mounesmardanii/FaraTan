@@ -1,58 +1,155 @@
-import React, { useState } from 'react';
-import AdminHeader from '../AdminHeader';
-import AdminSidebar from '../AdminSidebar';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import AdminHeader from "../AdminHeader";
+import AdminSidebar from "../AdminSidebar";
+import { motion } from "framer-motion";
+import DatePicker from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
 
 const PaymentStatus = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [editId, setEditId] = useState(null);
+  const [showAlert, setShowAlert] = useState(false); // وضعیت برای نمایش هشدار
+
   const [newPayment, setNewPayment] = useState({
-    name: '',
-    courseType: '',
-    sessions: '',
-    coach: '',
-    date: '',
-    amount: '',
-    method: '',
-    status: ''
+    name: "",
+    courseType: "",
+    sessions: "",
+    coach: "",
+    date: "",
+    amount: "",
+    method: "",
+    status: "",
   });
 
-  const [payments, setPayments] = useState([
-    { id: 1, name: 'مونس مردانی', courseType: 'VIP', sessions: 10, coach: 'خانم الف', date: '1 آذر', amount: 150, method: 'آنلاین', status: 'پرداخت شده' },
-    { id: 2, name: 'ملاحت مردانی', courseType: 'عمومی', sessions: 8, coach: 'خانم ب', date: '5 آذر', amount: 200, method: 'کارتخوان', status: 'پرداخت شده' },
-    { id: 3, name: 'غزل نادری', courseType: 'خصوصی', sessions: 5, coach: 'خانم ج', date: '', amount: 0, method: '', status: 'پرداخت نشده' },
-    { id: 4, name: 'نگین شاکری', courseType: 'VIP', sessions: 12, coach: 'خانم د', date: '10 آذر', amount: 400, method: 'نقدی', status: 'پرداخت شده' }
-  ]);
+  const [payments, setPayments] = useState(() => {
+    const saved = localStorage.getItem("paymentList");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  const handleDelete = (id) => {
-    setPayments(prev => prev.filter(p => p.id !== id));
-  };
+  // ****************************************************************************
+  //   وقتی بک‌اند آماده شد، فقط کافیه توی یک useEffect دیگه، مثلاً بنویسی:
+
+  // jsx
+  // Copy
+  // Edit
+  // useEffect(() => {
+  //   fetch("https://your-backend.com/api/payments")
+  //     .then((res) => res.json())
+  //     .then((data) => setPayments(data));
+  // }, []);
+
+  // ***********************************************************
+  // یا اگر از axios استفاده می‌کنی:
+
+  // js
+  // Copy
+  // Edit
+  // import axios from "axios";
+
+  // useEffect(() => {
+  //   axios.get("/api/payments").then((res) => {
+  //     setPayments(res.data);
+  //   });
+  // }, []);
+  // ***********************************************************
+
+  useEffect(() => {
+    localStorage.setItem("paymentList", JSON.stringify(payments));
+  }, [payments]);
+
+  const userOptions = JSON.parse(localStorage.getItem("usersList")) || [];
 
   const handleAdd = () => {
-    if (!newPayment.name || !newPayment.amount) return;
-    setPayments([...payments, { ...newPayment, id: Date.now() }]);
-    setNewPayment({ name: '', courseType: '', sessions: '', coach: '', date: '', amount: '', method: '', status: '' });
+    // بررسی پر بودن فیلدهای ضروری
+    if (
+      !newPayment.name ||
+      !newPayment.amount ||
+      !newPayment.courseType ||
+      !newPayment.sessions ||
+      !newPayment.coach
+    ) {
+      setShowAlert(true); // نمایش هشدار در صورت پر نشدن فیلدها
+      return;
+    }
+
+    // اگر تمام فیلدها پر شده باشند، پیام هشدار را مخفی می‌کنیم
+    setShowAlert(false);
+
+    const isPaid =
+      newPayment.method === "کارتخوان" || newPayment.method === "نقدی"
+        ? "پرداخت شده"
+        : "پرداخت نشده";
+
+    const updatedPayments = [
+      ...payments,
+      { ...newPayment, id: Date.now(), status: isPaid },
+    ];
+
+    setPayments(updatedPayments);
+    resetPaymentForm();
   };
 
-  const handleEdit = (id) => {
-    const toEdit = payments.find(p => p.id === id);
-    setNewPayment(toEdit);
-    setEditId(id);
+  const handleInvalidate = (id) => {
+    const updated = payments.map((p) =>
+      p.id === id ? { ...p, status: "باطل‌شده" } : p
+    );
+    setPayments(updated);
+  };
+
+  const resetPaymentForm = () => {
+    setNewPayment({
+      name: "",
+      courseType: "",
+      sessions: "",
+      coach: "",
+      date: "",
+      amount: "",
+      method: "",
+      status: "",
+    });
+    setEditId(null);
+    setShowAlert(false);
   };
 
   const handleUpdate = () => {
-    setPayments(payments.map(p => (p.id === editId ? { ...newPayment, id: editId } : p)));
-    setNewPayment({ name: '', courseType: '', sessions: '', coach: '', date: '', amount: '', method: '', status: '' });
-    setEditId(null);
+    const isPaid =
+      newPayment.method === "کارتخوان" || newPayment.method === "نقدی"
+        ? "پرداخت شده"
+        : "پرداخت نشده";
+
+    const updatedPayments = payments.map((p) =>
+      p.id === editId ? { ...newPayment, id: editId, status: isPaid } : p
+    );
+
+    setPayments(updatedPayments); // دوباره باعث ذخیره در localStorage میشه
+
+    resetPaymentForm();
   };
 
-  const filtered = payments.filter(p => p.name.includes(search));
+  const filtered = payments.filter((p) => p.name.includes(search));
 
   const fadeIn = {
     hidden: { opacity: 0, y: 10 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
   };
+
+  const placeholders = {
+    name: "نام عضو",
+    courseType: "نوع دوره",
+    sessions: "تعداد جلسات",
+    coach: "نام مربی",
+    date: "تاریخ خرید",
+    amount: "مبلغ",
+    method: "روش پرداخت",
+    status: "وضعیت",
+  };
+
+  const coachOptions =
+    JSON.parse(localStorage.getItem("coachesList"))?.map(
+      (c) => `${c.name} ${c.lastName}`
+    ) || [];
 
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col relative">
@@ -63,9 +160,9 @@ const PaymentStatus = () => {
         </aside>
 
         <motion.aside
-          initial={{ x: '-100%' }}
-          animate={{ x: sidebarOpen ? 0 : '-100%' }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          initial={{ x: "-100%" }}
+          animate={{ x: sidebarOpen ? 0 : "-100%" }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className="fixed md:hidden top-[4rem] left-0 z-50 w-[275px] h-[calc(100vh-4rem)] bg-[#D1E7D8] border-t-[3px] border-r-[3px] border-[#055B5C] rounded-tr-[75px] p-6 overflow-y-auto mt-13"
         >
           <AdminSidebar />
@@ -92,6 +189,14 @@ const PaymentStatus = () => {
             animate="visible"
             variants={fadeIn}
           />
+
+          {/* هشدار */}
+          {showAlert && (
+            <div className="text-[#FF6347] bg-red-50 border border-[#FF6347] rounded px-4 py-2 text-sm mb-4 text-center">
+              لطفاً تمام فیلدهای ضروری را پر کنید
+            </div>
+          )}
+
           <motion.h2
             className="text-center text-[#FF6600] font-bold text-lg md:text-xl"
             initial="hidden"
@@ -130,44 +235,180 @@ const PaymentStatus = () => {
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.03 }}
-                        className="bg-[#EAF4EF] border-b hover:bg-[#D1E7D8]"
+                        className={`${
+                          p.status === "باطل‌شده"
+                            ? "bg-gray-300 text-gray-500 line-through"
+                            : "bg-[#EAF4EF] hover:bg-[#D1E7D8]"
+                        } border-b`}
                       >
                         <td className="p-2">{p.name}</td>
                         <td className="p-2">{p.courseType}</td>
                         <td className="p-2">{p.sessions}</td>
                         <td className="p-2">{p.coach}</td>
-                        <td className="p-2">{p.date || '-'}</td>
-                        <td className="p-2">{p.amount}</td>
-                        <td className="p-2">{p.method || '-'}</td>
-                        <td className="p-2">{p.status || '-'}</td>
+                        <td className="p-2">{p.date || "-"}</td>
+                        <td className="p-2">{p.amount} ریال</td>
+                        <td className="p-2">{p.method || "-"}</td>
+                        <td className="p-2">{p.status || "-"}</td>
                         <td className="p-2 flex justify-center gap-1">
-                          <button
-                            className="text-sm bg-[#FF6600] text-white px-2 py-1 rounded hover:bg-[#e65c00] transition cursor-pointer"
-                            onClick={() => handleEdit(p.id)}
-                          >
-                            ویرایش
-                          </button>
-                          <button
-                            className="text-sm bg-[#9FC6C3] text-[#055B5C] px-2 py-1 rounded hover:bg-[#85bab4] transition cursor-pointer"
-                            onClick={() => handleDelete(p.id)}
-                          >
-                            حذف
-                          </button>
+                          {p.method === "درگاه اینترنتی" ? (
+                            <span className="text-gray-400 text-xs">
+                              غیرقابل ویرایش
+                            </span>
+                          ) : (
+                            <>
+                              <button
+                                className="text-sm bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+                                onClick={() => handleInvalidate(p.id)}
+                              >
+                                باطل کردن
+                              </button>
+                            </>
+                          )}
                         </td>
                       </motion.tr>
                     ))}
 
                     {/* Add/Edit Row */}
                     <tr className="bg-[#EAF4EF]">
-                      {['name', 'courseType', 'sessions', 'coach', 'date', 'amount', 'method', 'status'].map((key) => (
+                      {[
+                        "name",
+                        "courseType",
+                        "sessions",
+                        "coach",
+                        "date",
+                        "amount",
+                        "method",
+                        "status",
+                      ].map((key) => (
                         <td key={key} className="p-2">
-                          <input
-                            type="text"
-                            className="w-full px-2 py-1 border rounded text-xs text-right"
-                            placeholder={key}
-                            value={newPayment[key]}
-                            onChange={(e) => setNewPayment({ ...newPayment, [key]: e.target.value })}
-                          />
+                          {key === "name" ? (
+                            <select
+                              className="w-full px-2 py-1 border rounded text-xs text-right"
+                              value={newPayment.name}
+                              onChange={(e) =>
+                                setNewPayment({
+                                  ...newPayment,
+                                  name: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">انتخاب عضو</option>
+                              {userOptions.map((u) => (
+                                <option
+                                  key={u.id}
+                                  value={`${u.name} ${u.lastName}`}
+                                >
+                                  {u.name} {u.lastName}
+                                </option>
+                              ))}
+                            </select>
+                          ) : key === "courseType" ? (
+                            <select
+                              className="w-full px-2 py-1 border rounded text-xs text-right"
+                              value={newPayment.courseType}
+                              onChange={(e) =>
+                                setNewPayment({
+                                  ...newPayment,
+                                  courseType: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">نوع دوره</option>
+                              <option value="عمومی">عمومی</option>
+                              <option value="خصوصی">خصوصی</option>
+                              <option value="VIP">VIP</option>
+                            </select>
+                          ) : key === "sessions" ? (
+                            <input
+                              type="number"
+                              min="1"
+                              className="w-full px-2 py-1 border rounded text-xs text-right"
+                              placeholder="تعداد جلسات"
+                              value={newPayment.sessions}
+                              onChange={(e) =>
+                                setNewPayment({
+                                  ...newPayment,
+                                  sessions: e.target.value,
+                                })
+                              }
+                            />
+                          ) : key === "coach" ? (
+                            <select
+                              className="w-full px-2 py-1 border rounded text-xs text-right"
+                              value={newPayment.coach}
+                              onChange={(e) =>
+                                setNewPayment({
+                                  ...newPayment,
+                                  coach: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">انتخاب مربی</option>
+                              {coachOptions.map((coach, index) => (
+                                <option key={index} value={coach}>
+                                  {coach}
+                                </option>
+                              ))}
+                            </select>
+                          ) : key === "date" ? (
+                            <DatePicker
+                              calendar={persian}
+                              locale={persian_fa}
+                              inputClass="w-full px-2 py-1 border rounded text-xs text-right"
+                              value={newPayment.date}
+                              onChange={(dateObject) =>
+                                setNewPayment({
+                                  ...newPayment,
+                                  date: dateObject?.format("YYYY/MM/DD") || "",
+                                })
+                              }
+                              calendarPosition="bottom-right"
+                              placeholder="تاریخ خرید"
+                            />
+                          ) : key === "amount" ? (
+                            <input
+                              type="number"
+                              min="0"
+                              className="w-full px-2 py-1 border rounded text-xs text-right"
+                              placeholder="مبلغ به ریال"
+                              value={newPayment.amount}
+                              onChange={(e) =>
+                                setNewPayment({
+                                  ...newPayment,
+                                  amount: e.target.value,
+                                })
+                              }
+                            />
+                          ) : key === "method" ? (
+                            <select
+                              className="w-full px-2 py-1 border rounded text-xs text-right"
+                              value={newPayment.method}
+                              onChange={(e) =>
+                                setNewPayment({
+                                  ...newPayment,
+                                  method: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="">روش پرداخت</option>
+                              <option value="کارتخوان">کارتخوان</option>
+                              <option value="نقدی">نقدی</option>
+                              <option value="دستی">ثبت دستی</option>
+                            </select>
+                          ) : key === "status" ? null : (
+                            <input
+                              type="text"
+                              className="w-full px-2 py-1 border rounded text-xs text-right"
+                              placeholder={placeholders[key] || ""}
+                              value={newPayment[key]}
+                              onChange={(e) =>
+                                setNewPayment({
+                                  ...newPayment,
+                                  [key]: e.target.value,
+                                })
+                              }
+                            />
+                          )}
                         </td>
                       ))}
                       <td className="p-2">
@@ -175,11 +416,24 @@ const PaymentStatus = () => {
                           className="bg-green-600 text-white px-2 py-1 rounded text-xs hover:bg-green-700 cursor-pointer"
                           onClick={editId ? handleUpdate : handleAdd}
                         >
-                          {editId ? 'ذخیره' : 'افزودن'}
+                          {editId ? "ذخیره" : "افزودن"}
                         </button>
                       </td>
                     </tr>
                   </tbody>
+                  <tfoot>
+                    <tr className="items-center">
+                      <td className="px-1 py-2 font-bold text-center">
+                        جمع کل:
+                      </td>
+                      <td className="px-1 py-2 font-bold text-green-700 text-center">
+                        {payments
+                          .filter((p) => p.status !== "باطل‌شده") // فیلتر کردن سطرهای باطل‌شده
+                          .reduce((sum, p) => sum + Number(p.amount), 0)}{" "}
+                        تومان
+                      </td>
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
 
@@ -191,43 +445,225 @@ const PaymentStatus = () => {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.03 }}
-                    className="bg-[#EAF4EF] p-3 rounded-xl shadow text-sm text-[#055B5C]"
+                    className={`bg-[#EAF4EF] p-3 rounded-xl shadow text-sm text-[#055B5C] ${
+                      p.status === "باطل‌شده"
+                        ? "line-through text-gray-500"
+                        : ""
+                    }`} // خط زدن و تغییر رنگ برای وضعیت "باطل‌شده"
                   >
-                    <div className="flex justify-between mb-1"><span className="font-bold">نام:</span><span>{p.name}</span></div>
-                    <div className="flex justify-between mb-1"><span className="font-bold">نوع دوره:</span><span>{p.courseType}</span></div>
-                    <div className="flex justify-between mb-1"><span className="font-bold">تعداد جلسات:</span><span>{p.sessions}</span></div>
-                    <div className="flex justify-between mb-1"><span className="font-bold">مربی:</span><span>{p.coach}</span></div>
-                    <div className="flex justify-between mb-1"><span className="font-bold">تاریخ خرید:</span><span>{p.date || '-'}</span></div>
-                    <div className="flex justify-between mb-1"><span className="font-bold">مبلغ:</span><span>{p.amount}</span></div>
-                    <div className="flex justify-between mb-1"><span className="font-bold">روش:</span><span>{p.method || '-'}</span></div>
-                    <div className="flex justify-between mb-3"><span className="font-bold">وضعیت:</span><span>{p.status || '-'}</span></div>
-                    <div className="flex gap-2 justify-end">
-                      <button className="bg-[#FF6600] text-white px-2 py-1 rounded text-xs hover:bg-[#e65c00] transition cursor-pointer" onClick={() => handleEdit(p.id)}>ویرایش</button>
-                      <button className="bg-[#9FC6C3] text-[#055B5C] px-2 py-1 rounded text-xs hover:bg-[#85bab4] transition cursor-pointer" onClick={() => handleDelete(p.id)}>حذف</button>
+                    <div className="flex flex-col gap-1 mb-3">
+                      <div className="flex justify-between">
+                        <span className="font-bold">نام:</span>
+                        <span>{p.name}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-bold">نوع دوره:</span>
+                        <span>{p.courseType}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-bold">تعداد جلسات:</span>
+                        <span>{p.sessions}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-bold">مربی:</span>
+                        <span>{p.coach}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-bold">تاریخ خرید:</span>
+                        <span>{p.date || "-"}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-bold">مبلغ:</span>
+                        <span>{p.amount}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-bold">روش:</span>
+                        <span>{p.method || "-"}</span>
+                      </div>
+                      <div className="flex justify-between mb-3">
+                        <span className="font-bold">وضعیت:</span>
+                        <span>{p.status || "-"}</span>
+                      </div>
+
+                      {/* دکمه باطل کردن در موبایل */}
+                      <div className="flex justify-between gap-2">
+                        {p.status !== "باطل‌شده" && (
+                          <button
+                            className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600 transition cursor-pointer w-full sm:w-auto"
+                            onClick={() => handleInvalidate(p.id)}
+                          >
+                            باطل کردن
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </motion.div>
                 ))}
 
+                {/* فرم افزودن یا ویرایش */}
                 <div className="bg-[#D1E7D8] p-3 rounded-xl shadow text-sm">
-                  {['name', 'courseType', 'sessions', 'coach', 'date', 'amount', 'method', 'status'].map((key) => (
-                    <div key={key} className="mb-2">
-                      <input
-                        type="text"
-                        className="w-full px-2 py-1 border rounded text-xs text-right"
-                        placeholder={key}
-                        value={newPayment[key]}
-                        onChange={(e) => setNewPayment({ ...newPayment, [key]: e.target.value })}
-                      />
-                    </div>
-                  ))}
+                  {[
+                    "name",
+                    "courseType",
+                    "sessions",
+                    "coach",
+                    "date",
+                    "amount",
+                    "method",
+                    "status", // این را نگه می‌داریم ولی در داخل map شرط می‌گذاریم که نمایش داده نشود
+                  ].map((key) =>
+                    key === "status" ? null : ( // 👈 وضعیت را از UI حذف می‌کنیم
+                      <div key={key} className="mb-2">
+                        {key === "name" ? (
+                          <select
+                            className="w-full px-2 py-1 border rounded text-xs text-right"
+                            value={newPayment.name}
+                            onChange={(e) =>
+                              setNewPayment({
+                                ...newPayment,
+                                name: e.target.value,
+                              })
+                            }
+                          >
+                            <option value="">انتخاب عضو</option>
+                            {userOptions.map((u) => (
+                              <option
+                                key={u.id}
+                                value={`${u.name} ${u.lastName}`}
+                              >
+                                {u.name} {u.lastName}
+                              </option>
+                            ))}
+                          </select>
+                        ) : key === "courseType" ? (
+                          <select
+                            className="w-full px-2 py-1 border rounded text-xs text-right"
+                            value={newPayment.courseType}
+                            onChange={(e) =>
+                              setNewPayment({
+                                ...newPayment,
+                                courseType: e.target.value,
+                              })
+                            }
+                          >
+                            <option value="">نوع دوره</option>
+                            <option value="عمومی">عمومی</option>
+                            <option value="خصوصی">خصوصی</option>
+                            <option value="VIP">VIP</option>
+                          </select>
+                        ) : key === "sessions" ? (
+                          <input
+                            type="number"
+                            min="1"
+                            className="w-full px-2 py-1 border rounded text-xs text-right"
+                            placeholder="تعداد جلسات"
+                            value={newPayment.sessions}
+                            onChange={(e) =>
+                              setNewPayment({
+                                ...newPayment,
+                                sessions: e.target.value,
+                              })
+                            }
+                          />
+                        ) : key === "coach" ? (
+                          <select
+                            className="w-full px-2 py-1 border rounded text-xs text-right"
+                            value={newPayment.coach}
+                            onChange={(e) =>
+                              setNewPayment({
+                                ...newPayment,
+                                coach: e.target.value,
+                              })
+                            }
+                          >
+                            <option value="">انتخاب مربی</option>
+                            {coachOptions.map((coach, index) => (
+                              <option key={index} value={coach}>
+                                {coach}
+                              </option>
+                            ))}
+                          </select>
+                        ) : key === "date" ? (
+                          <DatePicker
+                            calendar={persian}
+                            locale={persian_fa}
+                            inputClass="w-full px-2 py-1 border rounded text-xs text-right"
+                            placeholder="تاریخ خرید"
+                            value={newPayment.date}
+                            onChange={(date) =>
+                              setNewPayment({
+                                ...newPayment,
+                                date: date?.format("YYYY/MM/DD") || "",
+                              })
+                            }
+                          />
+                        ) : key === "amount" ? (
+                          <input
+                            type="number"
+                            min="0"
+                            className="w-full px-2 py-1 border rounded text-xs text-right"
+                            placeholder="مبلغ به ریال"
+                            value={newPayment.amount}
+                            onChange={(e) =>
+                              setNewPayment({
+                                ...newPayment,
+                                amount: e.target.value,
+                              })
+                            }
+                          />
+                        ) : key === "method" ? (
+                          <select
+                            className="w-full px-2 py-1 border rounded text-xs text-right"
+                            value={newPayment.method}
+                            onChange={(e) =>
+                              setNewPayment({
+                                ...newPayment,
+                                method: e.target.value,
+                              })
+                            }
+                          >
+                            <option value="">روش پرداخت</option>
+                            <option value="کارتخوان">کارتخوان</option>
+                            <option value="نقدی">نقدی</option>
+                            <option value="دستی">ثبت دستی</option>
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            className="w-full px-2 py-1 border rounded text-xs text-right"
+                            placeholder={placeholders[key] || ""}
+                            value={newPayment[key]}
+                            onChange={(e) =>
+                              setNewPayment({
+                                ...newPayment,
+                                [key]: e.target.value,
+                              })
+                            }
+                          />
+                        )}
+                      </div>
+                    )
+                  )}
+
                   <div className="text-left">
                     <button
                       className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700 cursor-pointer"
                       onClick={editId ? handleUpdate : handleAdd}
                     >
-                      {editId ? 'ذخیره' : 'افزودن'}
+                      {editId ? "ذخیره" : "افزودن"}
                     </button>
                   </div>
+                </div>
+
+                {/* جمع کل پرداخت‌ها */}
+                <div className="bg-white text-sm text-right font-bold text-[#055B5C] px-3 py-2 border-t border-[#9FC6C3] rounded-md shadow">
+                  جمع کل پرداخت‌ها:{" "}
+                  <span className="text-green-700">
+                    {payments
+                      .filter((p) => p.status !== "باطل‌شده") // فیلتر کردن سطرهای باطل‌شده
+                      .reduce((sum, p) => sum + Number(p.amount), 0)}{" "}
+                    تومان
+                  </span>
                 </div>
               </div>
             </div>

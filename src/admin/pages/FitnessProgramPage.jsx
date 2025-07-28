@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
-import { motion, AnimatePresence } from "framer-motion"; // ✅ اضافه شد
+import { motion, AnimatePresence } from "framer-motion";
 
 // توابع مدیریت داده‌ها
 const fetchRows = () => {
@@ -204,12 +204,27 @@ function FitnessProgramPage() {
                             <input
                               type="text"
                               name={field}
-                              value={row[field]}
-                              onChange={(e) => handleChange(e, row.id)}
+                              value={newRow[field]}
+                              onChange={(e) =>
+                                setNewRow({
+                                  ...newRow,
+                                  [field]: e.target.value,
+                                })
+                              }
+                              placeholder={
+                                field === "title"
+                                  ? "نام حرکت"
+                                  : field === "sets"
+                                  ? "تعداد ست"
+                                  : field === "time"
+                                  ? "مدت زمان (مثلاً 10 دقیقه)"
+                                  : "نوع ویدیو (مثلاً عمومی)"
+                              }
                               className="w-full border px-1 rounded text-xs h-8"
                             />
                           </td>
                         ))}
+
                         <td>
                           <div className="flex flex-col items-center">
                             {row.video ? (
@@ -298,13 +313,25 @@ function FitnessProgramPage() {
                       name={field}
                       value={newRow[field]}
                       onChange={(e) =>
-                        setNewRow({ ...newRow, [field]: e.target.value })
+                        setNewRow({
+                          ...newRow,
+                          [field]: e.target.value,
+                        })
                       }
-                      placeholder={field === "time" ? "زمان (اختیاری)" : "..."}
+                      placeholder={
+                        field === "title"
+                          ? "نام حرکت"
+                          : field === "sets"
+                          ? "تعداد ست"
+                          : field === "time"
+                          ? "مدت زمان (مثلاً 10 دقیقه)"
+                          : "نوع ویدیو (مثلاً عمومی)"
+                      }
                       className="w-full border px-1 rounded text-xs h-8"
                     />
                   </td>
                 ))}
+
                 <td>
                   <div className="flex flex-col items-center gap-1">
                     {newRow.video && (

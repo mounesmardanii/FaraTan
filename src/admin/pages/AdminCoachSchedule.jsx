@@ -47,7 +47,7 @@ function AdminCoachSchedule() {
       status === ""
     ) {
       setError(
-        "تمام فیلدها (نوع دوره، نوع کلاس، روز، ساعت و ظرفیت) الزامی است."
+        "تمام فیلدها (نوع دوره، نوع کلاس، روز، ساعت و ظرفیت) الزامی است"
       );
       return;
     }
@@ -65,7 +65,7 @@ function AdminCoachSchedule() {
     setRows([...rows, newItem]);
     setNewRow({
       courseType: "عمومی",
-      classType: "بدنسازی", // ✅ مقدار پیش‌فرض معتبر
+      classType: "بدنسازی",
       day: "",
       startTime: "10:00",
       endTime: "11:00",

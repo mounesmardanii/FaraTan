@@ -190,10 +190,23 @@ function NutritionProgramPage() {
                         setNewRow({ ...newRow, [field]: e.target.value })
                       }
                       className="w-full border px-1 rounded text-xs h-8"
-                      placeholder="..."
+                      placeholder={
+                        field === "day"
+                          ? "مثلاً شنبه"
+                          : field === "breakfast"
+                          ? "مثلاً املت"
+                          : field === "snack1"
+                          ? "مثلاً موز"
+                          : field === "lunch"
+                          ? "مثلاً مرغ"
+                          : field === "snack2"
+                          ? "مثلاً بادام"
+                          : "مثلاً کباب"
+                      }
                     />
                   </td>
                 ))}
+
                 <td>
                   <button
                     onClick={handleAddRow}
