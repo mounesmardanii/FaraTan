@@ -45,7 +45,7 @@ class PlanPurchaseService:
             status = "Pending"
             paid_at = None  
         else:    
-            status = "paid"
+            status = "Paid"
             paid_at = datetime.utcnow()   
         return self.repo.create_manual_purchase(
             member_id=data.member_id,

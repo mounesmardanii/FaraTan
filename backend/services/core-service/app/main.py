@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from fastapi.security import OAuth2PasswordBearer
 from app.api.v1.endpoints.member_route import member_router
-from app.api.v1.endpoints.admin_route import admin_router
+from app.api.v1.endpoints.admin_routes import admin_router
 # from app.utils.scheduler_starter import starter
 from app.api.v1.endpoints.nutrition_routes import nutrition_router
 from app.api.v1.endpoints.plan_routes import plan_router
@@ -19,8 +19,11 @@ from app.api.v1.endpoints.plan_session_routes import plan_session_router
 from app.api.v1.endpoints.payment_routes import payment_router
 from app.api.v1.endpoints.purchase_routes import purchase_router
 from app.api.v1.endpoints.schedule_routes import gym_schedule_router
-from app.api.v1.endpoints.sports_router import gym_sports_router
-from app.api.v1.endpoints.reservation_router import reservation_router
+from app.api.v1.endpoints.sports_routes import gym_sports_router
+from app.api.v1.endpoints.reservation_routes import reservation_router
+from app.api.v1.endpoints.movement_routes import movement_router
+from app.api.v1.endpoints.program_routes import program_router
+
 
 app = FastAPI()
 
@@ -48,6 +51,8 @@ app.include_router(purchase_router, prefix="/api/v1/purchase", tags=["purchases"
 app.include_router(gym_schedule_router, prefix="/api/v1/schedule", tags=["schedules"])
 app.include_router(gym_sports_router, prefix="/api/v1/sport", tags=["sports"])
 app.include_router(reservation_router, prefix="/api/v1/reservation", tags=["reservations"])
+app.include_router(movement_router, prefix="/api/v1/movement", tags=["movements"])
+app.include_router(program_router, prefix="/api/v1/program", tags=["programs"])
 
 
 @app.get("/")

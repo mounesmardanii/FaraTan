@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Annotated
 from uuid import UUID
 from fastapi import Depends
 from app.infrastructure.repositories.reservation_repository import ReservationRepository
@@ -7,7 +7,7 @@ from datetime import date
 
 
 class ReservationService:
-    def __init__(self, repo: ReservationRepository = Depends()):
+    def __init__(self, repo: Annotated[ReservationRepository, Depends()]):
         self.repo = repo
 
     async def create(self, member_id:UUID, session_id:UUID, session_schedule_id:UUID) -> Reservation:

@@ -6,6 +6,7 @@ from loguru import logger
 from fastapi import Depends, HTTPException
 from uuid import UUID
 from app.domain.schemas.movements_schema import CreateMovementSchema
+
 class MovementService:
     def __init__(self, repo: Annotated[MovementRepository, Depends()]):
         self.repo = repo
