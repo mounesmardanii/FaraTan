@@ -14,13 +14,19 @@ class MovementService:
         movement = Movement(
             title=data.title
         )
-        return await self.repo.create_movement(movement)
+        return self.repo.create_movement(movement)
 
     async def get_movement_by_id(self, movement_id: str) -> Movement:
-        movement = await self.repo.get_movement_by_id(movement_id)
+        movement = self.repo.get_movement_by_id(movement_id)
         if not movement:
             raise HTTPException(status_code=404, detail="Movement not found")
         return movement
 
     async def get_all_movements(self) -> List[Movement]:
-      return await self.repo.get_all_movements()
+      return self.repo.get_all_movements()
+    
+    async def update_movement_title(self, movement_id: UUID, title: str) -> Movement:
+        return self.repo.update_movement_title(movement_id, title)
+
+    async def delete_movement(self, movement_id: str) -> None:
+        return self.repo.delete_movement(movement_id)

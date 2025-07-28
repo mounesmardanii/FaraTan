@@ -31,3 +31,22 @@ async def get_all_movements(
 ):
     
     return await service.get_all_movements()
+
+
+@movement_router.put("/movements/{movement_id}/title", status_code=status.HTTP_200_OK)
+async def update_movement_title(
+    movement_id: UUID,
+    new_title: str,
+    service: Annotated[MovementMainService, Depends()],
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
+):
+    return await service.update_movement_title(movement_id, new_title)
+
+
+@movement_router.delete("/movements/{movement_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_movement(
+    movement_id: str,
+    service: Annotated[MovementMainService, Depends()],
+    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
+):
+    return await service.delete_movement(movement_id)
