@@ -38,7 +38,7 @@ async def upload_profile(
     update_data = MemberUpdateSchema(
         profile_image=str(output.mongo_id)
     )
-    logger.info(f"Saving media in website with id: {current_member.id}")
+    logger.info(f"Saving media in member with id: {current_member.id}")
     await service.update_member(current_member.id, update_data)
     
     return output
