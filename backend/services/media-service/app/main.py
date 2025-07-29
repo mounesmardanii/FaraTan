@@ -6,7 +6,7 @@ import logging
 from app.api.v1.endpoints.member_routes import member_media_router
 from app.api.v1.endpoints.trainer_routes import trainer_media_router
 from app.api.v1.endpoints.movement_routes import movement_media_router
-from app.utils.scheduler_starter import starter
+# from app.utils.scheduler_starter import starter
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -18,9 +18,9 @@ logger.info("Custom logging is configured.")
 
 app = FastAPI()
 
-@app.on_event("startup")
-async def start_scheduler():
-    starter()
+# @app.on_event("startup")
+# async def start_scheduler():
+#     starter()
 
 app.add_middleware(
     CORSMiddleware,
