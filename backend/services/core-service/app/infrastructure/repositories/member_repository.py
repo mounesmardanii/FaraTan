@@ -74,3 +74,15 @@ class MemberRepository:
           )
 
           return [{"month": r.month.strftime("%B"), "weight": float(r.weight)} for r in result]
+    
+
+    def get_member_profile(self, member_id: UUID) -> MemberProfile:
+        return self.db.query(MemberProfile).filter_by(member_id=member_id).first()
+
+    def get_latest_measurement(self, member_id: UUID) -> BodyMeasurement:
+        return (
+            self.db.query(BodyMeasurement)
+            .filter_by(member_id=member_id)
+            .order_by(BodyMeasurement.created_at.desc())
+            .first()
+        )

@@ -37,3 +37,5 @@ class ReservationService:
         self.repo.cancel_reservation(reservation)
 
 
+    async def get_last_reservation_by_member_id(self, member_id: UUID) -> List[Reservation]:
+        return self.repo.get_last_reservation_by_member_id(member_id)

@@ -22,6 +22,8 @@ class ReservationRepository:
     def get_by_member_id(self, member_id: UUID) -> List[Reservation]:
         return self.db.query(Reservation).filter_by(member_id=member_id).all()
     
+    def get_last_reservation_by_member_id(self, member_id: UUID) -> Reservation:
+        return self.db.query(Reservation).filter_by(member_id=member_id).order_by(Reservation.reserved_at.desc()).first()
 
     def get_by_id(self, id: UUID) -> Reservation:
         return self.db.query(Reservation).filter_by(id=id).first()

@@ -53,3 +53,8 @@ class PlanSessionService:
     
     async def get_active_trainers_count(self):
         return self.repo.get_active_trainers_count()
+    
+
+    async def get_monthly_session_count(self, member_id: UUID) -> int:
+        
+        return self.repo.get_monthly_session_count(member_id) 

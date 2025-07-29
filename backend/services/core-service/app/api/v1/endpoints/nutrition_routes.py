@@ -93,3 +93,11 @@ async def get_nutrition_plan_by_week_id(
     service: Annotated[NutritionMainService, Depends()],
 ):
     return await service.get_week_plan(week_id)
+
+
+@nutrition_router.get("/nutrition/info")
+async def get_nutrition_info(
+    service: Annotated[NutritionMainService, Depends()],
+    current_member: Annotated[MemberTokenDataSchema, Depends(get_current_member)]
+    ):
+    return await service.calculate_nutrition(current_member.id)

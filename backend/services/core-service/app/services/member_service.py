@@ -29,10 +29,17 @@ class MemberService(BaseService):
         return self.member_repository.get_member_by_id(member_id)
 
     async def get_profile_by_member_id(self, member_id: UUID) -> MemberProfile:
-        return self.member_repository.get_profile_by_member_id(member_id)
-
+        prof = self.member_repository.get_profile_by_member_id(member_id)
+        logger.info(f"{prof}")
+        return prof
     async def get_growth_stats(self):
         return self.member_repository.get_member_growth_last_three_months()
     
     async def get_monthly_weight_trend(self, member_id: UUID) -> List[Dict]:
         return self.member_repository.get_monthly_weight_trend(member_id)
+    
+    async def get_member_profile(self, member_id: UUID) -> MemberProfile:
+        return self.member_repository.get_member_profile(member_id)
+
+    async def get_latest_measurement(self, member_id: UUID) -> BodyMeasurement:
+        return self.member_repository.get_latest_measurement(member_id)

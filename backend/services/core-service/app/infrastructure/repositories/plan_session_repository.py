@@ -54,3 +54,18 @@ class PlanSessionRepository:
         ).scalar()
 
         return active_trainers_count if active_trainers_count is not None else 0
+    
+
+    def get_monthly_session_count(self, member_id: UUID) -> int:
+        start = datetime.utcnow().replace(day=1)
+        end = start + relativedelta(months=1)
+
+        return (
+            self.db.query(func.count())
+            .select_from(ProgramMovement)
+            .filter(
+                ProgramMovement.member_id == member_id,
+                ProgramMovement.created_at >= start,
+                ProgramMovement.created_at < end
+            ).scalar()
+        )
