@@ -8,7 +8,7 @@ from app.core.configs.config import get_settings
 
 config = get_settings()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"http://127.0.0.1:8000/api/v1/auth/login", scheme_name="AdminOAuth2")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"http://iam.localhost/api/v1/auth/login", scheme_name="AdminOAuth2")
 
 
 async def get_current_admin(
