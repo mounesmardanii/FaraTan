@@ -56,3 +56,44 @@ async def upload_movement_video(
             "updated_fields": updated_fields
         }
     )
+
+
+@movement_media_router.get(
+    "/{movement_id}/video",
+    response_class=StreamingResponse,
+    status_code=status.HTTP_200_OK
+)
+async def get_movement_video(
+    movement_id: UUID,
+    media_service: Annotated[MediaService, Depends()],
+    service: Annotated[MovementService, Depends()],
+):
+    logger.info(f"Fetching movement with id: {movement_id}")
+
+    try:
+        movement = await service.get_movement_by_id(movement_id)
+
+        if not movement or not movement.video_url:
+            logger.info(f"No video for movement {movement_id}")
+            return Response(status_code=204)
+
+        mongo_id = ObjectId(movement.video_url)
+        media_schema, file_stream = await media_service.get_public_media(mongo_id)
+
+        if not (media_schema and file_stream):
+            logger.warning(f"Video file not found for movement {movement_id}")
+            return Response(status_code=204)
+
+        logger.info(f"Serving video: {media_schema.filename}")
+
+        return StreamingResponse(
+            content=file_stream(),
+            media_type=media_schema.content_type,
+            headers={
+                "Content-Disposition": f"inline; filename={media_schema.filename}"
+            },
+        )
+
+    except Exception as e:
+        logger.warning(f"[Video Fetch Error] for movement {movement_id}: {e}")
+        return Response(status_code=204)
