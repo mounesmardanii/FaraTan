@@ -65,24 +65,24 @@ services:
       - app-network
     restart: unless-stopped
 
-#   iam:
-#     build:
-#       context:  ../iam
-#       dockerfile: Dockerfile
-#     container_name: iam
-# #    ports:
-# #      - "8020:8020"
-#     networks:
-#       - app-network
-#     labels:
-#       - "traefik.enable=true"
-#       - "traefik.http.routers.iam.rule=Host(`iam.localhost`)"
-#       - "traefik.http.routers.iam.entrypoints=web"
-#       - "traefik.http.services.iam.loadbalancer.server.port=80"
-#     restart: unless-stopped
-#     depends_on:
-#       - postgres
-#       - redis
+  iam:
+    build:
+      context:  ../iam
+      dockerfile: Dockerfile
+    container_name: iam
+#    ports:
+#      - "8020:8020"
+    networks:
+      - app-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.iam.rule=Host(`iam.localhost`)"
+      - "traefik.http.routers.iam.entrypoints=web"
+      - "traefik.http.services.iam.loadbalancer.server.port=80"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
 
 networks:
   app-network:
