@@ -4,8 +4,6 @@ from typing import Annotated, List
 from loguru import logger
 from app.domain.schemas.movements_schema import MovementResponseSchema, CreateMovementSchema
 from uuid import UUID
-from app.services.auth_services.admin_auth_service import get_current_admin
-from app.domain.schemas.token_schema import AdminTokenDataSchema
 from app.services.movement_main_service import MovementMainService
 movement_router = APIRouter()
 
@@ -13,7 +11,7 @@ movement_router = APIRouter()
 async def create_movement(
     data: CreateMovementSchema,
     service: Annotated[MovementMainService, Depends()],
-    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
+    # current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.create_movement(data)
 
@@ -27,7 +25,7 @@ async def get_movement_by_id(
 @movement_router.get("/movements", status_code=status.HTTP_200_OK, response_model=List[MovementResponseSchema])
 async def get_all_movements(
     service: Annotated[MovementMainService, Depends()],
-      current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
+    #   current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     
     return await service.get_all_movements()
@@ -38,7 +36,7 @@ async def update_movement_title(
     movement_id: UUID,
     new_title: str,
     service: Annotated[MovementMainService, Depends()],
-    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
+    # current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.update_movement_title(movement_id, new_title)
 
@@ -47,6 +45,6 @@ async def update_movement_title(
 async def delete_movement(
     movement_id: str,
     service: Annotated[MovementMainService, Depends()],
-    current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
+    # current_admin: Annotated[AdminTokenDataSchema, Depends(get_current_admin)]
 ):
     return await service.delete_movement(movement_id)

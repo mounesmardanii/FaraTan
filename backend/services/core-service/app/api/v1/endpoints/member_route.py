@@ -1,8 +1,6 @@
 from fastapi import Depends, status, APIRouter
 from typing import Annotated, List, Dict
 from loguru import logger
-from app.services.member_main_service import MemberMainService
-from app.services.auth_services.member_auth_service import get_current_member
 from app.domain.schemas.token_schema import MemberTokenDataSchema
 
 member_router = APIRouter()
