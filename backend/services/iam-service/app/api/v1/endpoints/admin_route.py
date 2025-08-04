@@ -71,9 +71,8 @@ async def forget_password(
 async def delete_member(
     member_id: UUID,
     member_service: Annotated[MemberMainService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
-    logger.info(f"🗑️ Admin [{current_admin.admin_id}] requested to delete member ID: {member_id}")
+    logger.info(f"🗑️ Admin requested to delete member ID: {member_id}")
     await member_service.delete_member(member_id)
     return {"message": f"✅ Member deleted successfully"}
 
@@ -92,7 +91,6 @@ async def register_trainer(
 @admin_router.get("/", response_model=List[TrainerResponseSchema])
 async def get_all_trainers(
     trainer_service: Annotated[TrainerService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
     return await trainer_service.get_all_trainers()
 
@@ -101,7 +99,6 @@ async def get_all_trainers(
 async def get_trainer_by_id(
     trainer_id: UUID,
     trainer_service: Annotated[TrainerService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
     return await trainer_service.get_trainer_by_id(trainer_id)
 
@@ -110,7 +107,6 @@ async def get_trainer_by_id(
 async def delete_trainer(
     trainer_id: UUID,
     trainer_service: Annotated[TrainerService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
     await trainer_service.delete_trainer(trainer_id)
     return {"message": f"✅ Trainer deleted successfully"}
@@ -123,6 +119,5 @@ async def update_trainer(
     trainer_id: UUID,
     update_data: TrainerUpdateSchema,
     trainer_service: Annotated[TrainerService, Depends()],
-    current_admin: Annotated[TokenDataSchema, Depends(get_current_admin)],
 ):
     return await trainer_service.update_trainer(trainer_id, update_data)

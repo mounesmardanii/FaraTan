@@ -21,6 +21,7 @@ from app.domain.schemas.token_schema import TokenSchema, TokenDataSchema
 from app.services.member_main_service import MemberMainService
 from app.services.member_service import MemberService
 from app.services.auth_services.auth_service import get_current_member
+from uuid import UUID
 
 member_router = APIRouter()
 
@@ -75,20 +76,20 @@ async def resend_otp(
 
 @member_router.put("/update-info", status_code=status.HTTP_200_OK)
 async def update_info(
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_id: UUID,
     member_data: UpdateMemberInfoSchema,
     member_service: Annotated[MemberService, Depends()]
 ):
-    logger.info(f"✏️ Updating info for member ID: {current_member.id}")
-    return await member_service.update_member(current_member.id, member_data)
+    logger.info(f"✏️ Updating info for member ID: {member_id}")
+    return await member_service.update_member(member_id, member_data)
 
 
-@member_router.get("/Me", response_model=MemberResponseSchema, status_code=status.HTTP_200_OK)
-async def read_me(
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
-) -> MemberResponseSchema:
-    logger.info(f"👤 Fetching current member: {current_member.phone_number}")
-    return current_member
+# @member_router.get("/Me", response_model=MemberResponseSchema, status_code=status.HTTP_200_OK)
+# async def read_me(
+#     current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+# ) -> MemberResponseSchema:
+#     logger.info(f"👤 Fetching current member: {current_member.phone_number}")
+#     return current_member
 
 
 @member_router.post("/verify-otp-forget-password", status_code=status.HTTP_200_OK)
@@ -116,20 +117,22 @@ async def forget_password(
 )
 async def create_member_profile(
     profile_data: MemberProfileCreateSchema,
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    # current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_id:UUID,
     member_service: Annotated[MemberMainService, Depends()],
 ) -> MemberProfileResponseSchema:
-    logger.info(f"📁 Creating profile for member ID: {current_member.id}")
-    return await member_service.create_profile(current_member.id, profile_data)
+    logger.info(f"📁 Creating profile for member ID: {member_id}")
+    return await member_service.create_profile(member_id, profile_data)
 
 
 @member_router.get("/profile", response_model=MemberProfileResponseSchema, status_code=status.HTTP_200_OK)
 async def get_member_profile(
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_id: UUID,
+    # current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
     member_service: Annotated[MemberMainService, Depends()],
 ) -> MemberProfileResponseSchema:
-    logger.info(f"📄 Fetching profile for member ID: {current_member.id}")
-    return await member_service.get_profile_by_member_id(current_member.id)
+    logger.info(f"📄 Fetching profile for member ID: {member_id}")
+    return await member_service.get_profile_by_member_id(member_id)
 
 
 @member_router.put(
@@ -139,11 +142,12 @@ async def get_member_profile(
 )
 async def update_member_profile(
     profile_data: MemberProfileUpdateSchema,
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_id: UUID,
+    # current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
     member_service: Annotated[MemberService, Depends()],
 ) -> MemberProfileResponseSchema:
-    logger.info(f"✏️ Updating profile for member ID: {current_member.id}")
-    return await member_service.update_profile(current_member.id, profile_data)
+    logger.info(f"✏️ Updating profile for member ID: {member_id}")
+    return await member_service.update_profile(member_id, profile_data)
 
 
 @member_router.post(
@@ -153,11 +157,12 @@ async def update_member_profile(
 )
 async def create_body_measurement(
     measurement_data: BodyMeasurementCreateSchema,
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_id: UUID,
+    # current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
     member_service: Annotated[MemberMainService, Depends()],
 ) -> BodyMeasurementResponseSchema:
-    logger.info(f"📏 Creating body measurements for member ID: {current_member.id}")
-    return await member_service.create_body_measurement(current_member.id, measurement_data)
+    logger.info(f"📏 Creating body measurements for member ID: {member_id}")
+    return await member_service.create_body_measurement(member_id, measurement_data)
 
 
 @member_router.get(
@@ -166,11 +171,12 @@ async def create_body_measurement(
     status_code=status.HTTP_200_OK,
 )
 async def get_body_measurements(
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_id: UUID,
+    # current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
     member_service: Annotated[MemberMainService, Depends()],
 ) -> BodyMeasurementResponseSchema:
-    logger.info(f"📊 Fetching body measurements for member ID: {current_member.id}")
-    return await member_service.get_member_body_measurements(current_member.id)
+    logger.info(f"📊 Fetching body measurements for member ID: {member_id}")
+    return await member_service.get_member_body_measurements(member_id)
 
 
 @member_router.put(
@@ -180,8 +186,9 @@ async def get_body_measurements(
 )
 async def update_body_measurement(
     measurement_data: BodyMeasurementUpdateSchema,
-    current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
+    member_id: UUID,
+    # current_member: Annotated[TokenDataSchema, Depends(get_current_member)],
     member_service: Annotated[MemberMainService, Depends()],
 ) -> BodyMeasurementResponseSchema:
-    logger.info(f"📝 Updating body measurements for member ID: {current_member.id}")
-    return await member_service.update_body_measurement(current_member.id, measurement_data)
+    logger.info(f"📝 Updating body measurements for member ID: {member_id}")
+    return await member_service.update_body_measurement(member_id, measurement_data)
