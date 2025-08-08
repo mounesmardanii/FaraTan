@@ -10,7 +10,7 @@ logger.info("Custom logging is configured.")
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from fastapi.security import OAuth2PasswordBearer
-from app.api.v1.endpoints.member_route import member_router
+# from app.api.v1.endpoints.member_route import member_router
 from app.api.v1.endpoints.admin_routes import admin_router
 # from app.utils.scheduler_starter import starter
 from app.api.v1.endpoints.nutrition_routes import nutrition_router
@@ -41,7 +41,7 @@ app.add_middleware(
 
 logging.info("IAM Service Started")
 
-app.include_router(member_router, prefix="/api/v1/members", tags=["members"])
+# app.include_router(member_router, prefix="/api/v1/members", tags=["members"])
 app.include_router(admin_router, prefix="/api/v1/admins", tags=["admins"])
 app.include_router(nutrition_router, prefix="/api/v1/nutrition", tags=["nutritions"])
 app.include_router(plan_router, prefix="/api/v1/plan", tags=["plans"])

@@ -9,7 +9,7 @@ BodyMeasurementCreateSchema, BodyMeasurementResponseSchema, BodyMeasurementUpdat
 
 )
 from app.services.auth_services.auth_service import AuthService
-from app.services.auth_services.otp_service import OTPService
+# from app.services.auth_services.otp_service import OTPService
 from app.services.base_service import BaseService
 from app.services.member_service import MemberService
 from uuid import UUID
@@ -20,13 +20,13 @@ class MemberMainService(BaseService):
     def __init__(
         self,
         member_service: Annotated[MemberService, Depends()],
-        otp_service: Annotated[OTPService, Depends()],
+        # otp_service: Annotated[OTPService, Depends()],
         auth_service: Annotated[AuthService, Depends()],
     ) -> None:
         super().__init__()
 
         self.member_service = member_service
-        self.otp_service = otp_service
+        # self.otp_service = otp_service
         self.auth_service = auth_service
 
     async def register_member(self, member: MemberCreateSchema) -> MemberResponseSchema:
@@ -40,21 +40,21 @@ class MemberMainService(BaseService):
 
 
         new_member = await self.member_service.create_member(member)
-        if self.config.ENABLE_OTP:
-            self.otp_service.send_otp(new_member.phone_number)
+        # if self.config.ENABLE_OTP:
+        #     self.otp_service.send_otp(new_member.phone_number)
         logger.info(f"member with number: {member.phone_number} created successfully")
         return MemberResponseSchema.from_orm(new_member)
 
     async def verify_member(
         self, verify_member_schema: VerifyOTPSchema
     ) -> TokenSchema:
-        if not self.otp_service.verify_otp(
-            verify_member_schema.phone_number, verify_member_schema.otp
-        ):
-            logger.error(f"Invalid OTP for phone_number {verify_member_schema.phone_number}❌")
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid OTP❌"
-            )
+        # if not self.otp_service.verify_otp(
+        #     verify_member_schema.phone_number, verify_member_schema.otp
+        # ):
+        #     logger.error(f"Invalid OTP for phone_number {verify_member_schema.phone_number}❌")
+        #     raise HTTPException(
+        #         status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid OTP❌"
+        #     )
 
         member = await self.member_service.get_member_by_number(
             verify_member_schema.phone_number
@@ -89,38 +89,38 @@ class MemberMainService(BaseService):
                 status_code=status.HTTP_400_BAD_REQUEST, detail="member already verified"
             )
 
-        if self.otp_service.check_exist(resend_otp_schema.phone_number):
-            logger.error(f"OTP for phone_number {resend_otp_schema.phone_number} already exists")
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="OTP already exists"
-            )
+        # if self.otp_service.check_exist(resend_otp_schema.phone_number):
+        #     logger.error(f"OTP for phone_number {resend_otp_schema.phone_number} already exists")
+        #     raise HTTPException(
+        #         status_code=status.HTTP_400_BAD_REQUEST, detail="OTP already exists"
+        #     )
         
 
-        if self.config.ENABLE_OTP:
-            self.otp_service.send_otp(resend_otp_schema.phone_number)
-            logger.info(f"OTP resent to phone_number {resend_otp_schema.phone_number}")
-            return ResendOTPResponseSchema(
-                phone_number=resend_otp_schema.phone_number,
-                message="OTP sent to phone_number",
-            )   
-        else:
-            logger.info("OTP service is disabled, skipping OTP sending")
-            return ResendOTPResponseSchema(
-                phone_number=resend_otp_schema.phone_number,
-                message="OTP feature is disabled",
-            )
+        # if self.config.ENABLE_OTP:
+        #     self.otp_service.send_otp(resend_otp_schema.phone_number)
+        #     logger.info(f"OTP resent to phone_number {resend_otp_schema.phone_number}")
+        #     return ResendOTPResponseSchema(
+        #         phone_number=resend_otp_schema.phone_number,
+        #         message="OTP sent to phone_number",
+        #     )   
+        # else:
+        logger.info("OTP service is disabled, skipping OTP sending")
+        return ResendOTPResponseSchema(
+            phone_number=resend_otp_schema.phone_number,
+            message="OTP feature is disabled",
+        )
                     
 
     async def verify_otp_forget_password(
         self, verify_member_schema: VerifyOTPSchema
     ) :
-        if not self.otp_service.verify_otp(
-            verify_member_schema.phone_number, verify_member_schema.otp
-        ):
-            logger.error(f"Invalid OTP for phone_number {verify_member_schema.phone_number}❌")
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid OTP❌"
-            )
+        # if not self.otp_service.verify_otp(
+        #     verify_member_schema.phone_number, verify_member_schema.otp
+        # ):
+        #     logger.error(f"Invalid OTP for phone_number {verify_member_schema.phone_number}❌")
+        #     raise HTTPException(
+        #         status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid OTP❌"
+        #     )
 
         member = await self.member_service.get_member_by_number(verify_member_schema.phone_number)
         await self.member_service.update_verified_status(member.id, {"can_reset_password": True})

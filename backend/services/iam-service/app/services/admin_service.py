@@ -5,7 +5,7 @@ from  app.infrastructure.repositories.admin_repository import AdminRepository
 from  app.services.auth_services.hash_service import HashService
 from  app.services.base_service import BaseService
 from uuid import UUID
-from app.services.auth_services.otp_service import OTPService
+# from app.services.auth_services.otp_service import OTPService
 from fastapi import Depends, HTTPException
 from app.domain.schemas.admin_schema import AdminResponseSchema
 class AdminService(BaseService):
@@ -13,12 +13,12 @@ class AdminService(BaseService):
         self,
         admin_repository: Annotated[AdminRepository, Depends()],
         hash_service: Annotated[HashService, Depends()],
-        otp_service: Annotated[OTPService, Depends()],
+        # otp_service: Annotated[OTPService, Depends()],
     ) -> None:
         super().__init__()
         self.admin_repository = admin_repository
         self.hash_service = hash_service
-        self.otp_service = otp_service
+        # self.otp_service = otp_service
 
 
 

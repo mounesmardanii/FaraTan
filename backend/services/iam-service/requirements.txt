@@ -25,3 +25,5 @@ pytest==6.2.4
 python-multipart
 pytest-mock
 jwt
+kavenegar
+apscheduler

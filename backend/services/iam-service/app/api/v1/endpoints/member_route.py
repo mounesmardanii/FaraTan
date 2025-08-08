@@ -37,20 +37,20 @@ async def register(
     return await member_service.register_member(member)
 
 
-@member_router.post(
-    "/verify-otp",
-    response_model=TokenSchema,
-    status_code=status.HTTP_200_OK
-)
-async def verify_otp(
-    verify_member_schema: VerifyOTPSchema,
-    member_service: Annotated[MemberMainService, Depends()],
-) -> TokenSchema:
-    logger.info(f"📨 Verifying OTP for: {verify_member_schema.phone_number}")
-    return await member_service.verify_member(verify_member_schema)
+# @member_router.post(
+#     "/verify-otp",
+#     response_model=TokenSchema,
+#     status_code=status.HTTP_200_OK
+# )
+# async def verify_otp(
+#     verify_member_schema: VerifyOTPSchema,
+#     member_service: Annotated[MemberMainService, Depends()],
+# ) -> TokenSchema:
+#     logger.info(f"📨 Verifying OTP for: {verify_member_schema.phone_number}")
+#     return await member_service.verify_member(verify_member_schema)
 
 
-# @member_router.post("/login", response_model=TokenSchema, status_code=status.HTTP_200_OK)
+# # @member_router.post("/login", response_model=TokenSchema, status_code=status.HTTP_200_OK)
 # async def login_for_access_token(
 #     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 #     auth_service: Annotated[AuthService, Depends()],
@@ -61,17 +61,17 @@ async def verify_otp(
 #     )    
 
 
-@member_router.post(
-    "/resend-otp",
-    response_model=ResendOTPResponseSchema,
-    status_code=status.HTTP_200_OK,
-)
-async def resend_otp(
-    resend_otp_schema: ResendOTPSchema,
-    member_service: Annotated[MemberMainService, Depends()],
-) -> ResendOTPResponseSchema:
-    logger.info(f"🔁 Resending OTP for: {resend_otp_schema.phone_number}")
-    return await member_service.resend_otp(resend_otp_schema)
+# @member_router.post(
+#     "/resend-otp",
+#     response_model=ResendOTPResponseSchema,
+#     status_code=status.HTTP_200_OK,
+# )
+# async def resend_otp(
+#     resend_otp_schema: ResendOTPSchema,
+#     member_service: Annotated[MemberMainService, Depends()],
+# ) -> ResendOTPResponseSchema:
+#     logger.info(f"🔁 Resending OTP for: {resend_otp_schema.phone_number}")
+#     return await member_service.resend_otp(resend_otp_schema)
 
 
 @member_router.put("/update-info", status_code=status.HTTP_200_OK)
@@ -92,13 +92,13 @@ async def update_info(
 #     return current_member
 
 
-@member_router.post("/verify-otp-forget-password", status_code=status.HTTP_200_OK)
-async def verify_otp_for_password(
-    verify_member_schema: VerifyOTPSchema,
-    member_service: Annotated[MemberMainService, Depends()],
-):
-    logger.info(f"🔐 Verifying OTP (Forget Password) for: {verify_member_schema.phone_number}")
-    return await member_service.verify_otp_forget_password(verify_member_schema)
+# @member_router.post("/verify-otp-forget-password", status_code=status.HTTP_200_OK)
+# async def verify_otp_for_password(
+#     verify_member_schema: VerifyOTPSchema,
+#     member_service: Annotated[MemberMainService, Depends()],
+# ):
+#     logger.info(f"🔐 Verifying OTP (Forget Password) for: {verify_member_schema.phone_number}")
+#     return await member_service.verify_otp_forget_password(verify_member_schema)
 
 
 @member_router.put("/forget-password", status_code=status.HTTP_200_OK)

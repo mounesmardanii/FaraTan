@@ -40,31 +40,31 @@ async def read_me(current_admin: Annotated[TokenDataSchema, Depends(get_current_
     logger.info(f"📥 Getting admin with phone_number {current_admin.phone_number}")
     return current_admin
 
-@admin_router.post("/send-otp", response_model=SendOTPResponseSchema, status_code=status.HTTP_200_OK)
-async def send_otp(
-    data: SendOTPSchema,
-    admin_service: Annotated[AdminMainService, Depends()],
-) -> SendOTPResponseSchema:
-    logger.info(f"📨 Sending OTP to admin: {data.phone_number}")
-    return await admin_service.send_otp(data)
+# @admin_router.post("/send-otp", response_model=SendOTPResponseSchema, status_code=status.HTTP_200_OK)
+# async def send_otp(
+#     data: SendOTPSchema,
+#     admin_service: Annotated[AdminMainService, Depends()],
+# ) -> SendOTPResponseSchema:
+#     logger.info(f"📨 Sending OTP to admin: {data.phone_number}")
+#     return await admin_service.send_otp(data)
 
 
-@admin_router.post("/verify-otp-forget-password", status_code=status.HTTP_200_OK)
-async def verify_otp_for_password(
-    data: VerifyOTPSchema,
-    admin_service: Annotated[AdminMainService, Depends()],
-):
-    logger.info(f"🔍 Verifying OTP for admin: {data.phone_number}")
-    return await admin_service.verify_otp_forget_password(data)
+# @admin_router.post("/verify-otp-forget-password", status_code=status.HTTP_200_OK)
+# async def verify_otp_for_password(
+#     data: VerifyOTPSchema,
+#     admin_service: Annotated[AdminMainService, Depends()],
+# ):
+#     logger.info(f"🔍 Verifying OTP for admin: {data.phone_number}")
+#     return await admin_service.verify_otp_forget_password(data)
 
 
-@admin_router.put("/forget-password", status_code=status.HTTP_200_OK)
-async def forget_password(
-    admin_data: ForgetPasswordSchema,
-    admin_service: Annotated[AdminService, Depends()],
-):
-    logger.info(f"🔃 Changing password for admin: {admin_data.phone_number}")
-    return await admin_service.change_admin_password(admin_data.phone_number, dict(admin_data))
+# @admin_router.put("/forget-password", status_code=status.HTTP_200_OK)
+# async def forget_password(
+#     admin_data: ForgetPasswordSchema,
+#     admin_service: Annotated[AdminService, Depends()],
+# ):
+#     logger.info(f"🔃 Changing password for admin: {admin_data.phone_number}")
+#     return await admin_service.change_admin_password(admin_data.phone_number, dict(admin_data))
 
 
 @admin_router.delete("/members/{member_id}", status_code=status.HTTP_200_OK)
