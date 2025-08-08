@@ -10,6 +10,7 @@ import CoursesPage from "./pages/Courses/CoursesPage";
 import VipCoursePage from "./pages/Courses/VipCoursePage";
 import GeneralCoursePage from "./pages/Courses/GeneralCoursePage";
 import PrivateCoursePage from "./pages/Courses/PrivateCoursePage";
+import AttendanceManagementPage from "./pages/AttendanceManagementPage";
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
       <Route path="/courses/vip" element={<VipCoursePage />} />
       <Route path="/courses/general" element={<GeneralCoursePage />} />
       <Route path="/courses/private" element={<PrivateCoursePage />} />
-
+      <Route path="/attendance-management" element={<AttendanceManagementPage />} />
       {/* مسیر اشتباه */}
       <Route path="*" element={<div style={{ padding: 20 }}>404 - مسیر پیدا نشد</div>} />
     </Routes>

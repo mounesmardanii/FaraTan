@@ -27,7 +27,7 @@ import modelight_orange from "./modelight_orange.svg";
 import modedark_black from "./modedark_black.svg";
 import modedark_green from "./modedark_green.svg";
 import modedark_orange from "./modedark_orange.svg";
-
+import Attendance from "./Attendance.svg";
 import account from "./account.png";
 import home from "./home.png";
 import payment from "./payment.png";
@@ -52,6 +52,7 @@ export { private1, general, membership };
 
 
 export const assets = {
+  Attendance,
   modedark_green,
   modedark_orange,
   modedark_white,

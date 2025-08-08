@@ -15,20 +15,36 @@ function Dashboard() {
     activeCoaches: 30,
   });
 
-  const [weeklySchedule] = useState([
-    { day: 'شنبه', time: '8-10' },
-    { day: 'یکشنبه', time: '10-12' },
-    { day: 'دوشنبه', time: '12-14' },
-    { day: 'سه‌شنبه', time: '14-16' },
-    { day: 'چهارشنبه', time: '16-18' },
-    { day: 'پنج‌شنبه', time: '18-20' },
-  ]);
 
   const [courses] = useState([
-    { title: 'دوره سه‌ماهه', count: 25 },
-    { title: 'دوره شش‌ماهه', count: 15 },
-    { title: 'دوره یک‌ساله', count: 10 },
+    { title: 'دوره عمومی', count: 25 },
+    { title: ' VIP دوره', count: 10 },
+    { title: 'دوره خصوصی', count: 15 },
   ]);
+
+  const todayClasses = [
+    {
+      title: 'بدنسازی',
+      startTime: '8:00',
+      endTime: '10:00',
+      coach: 'رضا احمدی',
+      status: 'شروع شده',
+    },
+    {
+      title: 'یوگا',
+      startTime: '10:30',
+      endTime: '12:00',
+      coach: 'سارا کریمی',
+      status: 'منتظر شروع',
+    },
+    {
+      title: 'پیلاتس',
+      startTime: '14:00',
+      endTime: '15:30',
+      coach: 'مریم نظری',
+      status: 'پایان یافته',
+    },
+  ];
 
   const growthData = [
     { month: 'فروردین', users: 50 },
@@ -53,6 +69,87 @@ function Dashboard() {
   };
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // کامپوننت کلاس‌های امروز
+  function TodayClasses() {
+    const sortedClasses = [...todayClasses].sort((a, b) => {
+      const timeToMinutes = (time) => {
+        const [h, m = '0'] = time.split(':');
+        return parseInt(h) * 60 + parseInt(m);
+      };
+      return timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
+    });
+
+    return (
+      <div className="bg-[#EAF4EF] rounded-xl p-6 shadow">
+        <h3 className="text-center font-bold text-[#FF7A00] mb-4">کلاس‌های امروز</h3>
+
+        {/* جدول فقط روی صفحه‌های متوسط و بزرگ */}
+        <table className="min-w-full text-[#055B5C] text-center border-collapse hidden md:table">
+          <thead>
+            <tr className="border-b border-gray-300">
+              <th className="py-2 px-4">وضعیت</th>
+              <th className="py-2 px-4">مربی</th>
+              <th className="py-2 px-4">زمان پایان</th>
+              <th className="py-2 px-4">زمان شروع</th>
+              <th className="py-2 px-4">نام کلاس</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedClasses.map((cls, i) => (
+              <tr
+                key={i}
+                className={`border-b border-gray-200 ${i % 2 === 0 ? 'bg-[#d3e8db]' : 'bg-[#e9f2ea]'
+                  }`}
+              >
+                <td
+                  className={`py-2 px-4 font-semibold ${cls.status === 'شروع شده'
+                      ? 'text-green-600'
+                      : cls.status === 'منتظر شروع'
+                        ? 'text-orange-600'
+                        : 'text-gray-500'
+                    }`}
+                >
+                  {cls.status}
+                </td>
+                <td className="py-2 px-4">{cls.coach}</td>
+                <td className="py-2 px-4">{cls.endTime}</td>
+                <td className="py-2 px-4">{cls.startTime}</td>
+                <td className="py-2 px-4">{cls.title}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* کارت‌ها فقط روی صفحه‌های کوچک */}
+        <div className="flex flex-col gap-4 md:hidden">
+          {sortedClasses.map((cls, i) => (
+            <div key={i} className="bg-white rounded-lg p-4 shadow">
+              <p>
+                <span className="font-semibold">وضعیت:</span>{' '}
+                <span
+                  className={
+                    cls.status === 'شروع شده'
+                      ? 'text-green-600'
+                      : cls.status === 'منتظر شروع'
+                        ? 'text-orange-600'
+                        : 'text-gray-500'
+                  }
+                >
+                  {cls.status}
+                </span>
+              </p>
+              <p><span className="font-semibold">مربی:</span> {cls.coach}</p>
+              <p><span className="font-semibold">زمان پایان:</span> {cls.endTime}</p>
+              <p><span className="font-semibold">زمان شروع:</span> {cls.startTime}</p>
+              <p className="font-bold text-[#055B5C] text-lg">{cls.title}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col relative">
@@ -81,8 +178,6 @@ function Dashboard() {
           />
         )}
 
-
-
         {sidebarOpen && (
           <div
             className="fixed md:hidden inset-0 top-[4rem] z-40"
@@ -105,7 +200,7 @@ function Dashboard() {
             { label: 'درآمد این ماه', value: stats.monthlyRevenue },
             { label: 'تعداد مربیان فعال', value: stats.activeCoaches },
             ].map((item, i) => (
-              <motion.div key={i} className="bg-[#EAF4EF] rounded-xl shadow p-5"
+              <motion.div key={i} className="bg-[#EAF4EF] rounded-xl shadow p-5 flex flex-col items-center justify-center text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.2, duration: 0.5 }}
@@ -113,6 +208,7 @@ function Dashboard() {
                 <p className="text-orange-600 font-bold text-sm mb-1">{item.label}</p>
                 <p className="text-2xl font-extrabold text-[#055B5C]">{item.value}</p>
               </motion.div>
+
             ))}
           </motion.div>
 
@@ -167,32 +263,9 @@ function Dashboard() {
           </div>
 
           <motion.div className="bg-[#EAF4EF] rounded-xl shadow p-6"
-            initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 2 }}
+            initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 2.3 }}
           >
-            <p className="text-orange-600 font-bold text-sm mb-4 text-center">برنامه‌ی هفتگی</p>
-            <div className="overflow-x-auto">
-              <table dir="rtl" className="min-w-full text-sm text-[#055B5C] text-center font-semibold ">
-                <thead>
-                  <tr>
-                    {weeklySchedule.map((d, i) => (
-                      <th key={i} className="px-4 py-2 ">{d.day}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className=" bg-[#bee2c9]">
-                  <tr>
-                    {weeklySchedule.map((_, i) => (
-                      <td key={i} className="px-4 py-2">بدنسازی</td>
-                    ))}
-                  </tr>
-                  <tr>
-                    {weeklySchedule.map((d, i) => (
-                      <td key={i} className="px-4 py-2">{d.time}</td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <TodayClasses />
           </motion.div>
 
         </main>
