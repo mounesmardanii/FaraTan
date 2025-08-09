@@ -6,7 +6,7 @@ from app.domain.schemas.purchase_schema import PlanPurchaseResponseSchema, Manua
 
 purchase_router = APIRouter()
 
-@purchase_router.get("/{member_id}", response_model=List[PlanPurchaseResponseSchema], status_code=status.HTTP_200_OK)
+@purchase_router.get("/get_member_purchases/{member_id}", response_model=List[PlanPurchaseResponseSchema], status_code=status.HTTP_200_OK)
 async def get_member_purchases(
     member_id:UUID,
     service: Annotated[PlanPurchaseMainService, Depends()],
@@ -26,13 +26,6 @@ async def get_plan_purchase_statistics(
 ):
     return await service.get_purchase_stats()
 
-
-# @purchase_router.get("/member-purchased-plans{member_id}", status_code=status.HTTP_200_OK)
-# async def get_member_purchased_plans(
-#     member_id:UUID,
-#     main_service: Annotated[PlanPurchaseMainService, Depends()]
-# ):
-#     return await main_service.get_member_purchased_plans(member_id)
 
 
 @purchase_router.post("/manual", status_code=status.HTTP_201_CREATED)
