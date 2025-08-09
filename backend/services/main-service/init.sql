@@ -53,12 +53,6 @@ CREATE TABLE plans (
     created_at TIMESTAMP DEFAULT now()
 );
 
-INSERT INTO plans (name)
-VALUES 
-('VIP'),
-('خصوصی'),
-('عمومی');
-
 
 
 CREATE TABLE plan_purchases (
