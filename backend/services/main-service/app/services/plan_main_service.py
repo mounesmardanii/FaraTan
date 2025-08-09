@@ -2,6 +2,7 @@ from fastapi import Depends
 from typing import Annotated
 from app.services.plan_service import PlanService
 from app.domain.schemas.plan_schema import PlanCreateSchema, PlanResponseSchema
+from uuid import UUID
 class PlanMainService:
     def __init__(
         self,
@@ -18,3 +19,6 @@ class PlanMainService:
     async def create_plan(self, data)-> PlanResponseSchema:
         new = await self.service.create_plan(data)
         return PlanResponseSchema.from_orm(new)
+    
+    async def delete_plan(self, plan_id: UUID) -> bool:
+        return await self.service.delete_plan(plan_id)

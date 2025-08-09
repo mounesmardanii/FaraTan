@@ -17,3 +17,6 @@ class PlanService:
     
     async def create_plan(self, data) -> Plan:
         return self.repo.create(data)
+    
+    async def delete_plan(self, plan_id: UUID) -> bool:
+        return self.repo.delete(plan_id)
