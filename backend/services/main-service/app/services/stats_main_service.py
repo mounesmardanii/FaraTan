@@ -14,8 +14,7 @@ class StatMainService:
         self.purchase_service = purchase_service
 
     async def get_member_growth_stats(self) -> List[MemberGrowthStatSchema]:
-        data = await self.member_service.get_growth_stats()
-        return [MemberGrowthStatSchema(month=row.month, member_count=row.member_count) for row in data]
+        return await self.member_service.get_growth_stats()
     
 
     async def get_revenue_this_month(self):
