@@ -14,3 +14,6 @@ class PlanService:
 
     def get_plan_by_id(self, plan_id: UUID) -> Optional[Plan]:
         return self.repo.get_by_id(plan_id)
+    
+    async def create_plan(self, data) -> Plan:
+        return self.repo.create(data)
