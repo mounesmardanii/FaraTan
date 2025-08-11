@@ -25,10 +25,6 @@ class PlanPurchaseMainService:
     async def get_purchase_stats(self):
         return await self.service.get_plan_purchase_counts()
     
-    async def get_my_purchased_plans(self, member_id: UUID):
-        return await self.service.get_purchased_plans_by_member(member_id)
-
-
     async def create_manual_purchase(self, data: ManualPurchaseCreateSchema):
         return await self.service.create_manual_purchase(data)
     
@@ -39,3 +35,11 @@ class PlanPurchaseMainService:
             raise HTTPException(status_code=404, detail="Purchase not found")
 
         return await self.service.update(purchase_id, data)
+
+    async def cancel_manual_purchase(self, purchase_id: UUID):
+        purchase = await self.service.get_purchase_by_id(purchase_id)
+
+        if purchase.status == 'Canceled':
+            raise HTTPException(status_code=403, detail="Already canceled.")
+
+        return self.service.mark_as_canceled(purchase)

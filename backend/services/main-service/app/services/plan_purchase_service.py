@@ -61,3 +61,6 @@ class PlanPurchaseService:
         start_of_month, end_of_month = get_start_and_end_of_month()
         return self.repo.get_active_members_count(start_of_month, end_of_month)
     
+    async def mark_as_canceled(self, purchase: PlanPurchase):
+        return self.repo.mark_as_canceled(purchase)
+    

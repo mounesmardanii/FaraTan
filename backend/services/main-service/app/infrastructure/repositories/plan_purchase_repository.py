@@ -80,3 +80,11 @@ class PlanPurchaseRepository:
         )
 
         return [{"plan_name": r.plan_name, "purchase_count": r.purchase_count} for r in results]
+    
+
+    
+    def mark_as_canceled(self, purchase: PlanPurchase):
+        purchase.status = "Canceled"
+        self.db.commit()
+        self.db.refresh(purchase)
+        return purchase
