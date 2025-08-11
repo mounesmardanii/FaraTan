@@ -9,14 +9,14 @@ class PlanService:
     def __init__(self, repo: Annotated[PlanRepository, Depends()]):
         self.repo = repo
 
-    def get_all_plans(self) -> List[Plan]:
+    async def get_all_plans(self) -> List[Plan]:
         return self.repo.get_all()
 
-    def get_plan_by_id(self, plan_id: UUID) -> Optional[Plan]:
+    async def get_plan_by_id(self, plan_id: UUID) -> Optional[Plan]:
         return self.repo.get_by_id(plan_id)
     
     async def create_plan(self, data) -> Plan:
         return self.repo.create(data)
     
-    async def delete_plan(self, plan_id: UUID) -> bool:
-        return self.repo.delete(plan_id)
+    async def update(self, plan_id , updated_data) -> Plan:
+        return self.repo.update(plan_id, updated_data)

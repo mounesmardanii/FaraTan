@@ -26,10 +26,13 @@ class PlanRepository:
     def get_by_id(self, plan_id: UUID) -> Optional[Plan]:
         return self.db.query(Plan).filter(Plan.id == plan_id).first()
     
-    def delete(self, plan_id: UUID) -> bool:
-        plan = self.db.query(Plan).filter(Plan.id == plan_id).first()
-        if not plan:
-            return False
-        self.db.delete(plan)
-        self.db.commit()
-        return True
+    def update(self, plan_id: UUID, update_fields: dict) -> Plan:
+        plan = self.db.query(Plan).filter(Plan.id == plan_id)
+        db_plan = plan.first()
+        if db_plan:
+            plan.update(update_fields, synchronize_session=False)
+            self.db.commit()
+            self.db.refresh(db_plan)
+            return db_plan
+        else:
+            return None
