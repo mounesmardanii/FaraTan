@@ -9,9 +9,9 @@ function AdminSidebar() {
   const items = [
     { icon: assets.home, label: 'داشبورد', path: '/' },
     { icon: assets.user, label: 'کاربران', path: '/users' },
-    // تغییر آیکون دوره ها به gym
     { icon: assets.gym, label: 'دوره ها', path: '/courses' },
-{ icon: assets.Attendance, label: 'مدیریت حضور و غیاب', path: '/attendance-management' },
+    { icon: assets.food, label: 'برنامه تغذیه', path: '/nutrition-management' },
+    { icon: assets.Attendance, label: 'مدیریت حضور و غیاب', path: '/attendance-management' },
     { icon: assets.wardrobe, label: 'کمد ها', path: '/wardrobes' },
     { icon: assets.payment, label: 'پرداخت ها', path: '/payments' },
   ];

@@ -21,7 +21,7 @@ import newpasspic from "./newpasspic.svg";
 import printer from "./printer.svg";
 import BodybuildingPic from "./BodybuildingPic.png";
 import woman1 from "./woman1.png";
-
+import food from "./food.svg";
 import modedark_white from "./modedark_white.svg";
 import modelight_orange from "./modelight_orange.svg";
 import modedark_black from "./modedark_black.svg";
@@ -52,6 +52,7 @@ export { private1, general, membership };
 
 
 export const assets = {
+  food,
   Attendance,
   modedark_green,
   modedark_orange,

@@ -24,9 +24,9 @@ const WardrobeManagement = () => {
     const dummy = Array.from({ length: 30 }, (_, i) => ({
       id: i + 1,
       status: ['locked', 'unlocked', 'repair'][Math.floor(Math.random() * 3)],
-      name: 'مونس مردانی',
-      phone: '09116868904',
-      date: '1404/02/15',
+      name: ' ',
+      phone: ' ',
+      date: ' ',
     }));
     setWardrobes(dummy);
   }, []);
@@ -62,6 +62,27 @@ const WardrobeManagement = () => {
     setSelectedWardrobe(null);
   };
 
+   useEffect(() => {
+    if (!sidebarOpen) return;
+  
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
+  
+    return () => {
+      const y = parseInt(document.body.style.top || "0") * -1;
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      window.scrollTo(0, y);
+    };
+  }, [sidebarOpen]); 
+
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col text-right">
       <AdminHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
@@ -71,18 +92,23 @@ const WardrobeManagement = () => {
         </aside>
 
 <motion.aside
-          initial={{ x: '-100%' }}
-          animate={{ x: sidebarOpen ? 0 : '-100%' }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed md:hidden top-[4rem] left-0 z-50 w-[275px] h-[calc(100vh-4rem)] bg-[#D1E7D8] border-t-[3px] border-r-[3px] border-[#055B5C] rounded-tr-[75px] p-6 overflow-y-auto mt-13"
+          initial={{ x: "-100%" }}
+          animate={{ x: sidebarOpen ? 0 : "-100%" }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="fixed md:hidden left-0 top-29 h-[calc(100vh-5rem)] z-50 w-[275px]
+             bg-[#D1E7D8] border-r-[3px] border-[#055B5C] rounded-tr-[75px]
+             p-6 overflow-y-auto"
         >
           <AdminSidebar />
         </motion.aside>
 
+
         {sidebarOpen && (
-          <div
-            className="fixed md:hidden inset-0 top-[4rem] z-40 bg-black/50 mt-13.5"
+          <button
+            type="button"
+            className="fixed md:hidden left-0 right-0 top-[7.4rem] bottom-0 z-40 bg-black/50 overscroll-none touch-none"
             onClick={() => setSidebarOpen(false)}
+            aria-label="بستن منو"
           />
         )}
         <main dir="rtl" className="flex-1 p-4 md:p-8 z-10 border-t-[3px] border-l-[3px] border-[#FF7A00] rounded-tl-[75px] bg-white md:ml-10 mt-3 ml-10">
